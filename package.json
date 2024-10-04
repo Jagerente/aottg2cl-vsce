@@ -1,0 +1,67 @@
+{
+  "name": "aottg2cl",
+  "displayName": "AoTTG 2 Custom Logic Language Support",
+  "description": "Syntax highlighting and autocomplete for AoTTG 2 Custom Logic",
+  "version": "0.0.1",
+  "publisher": "Jagerente",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jagerente/aottg2cl-vsce"
+  },
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "acl",
+        "aliases": [
+          "AoTTG 2 Custom Logic",
+          "acl"
+        ],
+        "extensions": [
+          ".acl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "acl",
+        "scopeName": "source.acl",
+        "path": "./syntaxes/acl.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "acl",
+        "path": "./snippets/acl.code-snippets"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.8",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.94.0",
+    "@typescript-eslint/eslint-plugin": "^8.7.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.11.1",
+    "typescript": "^5.6.2"
+  }
+}
