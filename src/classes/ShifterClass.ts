@@ -1,9 +1,12 @@
+import { CharacterClassInstance } from './CharacterClass';
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class ShifterClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Shifter';
     public description = 'Shifter inherits from Character. Only character owner can modify fields and call functions unless otherwise specified.';
+
+    public extends?: IClass[] = [CharacterClassInstance];
 
     public instanceFields: IField[] = [
         { label: 'Size', type: 'float', description: 'Shifter\'s size.' },

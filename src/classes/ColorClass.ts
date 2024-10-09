@@ -1,10 +1,13 @@
 import { ClassKinds, IClass, IConstructor, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class ColorClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Color';
     public description = 'Is a struct, meaning that assignments will create copies and comparisons will return true if all fields are equivalent.';
 
+    public extends?: IClass[] = [ObjectClassInstance];
+    
     public constructors: IConstructor[] = [
         {
             description: "Create a default 255,255,255,255 color",

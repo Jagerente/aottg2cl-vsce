@@ -1,9 +1,12 @@
+import { CharacterClassInstance } from './CharacterClass';
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class HumanClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Human';
     public description = 'Human inherits from Character. Only character owner can modify fields and call functions unless otherwise specified.';
+    
+    public extends?: IClass[] = [CharacterClassInstance];
 
     public instanceFields: IField[] = [
         { label: 'Weapon', type: 'string', description: 'Human\'s current weapon ("Blade", "AHSS", "ThunderSpear", "APG").' },

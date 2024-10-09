@@ -1,10 +1,13 @@
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class NetworkViewClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'NetworkView';
     public description = 'Represents a network view on a map object that has the "networked" flag.';
 
+    public extends?: IClass[] = [ObjectClassInstance];
+    
     public instanceFields: IField[] = [
         { label: 'Owner', type: 'Player', description: 'The network view\'s owner.' }
     ];

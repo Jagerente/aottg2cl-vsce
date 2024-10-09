@@ -1,9 +1,12 @@
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class TransformClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Transform';
     public description = 'Represents an internal Unity transform on the MapObject\'s GameObject.';
+
+    public extends?: IClass[] = [ObjectClassInstance];
 
     public instanceFields: IField[] = [
         { label: 'Position', type: 'Vector3', description: 'Position of the transform.' },

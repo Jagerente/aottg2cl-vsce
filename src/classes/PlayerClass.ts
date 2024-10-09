@@ -1,11 +1,15 @@
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class PlayerClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Player';
     public description = 'Represents a network player. Only the master client or the player themselves may modify fields.';
 
+    public extends?: IClass[] = [ObjectClassInstance];
+
     public staticFields: IField[] = []; 
+
     public staticMethods: IMethod[] = [];
 
     public instanceFields: IField[] = [

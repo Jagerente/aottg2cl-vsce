@@ -1,9 +1,12 @@
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class DictClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Dict';
     public description = 'Dict (dictionary) allows you to add and reference objects by key and value.';
+
+    public extends?: IClass[] = [ObjectClassInstance];
 
     public instanceFields: IField[] = [
         { label: 'Keys', type: 'List(Object)', description: 'List of keys in the dictionary.' },

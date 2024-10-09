@@ -1,9 +1,12 @@
 import { ClassKinds, IClass, IConstructor, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class QuaternionClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Quaternion';
     public description = 'Quaternion is a struct representing a rotation in 3D space using four floats (X, Y, Z, W).';
+
+    public extends?: IClass[] = [ObjectClassInstance];
 
     public constructors: IConstructor[] = [
         {
