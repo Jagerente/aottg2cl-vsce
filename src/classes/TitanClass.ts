@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class TitanClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Titan';
     public description = 'Titan inherits from Character. Only character owner can modify fields and call functions unless otherwise specified.';
 
@@ -95,3 +96,5 @@ export class TitanClass implements IClass {
     
     public staticMethods: IMethod[] = [];
 }
+
+export const TitanClassInstance: TitanClass = new TitanClass();

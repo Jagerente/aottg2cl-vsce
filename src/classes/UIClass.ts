@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class UIClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'UI';
     public description = 'UI label functions.';
 
@@ -173,3 +174,5 @@ export class UIClass implements IClass {
         }
     ];
 }
+
+export const UIClassInstance: UIClass = new UIClass();

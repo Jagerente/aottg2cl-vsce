@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class ObjectClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Object';
     public description = 'Base class for all objects in custom logic.';
 
@@ -23,3 +24,5 @@ export class ObjectClass implements IClass {
 
     public staticMethods: IMethod[] = [];
 }
+
+export const ObjectClassInstance: ObjectClass = new ObjectClass();

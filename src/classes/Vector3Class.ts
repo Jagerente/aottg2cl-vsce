@@ -1,8 +1,37 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IConstructor, IField, IMethod } from './IClass';
 
 export class Vector3Class implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Vector3';
     public description = 'Vector3 is a struct representing a vector in 3D space.';
+
+    public constructors: IConstructor[] = [
+        {
+            description: "Create an empty 0,0,0 vector",
+            parameters: []
+        },
+        {
+            description: "Create a vector with specified x, y, z values",
+            parameters: [
+                { name: "x", type: "float", description: "X-coordinate" },
+                { name: "y", type: "float", description: "Y-coordinate" },
+                { name: "z", type: "float", description: "Z-coordinate" }
+            ]
+        },
+        {
+            description: "Create a vector with the same x, y, z value",
+            parameters: [
+                { name: "value", type: "float", description: "The value for x, y, and z coordinates" }
+            ]
+        },
+        {
+            description: "Create a vector with x and y values, z set to 0",
+            parameters: [
+                { name: "x", type: "float", description: "X-coordinate" },
+                { name: "y", type: "float", description: "Y-coordinate" }
+            ]
+        }
+    ];
 
     public instanceFields: IField[] = [
         { label: 'X', type: 'float', description: 'X axis of the vector.' },
@@ -169,3 +198,5 @@ export class Vector3Class implements IClass {
         }
     ];
 }
+
+export const Vector3ClassInstance: Vector3Class = new Vector3Class();

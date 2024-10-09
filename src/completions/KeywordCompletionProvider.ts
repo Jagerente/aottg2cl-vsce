@@ -16,7 +16,6 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
         { label: 'for', snippet: 'for ($1)\n{\n\t$0\n}', description: 'For loop to iterate a block of code.' },
         { label: 'while', snippet: 'while ($1) \n{\n\t$0\n}', description: 'While loop to execute code as long as a condition is true.' },
         { label: 'return', snippet: 'return$0;', description: 'Return statement to exit a function and return a value.' },
-        { label: 'Range', snippet: 'Range($1, $2, $0)', description: 'Inherits from List. Allows you to create lists of integers for convenient iteration, particularly in for loops.' }
     ];
 
     public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
@@ -33,6 +32,7 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
             items.push(this.createCompletionItem('class'));
             items.push(this.createCompletionItem('component'));
             items.push(this.createCompletionItem('extension'));
+            items.push(this.createCompletionItem('cutscene'));
         }
 
         if (isInsideClass && !isInsideAnyFunction) {
@@ -51,7 +51,6 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
             items.push(this.createCompletionItem('for'));
             items.push(this.createCompletionItem('while'));
             items.push(this.createCompletionItem('return'));
-            items.push(this.createCompletionItem('Range'));
         }
 
         return items;

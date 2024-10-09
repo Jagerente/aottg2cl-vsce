@@ -127,7 +127,7 @@
 			"patterns": [
 				{
 					"name": "support.type.acl",
-					"match": "\\b(Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|Dict|List|LineCastHitResult)\\b"
+					"match": "\\b(Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|Dict|List|Range|LineCastHitResult)\\b"
 				}
 			]
 		}

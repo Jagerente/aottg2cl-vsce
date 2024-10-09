@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class NetworkViewClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'NetworkView';
     public description = 'Represents a network view on a map object that has the "networked" flag.';
 
@@ -64,3 +65,5 @@ export class NetworkViewClass implements IClass {
     
     public staticMethods: IMethod[] = [];
 }
+
+export const NetworkViewClassInstance: NetworkViewClass = new NetworkViewClass();

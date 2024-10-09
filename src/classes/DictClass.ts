@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class DictClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Dict';
     public description = 'Dict (dictionary) allows you to add and reference objects by key and value.';
 
@@ -57,3 +58,5 @@ export class DictClass implements IClass {
     
     public staticMethods: IMethod[] = [];
 }
+
+export const DictClassInstance: DictClass = new DictClass();

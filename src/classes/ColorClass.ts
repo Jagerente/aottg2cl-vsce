@@ -1,8 +1,39 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IConstructor, IField, IMethod } from './IClass';
 
 export class ColorClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Color';
     public description = 'Is a struct, meaning that assignments will create copies and comparisons will return true if all fields are equivalent.';
+
+    public constructors: IConstructor[] = [
+        {
+            description: "Create a default 255,255,255,255 color",
+            parameters: []
+        },
+        {
+            description: "Create a color with specified RGB values and default alpha (255)",
+            parameters: [
+                { name: "r", type: "int", description: "Red value (0-255)" },
+                { name: "g", type: "int", description: "Green value (0-255)" },
+                { name: "b", type: "int", description: "Blue value (0-255)" }
+            ]
+        },
+        {
+            description: "Create a color with specified RGBA values",
+            parameters: [
+                { name: "r", type: "int", description: "Red value (0-255)" },
+                { name: "g", type: "int", description: "Green value (0-255)" },
+                { name: "b", type: "int", description: "Blue value (0-255)" },
+                { name: "a", type: "int", description: "Alpha value (0-255)" }
+            ]
+        },
+        {
+            description: "Create a color from a hexadecimal string",
+            parameters: [
+                { name: "hex", type: "string", description: "Hexadecimal color value (e.g. '#FF0000')" }
+            ]
+        }
+    ];
 
     public instanceFields: IField[] = [
         { label: 'R', type: 'int', description: 'Red' },
@@ -34,3 +65,5 @@ export class ColorClass implements IClass {
 
     public staticMethods: IMethod[] = [];
 }
+
+export const ColorClassInstance: ColorClass = new ColorClass();

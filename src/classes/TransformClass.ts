@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class TransformClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Transform';
     public description = 'Represents an internal Unity transform on the MapObject\'s GameObject.';
 
@@ -113,3 +114,5 @@ export class TransformClass implements IClass {
 
     public staticMethods: IMethod[] = [];
 }
+
+export const TransformClassInstance: TransformClass = new TransformClass();

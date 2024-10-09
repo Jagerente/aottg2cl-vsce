@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class ConvertClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Convert';
     public description = 'Converting objects to different types.';
 
@@ -85,3 +86,5 @@ export class ConvertClass implements IClass {
         }
     ];
 }
+
+export const ConvertClassInstance: ConvertClass = new ConvertClass();

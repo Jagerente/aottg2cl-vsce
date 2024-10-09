@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
-import { IClass, IField, IMethod, IParameter } from '../classes/IClass';
+import { ClassKinds, IClass, IParameter, MethodKinds } from '../classes/IClass';
+import { BaseMainClass } from '../classes/BaseMainClass';
+import { BaseComponentsClass } from '../classes/BaseComponentsClass';
 
 export class ClassParser {
     public static parseClasses(
@@ -10,44 +12,82 @@ export class ClassParser {
         const lines = text.split(/\r?\n/);
 
         const classes = new Map<string, IClass>();
+        let lineIndex = 0;
+
+        while (lineIndex < lines.length) {
+            lineIndex = this.parseClass(lines, lineIndex, classes, availableClasses);
+        }
+
+        return classes;
+    }
+
+    private static parseClass(
+        lines: string[],
+        startIndex: number,
+        classes: Map<string, IClass>,
+        availableClasses: Map<string, IClass>
+    ): number {
+        let braceDepth = 0;
         let currentClass: IClass | null = null;
         let className: string | null = null;
-        let insideClass = false;
-        let braceDepth = 0;
         let isInsideFunction = false;
 
-        for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+        for (let lineIndex = startIndex; lineIndex < lines.length; lineIndex++) {
             const line = lines[lineIndex].trim();
 
-            const classMatch = line.match(/^(class|component)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(\{)?\s*$/);
+            const classMatch = line.match(/^(class|component|extension|cutscene)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(\{)?\s*$/);
             if (classMatch) {
                 if (currentClass && className) {
                     classes.set(className, currentClass);
                 }
+
                 className = classMatch[2];
+                let classType: ClassKinds;
+                let extendsList: IClass[] = [];
+
+                switch (classMatch[1]) {
+                    case 'class':
+                        classType = ClassKinds.CLASS;
+                        if (className === 'Main') {
+                            extendsList = [new BaseMainClass(className)];
+                        }
+                        break;
+                    case 'component':
+                        classType = ClassKinds.COMPONENT;
+                        extendsList = [new BaseComponentsClass(className)]
+                        break;
+                    case 'extension':
+                        classType = ClassKinds.EXTENSION;
+                        break;
+                    case 'cutscene':
+                        classType = ClassKinds.CUTSCENE;
+                        break;
+                    default:
+                        classType = ClassKinds.CLASS;
+                        break;
+                }
+
                 currentClass = {
+                    kind: classType,
                     name: className,
                     description: '',
+                    extends: extendsList,
                     staticFields: [],
                     staticMethods: [],
                     instanceFields: [],
                     instanceMethods: []
                 };
-                insideClass = true;
                 braceDepth = classMatch[3] ? 1 : 0;
                 continue;
             }
 
-            if (insideClass && currentClass) {
+            if (currentClass) {
                 braceDepth += (line.match(/\{/g) || []).length;
                 braceDepth -= (line.match(/\}/g) || []).length;
 
                 if (braceDepth === 0) {
                     classes.set(className!, currentClass);
-                    currentClass = null;
-                    className = null;
-                    insideClass = false;
-                    continue;
+                    return lineIndex + 1;
                 }
 
                 if (isInsideFunction) {
@@ -57,10 +97,16 @@ export class ClassParser {
                     continue;
                 }
 
-                const functionMatch = line.match(/^\s*(function|coroutine|cutscene)\s+\w+\s*\(.*?\)\s*$/);
+                const functionMatch = line.match(/^\s*(function|coroutine)\s+\w+\s*\(.*?\)\s*$/);
                 if (functionMatch) {
                     isInsideFunction = true;
                     this.parseMethod(line, currentClass);
+                    continue;
+                }
+
+                const nestedClassMatch = line.match(/^(class|component|extension|cutscene)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(\{)?\s*$/);
+                if (nestedClassMatch) {
+                    lineIndex = this.parseClass(lines, lineIndex, classes, availableClasses);
                     continue;
                 }
 
@@ -68,11 +114,7 @@ export class ClassParser {
             }
         }
 
-        if (currentClass && className) {
-            classes.set(className, currentClass);
-        }
-
-        return classes;
+        return lines.length;
     }
 
     private static parseField(
@@ -88,32 +130,61 @@ export class ClassParser {
             const inferredType = this.inferFieldType(fieldValue, availableClasses);
             const isPrivate = fieldName.startsWith('_');
 
-            currentClass.instanceFields.push({
+            const field = {
                 label: fieldName,
                 type: inferredType,
                 description: '',
                 private: isPrivate
-            });
-            return;
+            };
+
+            if (currentClass.kind === ClassKinds.EXTENSION) {
+                currentClass.staticFields.push(field);
+            } else {
+                currentClass.instanceFields.push(field);
+            }
         }
     }
 
     private static parseMethod(
         line: string,
-        currentClass: IClass,
+        currentClass: IClass
     ): void {
-        const methodMatch = line.match(/^\s*(function|coroutine|cutscene)\s+(\w+)\s*\((.*?)\)\s*(\{)?\s*$/);
+        const methodMatch = line.match(/^\s*(function|coroutine)\s+(\w+)\s*\((.*?)\)\s*(\{)?\s*$/);
+
+        currentClass.extends?.forEach
         if (methodMatch) {
-            currentClass.instanceMethods.push({
-                label: methodMatch[2],
+            const methodKind = methodMatch[1] === 'coroutine' ? MethodKinds.COROUTINE : MethodKinds.FUNCTION;
+            const methodName = methodMatch[2];
+            const methodParameters = this.parseParameters(methodMatch[3]);
+            const methodExistsInParent = currentClass.extends?.some(parentClass =>
+                parentClass.instanceMethods.some(m => m.label === methodName && m.parameters.length === methodParameters.length)
+            );
+
+            if (methodExistsInParent) {
+                return;
+            }
+
+            const method = {
+                label: methodName,
+                type: methodKind,
                 returnType: 'void',
                 description: '',
                 parameters: this.parseParameters(methodMatch[3])
-            });
-            return;
+            };
+
+            if (methodName === 'Init' && (currentClass.kind === ClassKinds.CLASS || currentClass.kind === ClassKinds.COMPONENT)) {
+                currentClass.constructors = currentClass.constructors || [];
+                method.returnType = currentClass.name;
+                currentClass.constructors.push(method);
+            } else {
+                if (currentClass.kind === ClassKinds.EXTENSION) {
+                    currentClass.staticMethods.push(method);
+                } else {
+                    currentClass.instanceMethods.push(method);
+                }
+            }
         }
     }
-
 
 
     private static inferFieldType(

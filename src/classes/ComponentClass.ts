@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class ComponentClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Component';
     public description = 'Represents a component script attached to a MapObject.';
 
@@ -23,3 +24,5 @@ export class ComponentClass implements IClass {
 
     public staticMethods: IMethod[] = [];
 }
+
+export const ComponentClassInstance: ComponentClass = new ComponentClass();

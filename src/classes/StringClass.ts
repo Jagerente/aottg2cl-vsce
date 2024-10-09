@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class StringClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'String';
     public description = 'String manipulation functions.';
 
@@ -124,3 +125,5 @@ export class StringClass implements IClass {
         }
     ];
 }
+
+export const StringClassInstance: StringClass = new StringClass();

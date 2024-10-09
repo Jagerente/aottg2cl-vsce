@@ -1,3 +1,15 @@
+export enum ClassKinds {
+    CLASS = 'class',
+    COMPONENT = 'component',
+    EXTENSION = 'extension',
+    CUTSCENE = 'cutscene'
+}
+
+export enum MethodKinds {
+    FUNCTION = 'function',
+    COROUTINE = 'coroutine'
+}
+
 export interface IParameter {
     name: string;
     type: string;
@@ -6,8 +18,14 @@ export interface IParameter {
     isVariadic?: boolean;
 }
 
+export interface IConstructor {
+    parameters: IParameter[];
+    description: string;
+}
+
 export interface IMethod {
     label: string;
+    kind?: MethodKinds;
     returnType: string;
     description: string;
     parameters: IParameter[];
@@ -22,8 +40,11 @@ export interface IField {
 }
 
 export interface IClass {
+    kind: ClassKinds;
     name: string;
     description: string;
+    extends?: IClass[]
+    constructors?: IConstructor[];
     staticFields: IField[];
     staticMethods: IMethod[];
     instanceFields: IField[];

@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class InputClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Input';
     public description = 'Reading player key inputs. Note that inputs are best handled in OnFrame rather than OnTick, due to being updated every frame and not every physics tick.';
 
@@ -51,3 +52,5 @@ export class InputClass implements IClass {
         }
     ];
 }
+
+export const InputClassInstance: InputClass = new InputClass();

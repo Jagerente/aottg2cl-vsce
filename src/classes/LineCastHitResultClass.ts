@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class LineCastHitResultClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'LineCastHitResult';
     public description = 'Line cast hit result from Physics.LineCast.';
 
@@ -19,3 +20,5 @@ export class LineCastHitResultClass implements IClass {
 
     public staticMethods: IMethod[] = [];
 }
+
+export const LineCastHitResultClassInstance: LineCastHitResultClass = new LineCastHitResultClass();

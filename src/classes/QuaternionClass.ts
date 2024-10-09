@@ -1,8 +1,21 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IConstructor, IField, IMethod } from './IClass';
 
 export class QuaternionClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Quaternion';
     public description = 'Quaternion is a struct representing a rotation in 3D space using four floats (X, Y, Z, W).';
+
+    public constructors: IConstructor[] = [
+        {
+            description: "Initialize a Quaternion with four float values for X, Y, Z, and W",
+            parameters: [
+                { name: "x", type: "float", description: "X-component of the quaternion" },
+                { name: "y", type: "float", description: "Y-component of the quaternion" },
+                { name: "z", type: "float", description: "Z-component of the quaternion" },
+                { name: "w", type: "float", description: "W-component of the quaternion" }
+            ]
+        }
+    ];
 
     public instanceFields: IField[] = [
         { label: 'X', type: 'float', description: 'X value of the quaternion.' },
@@ -69,3 +82,5 @@ export class QuaternionClass implements IClass {
         }
     ];
 }
+
+export const QuaternionClassInstance: QuaternionClass = new QuaternionClass();

@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class GameClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Game';
     public description = 'Game functions such as spawning titans and managing game state.';
 
@@ -261,3 +262,5 @@ export class GameClass implements IClass {
         }
     ];
 }
+
+export const GameClassInstance: GameClass = new GameClass();

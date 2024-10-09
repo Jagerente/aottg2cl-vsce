@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class CameraClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Camera';
     public description = 'Camera functions for controlling and retrieving camera information.';
 
@@ -69,3 +70,5 @@ export class CameraClass implements IClass {
         }
     ];
 }
+
+export const CameraClassInstance: CameraClass = new CameraClass();

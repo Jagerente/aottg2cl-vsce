@@ -5,6 +5,25 @@ All notable changes to the "aottg2cl" extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.2-preview] - 2024-10-09
+
+### Added
+ 
+- Inheritance support
+- Callbacks support using inheritance definitions
+- Constructors support
+- Class kind support
+- Method kind support
+- Extensions support
+
+### Changed
+
+- Improved autocomplete features based on new class definitions
+- Updated global classes definitions 
+- Updated user-defined classes parsing
+- Range detection as class, not keyword
+- Constructors auto-complete
+
 ## [0.0.1-preview] - 2024-10-04
 
 ### Added

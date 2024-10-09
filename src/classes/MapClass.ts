@@ -1,13 +1,14 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class MapClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Map';
     public description = 'Functions for finding, creating, and destroying map objects.';
 
     public instanceFields: IField[] = [];
-    
+
     public instanceMethods: IMethod[] = [];
-    
+
     public staticFields: IField[] = [];
 
     public staticMethods: IMethod[] = [
@@ -97,3 +98,5 @@ export class MapClass implements IClass {
         }
     ];
 }
+
+export const MapClassInstance: MapClass = new MapClass();

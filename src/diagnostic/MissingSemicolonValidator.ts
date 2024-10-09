@@ -50,7 +50,7 @@ export class MissingSemicolonValidator {
             }
 
             if (
-                code.match(/^(class|component|function|coroutine|cutscene|if|for|while|else|elif|return)/) ||
+                code.match(/^(class|component|extension|function|coroutine|cutscene|if|for|while|else|elif|return)/) ||
                 code.endsWith('{') ||
                 code.endsWith('}')
             ) {

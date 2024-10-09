@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class CutsceneClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Cutscene';
     public description = 'Cutscene functions for starting and managing cutscenes.';
 
@@ -38,3 +39,5 @@ export class CutsceneClass implements IClass {
         }
     ];
 }
+
+export const CutsceneClassInstance: CutsceneClass = new CutsceneClass();

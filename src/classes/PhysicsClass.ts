@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class PhysicsClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Physics';
     public description = 'Some commonly used physics functions.';
 
@@ -34,3 +35,5 @@ export class PhysicsClass implements IClass {
         }
     ];
 }
+
+export const PhysicsClassInstance: PhysicsClass = new PhysicsClass();

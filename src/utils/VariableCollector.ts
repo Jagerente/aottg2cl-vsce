@@ -103,9 +103,9 @@ export class VariableCollector {
             }
         }
 
-        const identifierChain = value.split('.').filter(id => id.length > 0);
+        const identifierChain = value.split(/\.(?![^\(]*\))/).filter(id => id.length > 0);
         if (identifierChain.length > 1) {
-            return this.resolveChainType(identifierChain, availableClasses);
+            return this.resolveChainType(identifierChain, availableClasses, currentScopeVars);
         }
 
         if (/^\s*\w+\s*\(.*\)\s*$/.test(value)) {
@@ -121,6 +121,7 @@ export class VariableCollector {
     private static resolveChainType(
         identifierChain: string[],
         availableClasses: Map<string, IClass>,
+        currentScopeVars?: Map<string, { type: string, value: string }>
     ): string {
         let currentType: string | undefined;
 
@@ -128,6 +129,9 @@ export class VariableCollector {
             if (!currentType) {
                 if (availableClasses.has(identifier)) {
                     currentType = identifier;
+                } else if (currentScopeVars && currentScopeVars.has(identifier)) {
+                    currentType = currentScopeVars.get(identifier)!.type;
+
                 } else {
                     return 'any';
                 }
