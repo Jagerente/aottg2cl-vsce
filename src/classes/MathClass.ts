@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class MathClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Math';
     public description = 'Math functions. Note that parameter types can be either int or float unless otherwise specified. Functions may return int or float depending on the parameter types given.';
 
@@ -196,3 +197,5 @@ export class MathClass implements IClass {
         }
     ];
 }
+
+export const MathClassInstance: MathClass = new MathClass();

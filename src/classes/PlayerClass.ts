@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class PlayerClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Player';
     public description = 'Represents a network player. Only the master client or the player themselves may modify fields.';
 
@@ -48,3 +49,5 @@ export class PlayerClass implements IClass {
         }
     ];
 }
+
+export const PlayerClassInstance: PlayerClass = new PlayerClass();

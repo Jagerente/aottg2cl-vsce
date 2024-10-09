@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class NetworkClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Network';
     public description = 'Networking functions.';
 
@@ -43,3 +44,5 @@ export class NetworkClass implements IClass {
         }
     ];
 }
+
+export const NetworkClassInstance: NetworkClass = new NetworkClass();

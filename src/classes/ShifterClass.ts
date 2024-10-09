@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class ShifterClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Shifter';
     public description = 'Shifter inherits from Character. Only character owner can modify fields and call functions unless otherwise specified.';
 
@@ -71,3 +72,5 @@ export class ShifterClass implements IClass {
     
     public staticMethods: IMethod[] = [];
 }
+
+export const ShifterClassInstance: ShifterClass = new ShifterClass();

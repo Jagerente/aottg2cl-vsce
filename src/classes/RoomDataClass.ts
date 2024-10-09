@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class RoomDataClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'RoomData';
     public description = 'Store and retrieve room variables. Room data is cleared upon joining or creating a new lobby and does not reset between game rounds. Supports float, string, bool, and int types.';
 
@@ -37,3 +38,5 @@ export class RoomDataClass implements IClass {
         }
     ];
 }
+
+export const RoomDataClassInstance: RoomDataClass = new RoomDataClass();

@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class CharacterClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Character';
     public description = 'Character is the base class that Human, Titan, and Shifter inherit from.';
 
@@ -132,3 +133,5 @@ export class CharacterClass implements IClass {
 
     public staticMethods: IMethod[] = [];
 }
+
+export const CharacterClassInstance: CharacterClass = new CharacterClass();

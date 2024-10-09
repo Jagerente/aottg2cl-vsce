@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class HumanClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'Human';
     public description = 'Human inherits from Character. Only character owner can modify fields and call functions unless otherwise specified.';
 
@@ -114,6 +115,8 @@ export class HumanClass implements IClass {
     ];
 
     public staticFields: IField[] = [];
-    
+
     public staticMethods: IMethod[] = [];
 }
+
+export const HumanClassInstance: HumanClass = new HumanClass();

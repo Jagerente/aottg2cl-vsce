@@ -72,6 +72,23 @@ export class CodeContextUtils {
         return false;
     }
 
+    public static isInsideExtension(document: vscode.TextDocument, position: vscode.Position): boolean {
+        let openBraces = 0;
+        let closeBraces = 0;
+
+        for (let i = position.line; i >= 0; i--) {
+            const lineText = document.lineAt(i).text;
+
+            closeBraces += (lineText.match(/\}/g) || []).length;
+            openBraces += (lineText.match(/\{/g) || []).length;
+
+            if (lineText.includes('extension') && openBraces > closeBraces) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static isInsideFunction(document: vscode.TextDocument, position: vscode.Position): boolean {
         let openBraces = 0;
         let closeBraces = 0;
@@ -167,6 +184,33 @@ export class CodeContextUtils {
         return blockCommentStarts > blockCommentEnds;
     }
 
+    public static isInsideConditionDefinition(document: vscode.TextDocument, position: vscode.Position): boolean {
+        let openParensCount = 0;
+        let closeParensCount = 0;
+        let isInsideCondition = false;
+
+        for (let i = position.line; i >= 0; i--) {
+            const lineText = document.lineAt(i).text;
+
+            if (lineText.includes('if') || lineText.includes('elif')) {
+                isInsideCondition = true;
+            }
+
+            openParensCount += (lineText.match(/\(/g) || []).length;
+            closeParensCount += (lineText.match(/\)/g) || []).length;
+
+            if (isInsideCondition && openParensCount > closeParensCount) {
+                return true;
+            }
+
+            if (lineText.includes('{') || lineText.includes('}')) {
+                break;
+            }
+        }
+
+        return false;
+    }
+
     public static findCurrentClassName(document: vscode.TextDocument, position: vscode.Position): string | undefined {
         const text = document.getText();
         const lines = text.split(/\r?\n/);
@@ -198,5 +242,167 @@ export class CodeContextUtils {
         }
 
         return null;
+    }
+
+    public static splitCallChain(chain: string): string[] {
+        const components: string[] = [];
+        let currentComponent = '';
+        let bracesDepth = 0;
+        let inString = false;
+        let stringChar: string | null = null;
+        let escape = false;
+
+        for (let i = 0; i < chain.length; i++) {
+            const char = chain[i];
+
+            if (inString) {
+                currentComponent += char;
+                if (escape) {
+                    escape = false;
+                } else if (char === '\\') {
+                    escape = true;
+                } else if (char === stringChar) {
+                    inString = false;
+                    stringChar = null;
+                }
+                continue;
+            } else {
+                if (char === '"' || char === "'" || char === '`') {
+                    inString = true;
+                    stringChar = char;
+                    currentComponent += char;
+                    continue;
+                }
+            }
+
+            if (char === '(') {
+                bracesDepth++;
+            } else if (char === ')') {
+                bracesDepth--;
+            }
+
+            if (char === '.' && bracesDepth === 0) {
+                if (currentComponent.trim() !== '') {
+                    components.push(currentComponent.trim());
+                    currentComponent = '';
+                }
+            } else {
+                currentComponent += char;
+            }
+        }
+
+        if (currentComponent.trim() !== '') {
+            components.push(currentComponent.trim());
+        }
+
+        return components;
+    }
+
+    public static parseCallChain(input: string): string {
+        let methodChain = '';
+        let bracesDepth = 0;
+        let inString = false;
+        let stringChar: string | null = null;
+        let escape = false;
+
+        let lastDot = input.lastIndexOf('.');
+        if (lastDot === -1) {
+            return '';
+        }
+
+        const afterDot = input.slice(lastDot + 1).trim();
+        if (/\w/.test(afterDot)) {
+            return '';
+        }
+
+        for (let i = lastDot - 1; i >= 0; i--) {
+            const char = input[i];
+
+            if (inString) {
+                if (escape) {
+                    escape = false;
+                } else if (char === '\\') {
+                    escape = true;
+                } else if (char === stringChar) {
+                    inString = false;
+                    stringChar = null;
+                }
+                methodChain = char + methodChain;
+                continue;
+            } else {
+                if (char === '"' || char === "'" || char === '`') {
+                    inString = true;
+                    stringChar = char;
+                    methodChain = char + methodChain;
+                    continue;
+                }
+            }
+
+            if (char === ')') {
+                bracesDepth++;
+            } else if (char === '(') {
+                bracesDepth--;
+                if (bracesDepth < 0) {
+                    break;
+                }
+            }
+
+            if (char === '.' && bracesDepth === 0) {
+            } else if (/\s/.test(char) && bracesDepth === 0) {
+                break;
+            }
+
+            methodChain = char + methodChain;
+        }
+
+        if (!/^[A-Za-z_]\w*/.test(methodChain)) {
+            return '';
+        }
+
+        if (!this.areParenthesesBalanced(methodChain)) {
+            return '';
+        }
+
+        return methodChain;
+    }
+
+    public static areParenthesesBalanced(str: string): boolean {
+        let balance = 0;
+        let inString = false;
+        let stringChar: string | null = null;
+        let escape = false;
+
+        for (let i = 0; i < str.length; i++) {
+            const char = str[i];
+
+            if (inString) {
+                if (escape) {
+                    escape = false;
+                } else if (char === '\\') {
+                    escape = true;
+                } else if (char === stringChar) {
+                    inString = false;
+                    stringChar = null;
+                }
+                continue;
+            } else {
+                if (char === '"' || char === "'" || char === '`') {
+                    inString = true;
+                    stringChar = char;
+                    continue;
+                }
+            }
+
+            if (char === '(') {
+                balance++;
+            } else if (char === ')') {
+                balance--;
+                if (balance < 0) {
+                    return false;
+                }
+            }
+        }
+
+        return balance === 0 && !inString;
     }
 }

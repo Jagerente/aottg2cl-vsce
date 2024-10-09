@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class MapObjectClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'MapObject';
     public description = 'Represents a map object created in the editor.';
 
@@ -124,3 +125,5 @@ export class MapObjectClass implements IClass {
     
     public staticMethods: IMethod[] = [];
 }
+
+export const MapObjectClassInstance: MapObjectClass = new MapObjectClass();

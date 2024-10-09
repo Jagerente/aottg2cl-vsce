@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class JsonClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Json';
     public description = 'Serializes and deserializes primitive and struct values from and to JSON strings. Supports float, int, string, bool, Vector3, Quaternion, Color, Dict, and List.';
 
@@ -29,3 +30,5 @@ export class JsonClass implements IClass {
         }
     ];
 }
+
+export const JsonClassInstance: JsonClass = new JsonClass();

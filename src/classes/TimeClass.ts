@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class TimeClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'Time';
     public description = 'Time functions.';
 
@@ -17,3 +18,5 @@ export class TimeClass implements IClass {
 
     public staticMethods: IMethod[] = [];
 }
+
+export const TimeClassInstance: TimeClass = new TimeClass();

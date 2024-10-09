@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class ListClass implements IClass {
+    public kind = ClassKinds.CLASS;
     public name = 'List';
     public description = 'Lists allow you to keep an ordered array of objects.';
 
@@ -82,6 +83,8 @@ export class ListClass implements IClass {
     ];
 
     public staticFields: IField[] = [];
-    
+
     public staticMethods: IMethod[] = [];
 }
+
+export const ListClassInstance: ListClass = new ListClass();

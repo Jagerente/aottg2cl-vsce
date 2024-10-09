@@ -1,6 +1,7 @@
-import { IClass, IField, IMethod } from './IClass';
+import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class PersistentDataClass implements IClass {
+    public kind = ClassKinds.EXTENSION;
     public name = 'PersistentData';
     public description = 'Store and retrieve persistent data. Persistent data can be saved and loaded from file. Supports float, int, string, and bool types.';
 
@@ -71,3 +72,5 @@ export class PersistentDataClass implements IClass {
         }
     ];
 }
+
+export const PersistentDataClassInstance: PersistentDataClass = new PersistentDataClass();
