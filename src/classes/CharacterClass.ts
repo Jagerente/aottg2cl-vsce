@@ -1,9 +1,12 @@
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class CharacterClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Character';
     public description = 'Character is the base class that Human, Titan, and Shifter inherit from.';
+
+    public extends?: IClass[] = [ObjectClassInstance];
 
     public instanceFields: IField[] = [
         { label: 'Player', type: 'Player', description: 'The player who owns this character.' },

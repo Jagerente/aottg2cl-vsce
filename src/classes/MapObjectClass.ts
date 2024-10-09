@@ -1,9 +1,12 @@
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class MapObjectClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'MapObject';
     public description = 'Represents a map object created in the editor.';
+
+    public extends?: IClass[] = [ObjectClassInstance];
 
     public instanceFields: IField[] = [
         { label: 'Name', type: 'string', description: 'Name of the map object.' },
