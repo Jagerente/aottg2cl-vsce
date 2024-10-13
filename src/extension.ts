@@ -2,13 +2,12 @@ import * as vscode from 'vscode';
 import { KeywordCompletionProvider } from './completions/KeywordCompletionProvider';
 import { VariableCompletionProvider } from './completions/VariableCompletionProvider';
 import { MainFunctionsCompletionProvider } from './completions/MainFunctionsCompletionProvider';
-import { MissingSemicolonValidator } from './diagnostic/MissingSemicolonValidator';
-import { BracketValidator } from './diagnostic/BracketValidator';
 import { ClassUsageValidator } from './diagnostic/ClassUsageValidator';
 import { CustomClassValidator } from './diagnostic/CustomClassValidator';
 import { VariableDefinitionProvider } from './definition/VariableDefinitionProvider';
 import { IncompleteMemberAccessValidator } from './diagnostic/IncompleteMemberAccessValidator';
 import { AvailableClasses, AvailableClassesMap } from './classes/AvailableClasses';
+import { ACLManager } from './antlr/ACLManager';
 
 export function activate(context: vscode.ExtensionContext) {
 	const keywordsProvider = new KeywordCompletionProvider();
@@ -25,6 +24,10 @@ export function activate(context: vscode.ExtensionContext) {
 	const diagnosticCollection = vscode.languages.createDiagnosticCollection('acl');
 	context.subscriptions.push(diagnosticCollection);
 
+	const antlrManager = new ACLManager();
+
+	vscode.workspace.onDidOpenTextDocument(doc => antlrManager.refetch(doc));
+	vscode.workspace.onDidChangeTextDocument(event => antlrManager.refetch(event.document));
 	vscode.workspace.onDidOpenTextDocument(doc => validateDocument(doc, diagnosticCollection, AvailableClasses));
 	vscode.workspace.onDidChangeTextDocument(event => validateDocument(event.document, diagnosticCollection, AvailableClasses));
 
@@ -35,8 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		let diagnostics: vscode.Diagnostic[] = [];
 
-		diagnostics = diagnostics.concat(MissingSemicolonValidator.validate(document));
-		diagnostics = diagnostics.concat(BracketValidator.validate(document));
+		diagnostics = diagnostics.concat(antlrManager.getDiagnostics());
 		diagnostics = diagnostics.concat(new ClassUsageValidator(availableClasses).validate(document));
 		diagnostics = diagnostics.concat(new CustomClassValidator().validate(document));
 		diagnostics = diagnostics.concat(IncompleteMemberAccessValidator.validate(document));
