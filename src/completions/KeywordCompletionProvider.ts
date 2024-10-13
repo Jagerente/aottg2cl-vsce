@@ -15,6 +15,8 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
         { label: 'elif', snippet: 'elif ($1) \n{\n\t$0\n}', description: 'Else if statement to execute code if the "if" condition is false.' },
         { label: 'for', snippet: 'for ($1)\n{\n\t$0\n}', description: 'For loop to iterate a block of code.' },
         { label: 'while', snippet: 'while ($1) \n{\n\t$0\n}', description: 'While loop to execute code as long as a condition is true.' },
+        { label: 'break', snippet: 'break;$0', description: 'Breaks the current loop' },
+        { label: 'continue', snippet: 'continue;$0', description: 'Skips to the next iteration of the loop' },
         { label: 'return', snippet: 'return$0;', description: 'Return statement to exit a function and return a value.' },
     ];
 
@@ -26,6 +28,7 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
         const isInsideCoroutine = CodeContextUtils.isInsideCoroutine(document, position);
         const isInsideCutscene = CodeContextUtils.isInsideCutscene(document, position);
         const isInsideAnyFunction = isInsideFunction || isInsideCoroutine || isInsideCutscene;
+        const isInsideLoop = CodeContextUtils.isInsideLoop(document, position);
         const canSuggestElse = CodeContextUtils.canSuggestElse(document, position);
 
         if (!isInsideClass) {
@@ -51,6 +54,11 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
             items.push(this.createCompletionItem('for'));
             items.push(this.createCompletionItem('while'));
             items.push(this.createCompletionItem('return'));
+        }
+
+        if (isInsideLoop) {
+            items.push(this.createCompletionItem('break'));
+            items.push(this.createCompletionItem('continue'));
         }
 
         return items;
