@@ -1,9 +1,12 @@
 import { ClassKinds, IClass, IConstructor, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class Vector3Class implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Vector3';
     public description = 'Vector3 is a struct representing a vector in 3D space.';
+
+    public extends?: IClass[] = [ObjectClassInstance];
 
     public constructors: IConstructor[] = [
         {
