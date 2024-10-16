@@ -9,7 +9,7 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
         { label: 'extension', snippet: 'extension $1 \n{\n\t$0\n}', description: 'Extensions allow you to create static classes for utility functions.' },
         { label: 'function', snippet: 'function $1() \n{\n\t$0\n}', description: 'Functions are blocks of code that can be called.' },
         { label: 'coroutine', snippet: 'coroutine $1() \n{\n\t$0\n}', description: 'Coroutines are like functions except run in the background, while normal functions will interrupt the game until the function is completed.' },
-        { label: 'cutscene', snippet: 'cutscene $1() \n{\n\t$0\n}', description: 'Cutscenes are a type of class that can be conveniently referenced using the Cutscene static class.' },
+        { label: 'cutscene', snippet: 'cutscene $1() \n{\n\tcoroutine Start() \n\t{\n\t\t$0\n\t}\n}', description: 'Cutscenes are a type of class that can be conveniently referenced using the Cutscene static class.' },
         { label: 'if', snippet: 'if ($1) \n{\n\t$0\n}', description: 'If statement to execute code if a condition is true.' },
         { label: 'else', snippet: 'else \n{\n\t$0\n}', description: 'Else statement to execute code if the "if" condition is false.' },
         { label: 'elif', snippet: 'elif ($1) \n{\n\t$0\n}', description: 'Else if statement to execute code if the "if" condition is false.' },
@@ -22,23 +22,27 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
         const items: vscode.CompletionItem[] = [];
 
         const isInsideClass = CodeContextUtils.isInsideClass(document, position);
+        const isInsideComponent = CodeContextUtils.isInsideComponent(document, position);
+        const isInsideExtension = CodeContextUtils.isInsideExtension(document, position);
+        const isInsideCutscene = CodeContextUtils.isInsideCutscene(document, position);
+        const isInsideAnyClass = isInsideClass || isInsideComponent || isInsideExtension || isInsideCutscene;
+
         const isInsideFunction = CodeContextUtils.isInsideFunction(document, position);
         const isInsideCoroutine = CodeContextUtils.isInsideCoroutine(document, position);
-        const isInsideCutscene = CodeContextUtils.isInsideCutscene(document, position);
         const isInsideAnyFunction = isInsideFunction || isInsideCoroutine || isInsideCutscene;
+        
         const canSuggestElse = CodeContextUtils.canSuggestElse(document, position);
 
-        if (!isInsideClass) {
+        if (!isInsideAnyClass) {
             items.push(this.createCompletionItem('class'));
             items.push(this.createCompletionItem('component'));
             items.push(this.createCompletionItem('extension'));
             items.push(this.createCompletionItem('cutscene'));
         }
 
-        if (isInsideClass && !isInsideAnyFunction) {
+        if (isInsideAnyClass && !isInsideAnyFunction) {
             items.push(this.createCompletionItem('function'));
             items.push(this.createCompletionItem('coroutine'));
-            items.push(this.createCompletionItem('cutscene'));
         }
 
         if (isInsideAnyFunction) {
