@@ -51,7 +51,7 @@
 			"patterns": [
 				{
 					"name": "keyword.control.acl",
-					"match": "\\b(if|else|elif|while|for|return|class|component|coroutine|cutscene|self|extension|in|function|wait|true|false|null)\\b"
+					"match": "\\b(if|else|elif|while|for|break|continue|return|class|component|coroutine|cutscene|self|extension|in|function|wait|true|false|null)\\b"
 				}
 			]
 		},

@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import { StringAwareParser as StringAwareParser } from './StringAwareParser';
+import { CommentAwareTextProcessor } from '../diagnostic/CommentAwareTextProcessor';
 
 export class CodeContextUtils {
 
@@ -30,13 +32,58 @@ export class CodeContextUtils {
             closeBracesCount += (lineText.match(/\}/g) || []).length;
             openBracesCount += (lineText.match(/\{/g) || []).length;
 
-            if (lineText.startsWith('for') || lineText.startsWith('while') || lineText.startsWith('function')) {
+            if (lineText.startsWith('for') || lineText.startsWith('while') || lineText.startsWith('function') || lineText.startsWith('coroutine') || lineText.startsWith('cutscene') || lineText.startsWith('class') || lineText.startsWith('component') || lineText.startsWith('component')) {
                 return false;
             }
         }
 
         return hasIf && !hasElse;
     }
+
+    public static isInsideLoop(document: vscode.TextDocument, position: vscode.Position): boolean {
+        let openBracesCount = 0;
+        let closeBracesCount = 0;
+
+        const commentAwareTextProcessor = new CommentAwareTextProcessor(document);
+        const stringAwareParser = new StringAwareParser();
+
+        for (let i = position.line; i >= 0; i--) {
+            let lineText = document.lineAt(i).text;
+
+            if (i === position.line) {
+                lineText = lineText.slice(0, position.character);
+                const range = new vscode.Range(new vscode.Position(i, 0), position);
+                lineText = commentAwareTextProcessor.removeCommentsFromRange(lineText, range);
+            } else {
+                lineText = commentAwareTextProcessor.removeCommentsFromRange(lineText, new vscode.Range(i, 0, i, lineText.length));
+            }
+
+            let resultLine = lineText.trim();
+            resultLine = stringAwareParser.parseLine(resultLine);  // Обрабатываем строку без строковых литералов
+            resultLine = resultLine.trim();
+
+            if (resultLine.startsWith('for') || resultLine.startsWith('while')) {
+                if (openBracesCount > closeBracesCount) {
+                    return true;
+                }
+            }
+
+            closeBracesCount += (resultLine.match(/\}/g) || []).length;
+            openBracesCount += (resultLine.match(/\{/g) || []).length;
+
+            if (closeBracesCount > openBracesCount) {
+                return false;
+            }
+
+            if (resultLine.startsWith('function') || resultLine.startsWith('coroutine') || resultLine.startsWith('cutscene') || resultLine.startsWith('class') || resultLine.startsWith('component')) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+
 
     public static isInsideClass(document: vscode.TextDocument, position: vscode.Position): boolean {
         let openBraces = 0;

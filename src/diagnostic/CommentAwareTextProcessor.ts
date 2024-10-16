@@ -1,14 +1,16 @@
 import * as vscode from 'vscode';
 
 export class CommentAwareTextProcessor {
+    private document: vscode.TextDocument;
     private commentRanges: vscode.Range[] = [];
     private stringRanges: vscode.Range[] = [];
 
     constructor(document: vscode.TextDocument) {
-        this.processDocument(document);
+        this.document = document;
+        this.processDocument();
     }
 
-    private processDocument(document: vscode.TextDocument): void {
+    private processDocument(): void {
         const commentRanges: vscode.Range[] = [];
         const stringRanges: vscode.Range[] = [];
 
@@ -19,8 +21,8 @@ export class CommentAwareTextProcessor {
         let commentStartPosition: vscode.Position | null = null;
         let stringStartPosition: vscode.Position | null = null;
 
-        for (let line = 0; line < document.lineCount; line++) {
-            const lineText = document.lineAt(line).text;
+        for (let line = 0; line < this.document.lineCount; line++) {
+            const lineText = this.document.lineAt(line).text;
             let i = 0;
 
             while (i < lineText.length) {
@@ -70,7 +72,7 @@ export class CommentAwareTextProcessor {
                 }
             }
 
-            if (isInBlockComment && commentStartPosition && line === document.lineCount - 1) {
+            if (isInBlockComment && commentStartPosition && line === this.document.lineCount - 1) {
                 const endPosition = new vscode.Position(line, lineText.length);
                 commentRanges.push(new vscode.Range(commentStartPosition, endPosition));
             }
@@ -86,6 +88,29 @@ export class CommentAwareTextProcessor {
 
     public isInString(position: vscode.Position): boolean {
         return this.isPositionInRanges(position, this.stringRanges);
+    }
+
+    public removeCommentsFromRange(line: string, range: vscode.Range): string {
+        let resultLine = line;
+        let currentOffset = 0;
+
+        for (const commentRange of this.commentRanges) {
+            if (commentRange.end.isBefore(range.start) || commentRange.start.isAfter(range.end)) {
+                continue;
+            }
+
+            const commentStart = Math.max(commentRange.start.line === range.start.line ? commentRange.start.character : 0, range.start.character);
+            const commentEnd = Math.min(commentRange.end.line === range.end.line ? commentRange.end.character : line.length, range.end.character);
+
+            const lLine = resultLine.slice(0, commentStart - currentOffset);
+            const rLine = resultLine.slice(commentEnd - currentOffset);
+
+            resultLine = lLine + rLine;
+
+            currentOffset += (commentEnd - commentStart);
+        }
+
+        return resultLine;
     }
 
     private isPositionInRanges(position: vscode.Position, ranges: vscode.Range[]): boolean {
