@@ -3,7 +3,6 @@ import { StringAwareParser as StringAwareParser } from './StringAwareParser';
 import { CommentAwareTextProcessor } from '../diagnostic/CommentAwareTextProcessor';
 
 export class CodeContextUtils {
-
     public static canSuggestElse(document: vscode.TextDocument, position: vscode.Position): boolean {
         let openBracesCount = 0;
         let closeBracesCount = 0;
@@ -86,110 +85,49 @@ export class CodeContextUtils {
 
 
     public static isInsideClass(document: vscode.TextDocument, position: vscode.Position): boolean {
-        let openBraces = 0;
-        let closeBraces = 0;
-
-        for (let i = position.line; i >= 0; i--) {
-            const lineText = document.lineAt(i).text;
-
-            closeBraces += (lineText.match(/\}/g) || []).length;
-            openBraces += (lineText.match(/\{/g) || []).length;
-
-            if (lineText.includes('class') && openBraces > closeBraces) {
-                return true;
-            }
-        }
-        return false;
+        return CodeContextUtils.isInside(document, position, 'class');
     }
 
     public static isInsideComponent(document: vscode.TextDocument, position: vscode.Position): boolean {
-        let openBraces = 0;
-        let closeBraces = 0;
-
-        for (let i = position.line; i >= 0; i--) {
-            const lineText = document.lineAt(i).text;
-
-            closeBraces += (lineText.match(/\}/g) || []).length;
-            openBraces += (lineText.match(/\{/g) || []).length;
-
-            if (lineText.includes('component') && openBraces > closeBraces) {
-                return true;
-            }
-        }
-        return false;
+        return CodeContextUtils.isInside(document, position, 'component');
     }
 
     public static isInsideExtension(document: vscode.TextDocument, position: vscode.Position): boolean {
-        let openBraces = 0;
-        let closeBraces = 0;
-
-        for (let i = position.line; i >= 0; i--) {
-            const lineText = document.lineAt(i).text;
-
-            closeBraces += (lineText.match(/\}/g) || []).length;
-            openBraces += (lineText.match(/\{/g) || []).length;
-
-            if (lineText.includes('extension') && openBraces > closeBraces) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static isInsideFunction(document: vscode.TextDocument, position: vscode.Position): boolean {
-        let openBraces = 0;
-        let closeBraces = 0;
-
-        for (let i = position.line; i >= 0; i--) {
-            const lineText = document.lineAt(i).text;
-
-            closeBraces += (lineText.match(/\}/g) || []).length;
-            openBraces += (lineText.match(/\{/g) || []).length;
-
-            if (lineText.includes('function') && openBraces > closeBraces) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static isInsideCoroutine(document: vscode.TextDocument, position: vscode.Position): boolean {
-        let openBraces = 0;
-        let closeBraces = 0;
-
-        for (let i = position.line; i >= 0; i--) {
-            const lineText = document.lineAt(i).text;
-
-            closeBraces += (lineText.match(/\}/g) || []).length;
-            openBraces += (lineText.match(/\{/g) || []).length;
-
-            if (lineText.includes('coroutine') && openBraces > closeBraces) {
-                return true;
-            }
-        }
-        return false;
+        return CodeContextUtils.isInside(document, position, 'extension');
     }
 
     public static isInsideCutscene(document: vscode.TextDocument, position: vscode.Position): boolean {
-        let openBraces = 0;
-        let closeBraces = 0;
+        return CodeContextUtils.isInside(document, position, 'cutscene');
+    }
 
-        for (let i = position.line; i >= 0; i--) {
-            const lineText = document.lineAt(i).text;
+    public static isInsideFunction(document: vscode.TextDocument, position: vscode.Position): boolean {
+        return CodeContextUtils.isInside(document, position, 'function');
+    }
 
-            closeBraces += (lineText.match(/\}/g) || []).length;
-            openBraces += (lineText.match(/\{/g) || []).length;
-
-            if (lineText.includes('cutscene') && openBraces > closeBraces) {
-                return true;
-            }
-        }
-        return false;
+    public static isInsideCoroutine(document: vscode.TextDocument, position: vscode.Position): boolean {
+        return CodeContextUtils.isInside(document, position, 'coroutine');
     }
 
     public static isDeclaringFunction(document: vscode.TextDocument, position: vscode.Position): boolean {
         const line = document.lineAt(position).text;
         return line.match(/\bfunction\s+$/) !== null;
+    }
+
+    private static isInside(document: vscode.TextDocument, position: vscode.Position, keyword: string): boolean {
+        let openBraces = 0;
+        let closeBraces = 0;
+
+        for (let i = position.line; i >= 0; i--) {
+            const lineText = document.lineAt(i).text;
+
+            closeBraces += (lineText.match(/\}/g) || []).length;
+            openBraces += (lineText.match(/\{/g) || []).length;
+
+            if (lineText.includes(keyword) && openBraces > closeBraces) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static isInsideComment(document: vscode.TextDocument, position: vscode.Position): boolean {
