@@ -1,232 +1,124 @@
 import * as vscode from 'vscode';
-import { IClass, IMethod } from '../classes/IClass';
-import { DiagnosticUtils } from './DiagnosticUtils';
+import { ClassKinds, FindConstructorInClassHierarchy, FindFieldInClassHierarchy, FindMethodInClassHierarchy, IClass, IField, IMethod } from '../classes/IClass';
+import { IValidator } from './DiagnosticManager';
+import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
+import { IChainNode } from '../antlr/ClassesParserVisitor';
 
-export class ClassUsageValidator {
-    private availableClasses: IClass[];
+export class ClassUsageValidator implements IValidator {
+    private documentTreeProvider: DocumentTreeProvider;
 
-    constructor(availableClasses: IClass[]) {
-        this.availableClasses = availableClasses;
+    constructor(documentTreeProvider: DocumentTreeProvider) {
+        this.documentTreeProvider = documentTreeProvider;
     }
 
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         const diagnostics: vscode.Diagnostic[] = [];
-        const text = document.getText();
-        const lines = text.split(/\r?\n/);
 
-        lines.forEach((line, index) => {
-            const trimmedLine = line.trim();
+        const availableClasses = this.documentTreeProvider.getAllAvailableClasses();
+        this.documentTreeProvider.getChains().forEach(chain => {
+            const firstLink = chain[0];
+            let currentClass: IClass | undefined = undefined;
+            let isStatic = false;
+            let selfCast = false;
 
-            const methodPattern = /^([A-Za-z0-9_]+)\.([A-Za-z0-9_]+)(?=\()/;
-            const fieldPattern = /^([A-Za-z0-9_]+)\.([A-Za-z0-9_]+)\b/;
+            if (firstLink.text === 'self') {
+                currentClass = this.documentTreeProvider.getCurrentClass(new vscode.Position(firstLink.startLine, firstLink.startColumn));
+                if (!currentClass) {
+                    diagnostics.push(this.createDiagnostic(firstLink, `'self' reference found but no class is associated in the current context. Report this to the developer.`));
+                    return;
+                }
 
-            const methodMatch = trimmedLine.match(methodPattern);
-            const fieldMatch = trimmedLine.match(fieldPattern);
+                selfCast = true;
+            } else if (firstLink.isMethodCall) {
+                const className = firstLink.text.split('(')[0];
+                currentClass = availableClasses.get(className);
 
-            if (methodMatch) {
-                const className = methodMatch[1];
-                const methodName = methodMatch[2];
-                const methodStart = methodMatch.index!;
-                const methodEnd = methodStart + methodMatch[0].length;
+                if (currentClass) {
+                    switch (currentClass.kind) {
+                        case ClassKinds.CUTSCENE:
+                            diagnostics.push(this.createDiagnostic(firstLink, `Cutscenes are not recommended for instantiation.`, vscode.DiagnosticSeverity.Warning));
+                            return;
+                        case ClassKinds.EXTENSION:
+                            diagnostics.push(this.createDiagnostic(firstLink, `Extensions are not recommended for instantiation.`));
+                            return;
+                    }
 
-                this.validateStaticMethodUsage(document, diagnostics, className, methodName, index, methodStart, methodEnd);
+                    const constructorMatch = FindConstructorInClassHierarchy(currentClass, firstLink.methodArguments!.length);
+                    if (!constructorMatch) {
+                        diagnostics.push(this.createDiagnostic(firstLink, `Constructor for class ${className} with ${firstLink.methodArguments!.length} arguments not found.`));
+                        return;
+                    }
+                } else {
+                    diagnostics.push(this.createDiagnostic(firstLink, `Class definition for '${className}' not found.`));
+                    return;
+                }
+            } else {
+                const className = firstLink.text;
+                currentClass = availableClasses.get(className);
+                if (currentClass) {
+                    isStatic = true;
+                }
             }
 
-            if (fieldMatch && !methodMatch) {
-                const className = fieldMatch[1];
-                const fieldName = fieldMatch[2];
-                const fieldStart = fieldMatch.index!;
-                const fieldEnd = fieldStart + fieldMatch[0].length;
+            if (!currentClass) {
+                // diagnostics.push(this.createDiagnostic(firstLink, `Class definition for '${firstLink.text}' not found.`));
+                return;
+            }
 
-                this.validateStaticFieldUsage(document, diagnostics, className, fieldName, index, fieldStart, fieldEnd);
+            for (let i = 1; i < chain.length; i++) {
+                const currentLink = chain[i];
+
+                let returnType = '';
+                if (currentLink.isMethodCall) {
+                    const methodName = currentLink.text.split('(')[0];
+                    let method: IMethod | null = null;
+
+                    if (selfCast) {
+                        method = FindMethodInClassHierarchy(currentClass!, methodName, currentLink.methodArguments!.length, true, true);
+                    } else {
+                        method = FindMethodInClassHierarchy(currentClass!, methodName, currentLink.methodArguments!.length, !isStatic, isStatic);
+                    }
+
+                    if (!method) {
+                        diagnostics.push(this.createDiagnostic(currentLink, `${selfCast ? 'Self' : (isStatic ? 'Static' : 'Instance')} method '${methodName}' with ${currentLink.methodArguments!.length} arguments not found in class '${currentClass?.name}'.`));
+                        break;
+                    }
+
+                    returnType = method.returnType;
+                } else {
+                    let field: IField | null = null;
+
+                    if (selfCast) {
+                        field = FindFieldInClassHierarchy(currentClass!, currentLink.text, true, true, true, true);
+                    } else {
+                        field = FindFieldInClassHierarchy(currentClass!, currentLink.text, !isStatic, isStatic, true, true);
+                    }
+
+                    if (!field) {
+                        diagnostics.push(this.createDiagnostic(currentLink, `${isStatic ? 'Static' : 'Instance'} field '${currentLink.text}' not found in class '${currentClass?.name}'.`));
+                        break;
+                    }
+
+                    returnType = field.type;
+                }
+                currentClass = availableClasses.get(returnType);
+                isStatic = false;
+                selfCast = false;
             }
         });
 
         return diagnostics;
     }
 
-    private validateStaticMethodUsage(
-        document: vscode.TextDocument,
-        diagnostics: vscode.Diagnostic[],
-        className: string,
-        methodName: string,
-        lineIndex: number,
-        methodStart: number,
-        methodEnd: number
-    ) {
-        const classDef = this.availableClasses.find(cls => cls.name === className);
-        if (!classDef) {
-            return;
-        }
-
-        const methodDef = classDef.staticMethods.find(method => method.label === methodName);
-        if (!methodDef) {
-            const line = document.lineAt(lineIndex).text;
-            const startPosition = line.indexOf(className);
-            const endPosition = line.indexOf(methodName) + methodName.length;
-
-            const range = new vscode.Range(
-                new vscode.Position(lineIndex, startPosition),
-                new vscode.Position(lineIndex, endPosition)
-            );
-            DiagnosticUtils.addDiagnostic(diagnostics, document, range, `Unknown method: ${methodName} in class ${className}`);
-        } else {
-            this.validateMethodArguments(document, diagnostics, methodDef, lineIndex, methodStart, methodEnd);
-        }
-    }
-
-    private validateMethodArguments(
-        document: vscode.TextDocument,
-        diagnostics: vscode.Diagnostic[],
-        methodDef: IMethod,
-        lineIndex: number,
-        methodStart: number,
-        methodEnd: number
-    ) {
-        const lineText = document.lineAt(lineIndex).text;
-        const openParenIndex = lineText.indexOf('(', methodEnd);
-
-        if (openParenIndex === -1) {
-            return;
-        }
-
-        const closeParenIndex = this.findMatchingParenIndex(lineText, openParenIndex);
-
-        if (closeParenIndex === -1) {
-            return;
-        }
-
-        const argsString = lineText.substring(openParenIndex + 1, closeParenIndex).trim();
-        const args = this.parseArguments(argsString);
-
-        const requiredParamsCount = methodDef.parameters.filter(
-            (param) => !param.isOptional && !param.isVariadic
-        ).length;
-        const hasVariadic = methodDef.parameters.some((param) => param.isVariadic);
-        const optionalsCount = methodDef.parameters.filter((param) => param.isOptional).length;
-        const maxParamsCount = hasVariadic ? Infinity : requiredParamsCount + optionalsCount;
-
-        if (args.length < requiredParamsCount || args.length > maxParamsCount) {
-            const range = new vscode.Range(
-                new vscode.Position(lineIndex, openParenIndex),
-                new vscode.Position(lineIndex, closeParenIndex + 1)
-            );
-
-            let expectedArgsDescription: string;
-
-            if (hasVariadic) {
-                expectedArgsDescription = `${requiredParamsCount}+`;
-            } else if (optionalsCount > 0) {
-                expectedArgsDescription = `${requiredParamsCount} to ${maxParamsCount}`;
-            } else {
-                expectedArgsDescription = `${requiredParamsCount}`;
-            }
-
-            DiagnosticUtils.addDiagnostic(
-                diagnostics,
-                document,
-                range,
-                `Incorrect number of arguments for method ${methodDef.label}. Expected ${expectedArgsDescription} arguments, found ${args.length}.`
-            );
-        }
-    }
-
-    private findMatchingParenIndex(lineText: string, openParenIndex: number): number {
-        let depth = 1;
-        let insideString = false;
-        let stringChar = '';
-
-        for (let i = openParenIndex + 1; i < lineText.length; i++) {
-            const char = lineText[i];
-
-            if (insideString) {
-                if (char === stringChar && lineText[i - 1] !== '\\') {
-                    insideString = false;
-                }
-            } else {
-                if (char === '"' || char === "'") {
-                    insideString = true;
-                    stringChar = char;
-                } else if (char === '(') {
-                    depth++;
-                } else if (char === ')') {
-                    depth--;
-                    if (depth === 0) {
-                        return i;
-                    }
-                }
-            }
-        }
-        return -1;
-    }
-
-    private parseArguments(argsString: string): string[] {
-        const args: string[] = [];
-        let currentArg = '';
-        let insideString = false;
-        let stringChar = '';
-        let parenDepth = 0;
-
-        for (let i = 0; i < argsString.length; i++) {
-            const char = argsString[i];
-
-            if (insideString) {
-                currentArg += char;
-                if (char === stringChar && argsString[i - 1] !== '\\') {
-                    insideString = false;
-                }
-            } else {
-                if (char === '"' || char === "'") {
-                    insideString = true;
-                    stringChar = char;
-                    currentArg += char;
-                } else if (char === '(') {
-                    parenDepth++;
-                    currentArg += char;
-                } else if (char === ')') {
-                    parenDepth--;
-                    currentArg += char;
-                } else if (char === ',' && parenDepth === 0) {
-                    args.push(currentArg.trim());
-                    currentArg = '';
-                } else {
-                    currentArg += char;
-                }
-            }
-        }
-
-        if (currentArg.trim().length > 0) {
-            args.push(currentArg.trim());
-        }
-
-        return args;
-    }
-
-    private validateStaticFieldUsage(
-        document: vscode.TextDocument,
-        diagnostics: vscode.Diagnostic[],
-        className: string,
-        fieldName: string,
-        lineIndex: number,
-        fieldStart: number,
-        fieldEnd: number
-    ) {
-        const classDef = this.availableClasses.find(cls => cls.name === className);
-        if (!classDef) {
-            return;
-        }
-
-        const fieldDef = classDef.staticFields.find(field => field.label === fieldName);
-        if (!fieldDef) {
-            const line = document.lineAt(lineIndex).text;
-            const startPosition = line.indexOf(className);
-            const endPosition = line.indexOf(fieldName) + fieldName.length;
-
-            const range = new vscode.Range(
-                new vscode.Position(lineIndex, startPosition),
-                new vscode.Position(lineIndex, endPosition)
-            );
-            DiagnosticUtils.addDiagnostic(diagnostics, document, range, `Unknown field: ${fieldName} in class ${className}`);
-        }
+    private createDiagnostic(link: IChainNode, message: string, severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error): vscode.Diagnostic {
+        const range = new vscode.Range(
+            new vscode.Position(link.startLine - 1, link.startColumn),
+            new vscode.Position(link.startLine - 1, link.startColumn + link.text.length)
+        );
+        return new vscode.Diagnostic(
+            range,
+            message,
+            severity
+        );
     }
 }

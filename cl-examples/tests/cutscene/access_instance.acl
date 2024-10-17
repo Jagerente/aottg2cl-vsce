@@ -1,0 +1,29 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Instance access in cutscene");
+
+        cinematic = Cinematic();
+
+        Game.Print("[MAIN] Public field: " + cinematic.PublicField);
+        Game.Print("[MAIN] Trying to access private field:");
+        Game.Print("[MAIN] Private field: " + cinematic._privateField);
+
+        cinematic.PublicField = "Main updated public value";
+        cinematic._privateField = "Main updated private value";
+
+        cinematic.LogMethod();
+    }
+}
+
+cutscene Cinematic {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function LogMethod()
+    {
+        Game.Print("[CUTSCENE Cinematic] LogMethod called");
+    }
+}
+

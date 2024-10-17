@@ -1,0 +1,27 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Instance access in extension");
+
+        alpha = Alpha();
+        Game.Print("[MAIN] Public field: " + alpha.PublicField);
+        Game.Print("[MAIN] Trying to access private field:");
+        Game.Print("[MAIN] Private field: " + alpha._privateField);
+
+        alpha.PublicField = "Main updated public value";
+        alpha._privateField = "Main updated private value";
+
+        alpha.T();
+    }
+}
+
+extension Alpha {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function T()
+    {
+        Game.Print("[EXTENSION Alpha] LogMethod called");
+    }
+}

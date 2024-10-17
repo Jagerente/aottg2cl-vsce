@@ -1,0 +1,29 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Static access in class");
+
+        Game.Print("[MAIN] Public field (before change): " + TestClass.PublicField); # PROHIBITED
+        Game.Print("[MAIN] Trying to access private field:");
+        Game.Print("[MAIN] Private field (before change): " + TestClass._privateField); # PROHIBITED
+
+        TestClass.PublicField = "Updated public value from Main"; # PROHIBITED
+        TestClass._privateField = "Updated private value from Main"; # PROHIBITED
+
+        Game.Print("[MAIN] Public field (after change): " + TestClass.PublicField); # PROHIBITED
+        Game.Print("[MAIN] Private field (after change): " + TestClass._privateField); # PROHIBITED
+
+        TestClass.LogMethod(); # PROHIBITED
+    }
+}
+
+class TestClass {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function LogMethod()
+    {
+        Game.Print("[CLASS TestClass] LogMethod called.");
+    }
+}

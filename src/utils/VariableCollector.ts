@@ -1,19 +1,26 @@
 import * as vscode from 'vscode';
-import { IClass } from '../classes/IClass';
+import { IClass, IVariable } from '../classes/IClass';
 import { CodeContextUtils } from './CodeContextUtils';
+import { DocumentTreeProvider } from './DocumentTreeProvider';
 
 export class VariableCollector {
-    public static collectAvailableVariables(
+    private documentTreeProvider: DocumentTreeProvider;
+
+    constructor(documentTreeProvider: DocumentTreeProvider) {
+        this.documentTreeProvider = documentTreeProvider;
+    }
+
+    public collectAvailableVariables(
         document: vscode.TextDocument,
         position: vscode.Position,
-        availableClasses: Map<string, IClass>
-    ): Map<string, { type: string, value: string }> {
+    ): Map<string, IVariable> {
+        const availableClasses = this.documentTreeProvider.getAllAvailableClasses();
         const text = document.getText();
         const lines = text.split(/\r?\n/);
 
-        const variables = new Map<string, { type: string, value: string }>();
-        const scopeStack: Array<Map<string, { type: string, value: string }>> = [];
-        let currentScopeVars = new Map<string, { type: string, value: string }>();
+        const variables = new Map<string, IVariable>();
+        const scopeStack: Array<Map<string, IVariable>> = [];
+        let currentScopeVars = new Map<string, IVariable>();
 
         let braceDepth = 0;
         let contextStartLine = CodeContextUtils.findContextStartLine(document, position);
@@ -34,7 +41,7 @@ export class VariableCollector {
 
             if (openBraces > 0) {
                 scopeStack.push(currentScopeVars);
-                currentScopeVars = new Map<string, { type: string, value: string }>();
+                currentScopeVars = new Map<string, IVariable>();
             }
 
             this.collectVariablesFromLine(line, currentScopeVars, availableClasses, currentClass);
@@ -48,12 +55,19 @@ export class VariableCollector {
             }
         }
 
+        const currentMethod = this.documentTreeProvider.getCurrentMethod(position);
+        if (currentMethod) {
+            currentMethod.parameters.forEach(param => {
+                currentScopeVars.set(param.name, { name: param.name, type: param.type, value: 'unknown' });
+            });
+        }
+
         return currentScopeVars;
     }
 
-    private static collectVariablesFromLine(
+    private collectVariablesFromLine(
         line: string,
-        variables: Map<string, { type: string, value: string }>,
+        variables: Map<string, IVariable>,
         availableClasses: Map<string, IClass>,
         currentClass: IClass
     ): void {
@@ -63,15 +77,15 @@ export class VariableCollector {
             const variableValue = variableMatch[2].trim().replace(/;$/, '');
 
             const inferredType = this.inferType(variableValue, availableClasses, currentClass, variables);
-            variables.set(variableName, { type: inferredType, value: variableValue });
+            variables.set(variableName, { name: variableName, type: inferredType, value: variableValue });
         }
     }
 
-    private static inferType(
+    private inferType(
         value: string,
         availableClasses: Map<string, IClass>,
         currentClass?: IClass,
-        currentScopeVars?: Map<string, { type: string, value: string }>
+        currentScopeVars?: Map<string, IVariable>
     ): string {
         value = value.trim();
 
@@ -118,10 +132,10 @@ export class VariableCollector {
         return 'any';
     }
 
-    private static resolveChainType(
+    private resolveChainType(
         identifierChain: string[],
         availableClasses: Map<string, IClass>,
-        currentScopeVars?: Map<string, { type: string, value: string }>
+        currentScopeVars?: Map<string, IVariable>
     ): string {
         let currentType: string | undefined;
 
@@ -145,7 +159,7 @@ export class VariableCollector {
 
                 if (field) {
                     currentType = field.type;
-                    continue
+                    continue;
                 }
 
                 if (/^\s*\w+\s*\(.*\)\s*$/.test(identifier)) {

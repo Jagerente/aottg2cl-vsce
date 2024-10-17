@@ -1,132 +1,453 @@
+import * as vscode from 'vscode';
 import { ACLVisitor } from './ACLVisitor';
 import {
     ClassDeclContext,
     MethodDeclContext,
     VariableDeclContext,
-    ParamListContext
+    PostfixExpressionContext,
+    MethodCallContext,
+    FieldAccessContext,
+    WhileLoopContext,
+    ForLoopContext,
+    IfStatementContext,
+    ElifStatementContext,
+    ElseStatementContext
 } from './ACLParser';
-
 import {
     IClass,
     IMethod,
     IField,
     IParameter,
     ClassKinds,
-    MethodKinds
+    MethodKinds,
+    FindMethodInClassParentsHierarchy
 } from '../classes/IClass';
+import { BaseMainClass } from '../classes/BaseMainClass';
+import { BaseComponentsClass } from '../classes/BaseComponentsClass';
+import { BaseInstantiatableClass } from '../classes/BaseInstantiatableClass';
 
-export class ClassesParserVisitor extends ACLVisitor<IClass[]> {
-    public classes: IClass[] = [];
+export interface IChainNode {
+    text: string;
+    startLine: number;
+    startColumn: number;
+    isMethodCall: boolean;
+    methodArguments?: string[];
+}
+
+export interface ILoopNode {
+    conditionsRange: vscode.Range;
+    bodyRange: vscode.Range;
+}
+
+export interface IConditionNode {
+    type: string;
+    conditionRange?: vscode.Range;
+    bodyRange: vscode.Range;
+    afterBlockRange: vscode.Range;
+}
+
+export class ClassesParserVisitor extends ACLVisitor<void> {
+    public classes: Map<string, IClass> = new Map();
     private currentClass: IClass | null = null;
     private currentMethod: IMethod | null = null;
+    private currentChain: IChainNode[] = [];
+    private chainStack: IChainNode[][] = [];
+    public chains: IChainNode[][] = [];
+    public loopNodes: ILoopNode[] = [];
+    public conditionNodes: IConditionNode[] = [];
 
-    public visitClassDecl = (ctx: ClassDeclContext): IClass[] => {
+    public visitClassDecl = (ctx: ClassDeclContext): void => {
         this.currentMethod = null;
-        let kind = ClassKinds.CLASS;
-        if (ctx.EXTENSION()) {
-            kind = ClassKinds.EXTENSION;
-        } else if (ctx.COMPONENT()) {
-            kind = ClassKinds.COMPONENT;
-        } else if (ctx.CUTSCENE()) {
-            kind = ClassKinds.CUTSCENE;
-        }
+
         const className = ctx.ID().getText();
+        let classKind = ClassKinds.CLASS;
+        let extendsList: IClass[] = [];
+        let classDescription = '';
+
+        if (ctx.CLASS()) {
+            classKind = ClassKinds.CLASS;
+            // if (className === 'Main') {
+            extendsList = [new BaseMainClass(className)];
+            // }
+        } else if (ctx.COMPONENT()) {
+            classKind = ClassKinds.COMPONENT;
+            extendsList = [new BaseComponentsClass(className)];
+            classDescription = 'Represents a component script attached to a MapObject.';
+        } else if (ctx.EXTENSION()) {
+            classKind = ClassKinds.EXTENSION;
+            extendsList = [new BaseInstantiatableClass(className)];
+        } else if (ctx.CUTSCENE()) {
+            classKind = ClassKinds.CUTSCENE;
+            extendsList = [new BaseInstantiatableClass(className)];
+        }
+
+        const declarationRange: vscode.Range = this.getClassDeclarationRange(ctx);
+        const bodyRange = this.getClassBodyRange(ctx);
+
         this.currentClass = {
-            kind: kind,
+            kind: classKind,
             name: className,
-            description: '',
+            description: classDescription,
+            extends: extendsList,
             staticFields: [],
             staticMethods: [],
             instanceFields: [],
             instanceMethods: [],
+            declarationRange: declarationRange,
+            bodyRange: bodyRange,
         };
-        this.classes.push(this.currentClass);
+
+        this.classes.set(this.currentClass.name, this.currentClass);
         this.visitChildren(ctx);
-        return this.classes;
-    }
+    };
 
-    public visitMethodDecl = (ctx: MethodDeclContext): IClass[] => {
+    public visitMethodDecl = (ctx: MethodDeclContext): void => {
         const methodName = ctx.ID().getText();
-        let methodKind: MethodKinds = MethodKinds.FUNCTION;
 
-        if (ctx.FUNCTION()) {
-            methodKind = MethodKinds.FUNCTION;
-        } else if (ctx.COROUTINE()) {
+        const declarationRange: vscode.Range = this.getMethodDeclarationRange(ctx);
+        const bodyRange = this.getMethodBodyRange(ctx);
+
+        let methodKind: MethodKinds = MethodKinds.FUNCTION;
+        if (ctx.COROUTINE()) {
             methodKind = MethodKinds.COROUTINE;
         }
 
         if (this.currentClass) {
             const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
+            const parametersList: string[] = ctx.paramList()?.ID().map(id => id.getText()) || [];
+            let parameters: IParameter[] = parametersList.map(param => ({
+                name: param,
+                type: 'any',
+                description: ''
+            }));
+            let returnType = 'void';
+            let description = '';
+            const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
+            if (parentMethod) {
+                returnType = parentMethod.returnType;
+                description = parentMethod.description;
+                parameters = parentMethod.parameters;
+            }
+
             const method: IMethod = {
                 label: methodName,
                 kind: methodKind,
-                returnType: 'void',
-                description: '',
-                parameters: [],
+                returnType: returnType,
+                description: description,
+                parameters: parameters,
+                declarationRange: declarationRange,
+                bodyRange: bodyRange
             };
             this.currentMethod = method;
 
-            if (isStatic) {
-                this.currentClass.staticMethods.push(method);
+            if (methodName === 'Init' && (this.currentClass.kind === ClassKinds.CLASS || this.currentClass.kind === ClassKinds.COMPONENT)) {
+                this.currentClass.constructors = this.currentClass.constructors || [];
+                method.returnType = this.currentClass.name;
+                this.currentClass.constructors.push(method);
             } else {
-                this.currentClass.instanceMethods.push(method);
+                if (isStatic) {
+                    this.currentClass.staticMethods.push(method);
+                } else {
+                    this.currentClass.instanceMethods.push(method);
+                }
             }
         }
 
         this.visitChildren(ctx);
 
         this.currentMethod = null;
+    };
 
-        return this.classes;
-    }
-
-    public visitParamList = (ctx: ParamListContext): IClass[] => {
+    public visitVariableDecl = (ctx: VariableDeclContext): void => {
         if (this.currentMethod) {
-            for (const idCtx of ctx.ID()) {
-                const paramName = idCtx.getText();
-                const parameter: IParameter = {
-                    name: paramName,
-                    type: 'any',
-                    description: '',
-                };
-                this.currentMethod.parameters.push(parameter);
-            }
-        }
-        return this.classes;
-    }
-
-    public visitVariableDecl = (ctx: VariableDeclContext): IClass[] => {
-        const id = ctx.ID();
-        if (id === null) {
             this.visitChildren(ctx);
-            return this.classes;
+            return;
         }
 
-        const variableName = id.getText();
-        const isPrivate = variableName.startsWith('_');
-        const isStatic = this.currentClass?.kind === ClassKinds.EXTENSION;
-        const field: IField = {
-            label: variableName,
-            type: 'unknown',
-            description: '',
-            private: isPrivate,
-        };
+        if (this.currentClass) {
+            const fieldName = ctx.ID()?.getText();
+            if (!fieldName) {
+                this.visitChildren(ctx);
+                return;
+            }
 
-        if (this.currentClass && !this.currentMethod) {
+            const fieldType = 'any';
+            const description = '';
+
+            const field: IField = {
+                label: fieldName,
+                type: fieldType,
+                description: description,
+                private: ctx.PRIVATE() !== undefined,
+            };
+
+            const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
             if (isStatic) {
                 this.currentClass.staticFields.push(field);
             } else {
                 this.currentClass.instanceFields.push(field);
             }
-        } else if (this.currentMethod) {
-            // TODO:
         }
 
         this.visitChildren(ctx);
+    };
+
+    public visitPostfixExpression = (ctx: PostfixExpressionContext): void => {
+        this.chainStack.push([...this.currentChain]);
+        this.currentChain = [];
+
+        if (!ctx.primaryExpression().methodCall()) {
+            const primaryExpr = ctx.primaryExpression().getText();
+            const startToken = ctx.primaryExpression().start;
+            const startLine = startToken!.line;
+            const startColumn = startToken!.column;
+
+            this.currentChain.push({
+                text: primaryExpr,
+                startLine,
+                startColumn,
+                isMethodCall: false,
+            });
+        }
+
+        this.visitChildren(ctx);
+
+        if (this.currentChain.length > 1 || this.currentChain.length === 1 && this.currentChain[0].isMethodCall) {
+            this.chains.push(this.currentChain);
+        }
+
+        this.currentChain = this.chainStack.pop() || [];
+    };
+
+    public visitMethodCall = (ctx: MethodCallContext): void => {
+        const methodName = ctx.ID()!.getText();
+        const argumentList = ctx.argumentList()?.expression().map(expr => expr.getText()) || [];
+        const startToken = ctx.start;
+        const startLine = startToken!.line;
+        const startColumn = startToken!.column + (ctx.DOT() ? 1 : 0);
+
+        this.currentChain.push({
+            text: `${methodName}(${argumentList.join(', ')})`,
+            startLine,
+            startColumn,
+            isMethodCall: true,
+            methodArguments: argumentList,
+        });
+
+        this.visitChildren(ctx);
+    };
+
+    public visitFieldAccess = (ctx: FieldAccessContext): void => {
+        const fieldName = ctx.ID().getText();
+        const startToken = ctx.start;
+        const startLine = startToken!.line;
+        const startColumn = startToken!.column + 1;
+
+        this.currentChain.push({
+            text: fieldName,
+            startLine,
+            startColumn,
+            isMethodCall: false,
+        });
+
+        this.visitChildren(ctx);
+    };
+
+    public visitWhileLoop = (ctx: WhileLoopContext): void => {
+        let conditionRange: vscode.Range = this.getWhileConditionRange(ctx);
+        let bodyRange: vscode.Range = this.getWhileBodyRange(ctx);
+        this.loopNodes.push({
+            conditionsRange: conditionRange,
+            bodyRange: bodyRange,
+        });
+
+        this.visitChildren(ctx);
+    };
+
+    public visitForLoop = (ctx: ForLoopContext): void => {
+        let conditionRange: vscode.Range = this.getForConditionRange(ctx);
+        let bodyRange: vscode.Range = this.getForBodyRange(ctx);
+        this.loopNodes.push({
+            conditionsRange: conditionRange,
+            bodyRange: bodyRange,
+        });
+
+        this.visitChildren(ctx);
+    };
+
+    public visitIfStatement = (ctx: IfStatementContext): void => {
+        const afterBlockRange = this.getRangeAfterConditionBlock(ctx);
+        this.conditionNodes.push({
+            type: 'if',
+            conditionRange: this.getConditionRange(ctx),
+            bodyRange: this.getConditionBodyRange(ctx),
+            afterBlockRange: afterBlockRange,
+        });
+
+        this.visitChildren(ctx);
+    };
+
+    public visitElifStatement = (ctx: ElifStatementContext): void => {
+        const afterBlockRange = this.getRangeAfterConditionBlock(ctx);
+        this.conditionNodes.push({
+            type: 'elif',
+            conditionRange: this.getConditionRange(ctx),
+            bodyRange: this.getConditionBodyRange(ctx),
+            afterBlockRange: afterBlockRange,
+        });
+
+        this.visitChildren(ctx);
+    };
+
+    public visitElseStatement = (ctx: ElseStatementContext): void => {
+        const afterBlockRange = this.getRangeAfterConditionBlock(ctx);
+        this.conditionNodes.push({
+            type: 'else',
+            bodyRange: this.getConditionBodyRange(ctx),
+            afterBlockRange: afterBlockRange,
+        });
+
+        this.visitChildren(ctx);
+    };
+
+    public getParsedClasses(): Map<string, IClass> {
         return this.classes;
     }
 
-    public getParsedClasses(): IClass[] {
-        return this.classes;
+    public getParsedChains(): IChainNode[][] {
+        return this.chains;
+    }
+
+    public getParsedLoopNodes(): ILoopNode[] {
+        return this.loopNodes;
+    }
+
+    public getParsedConditionNodes(): IConditionNode[] {
+        return this.conditionNodes;
+    }
+
+    private getClassDeclarationRange(ctx: ClassDeclContext): vscode.Range {
+        const startLine = ctx.start!.line - 1;
+        const startChar = ctx.start!.column;
+        const endLine = ctx.ID().symbol.line - 1;
+        const endChar = ctx.ID().symbol.column + ctx.ID().symbol.text!.length;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getClassBodyRange(ctx: ClassDeclContext): vscode.Range {
+        const startLine = ctx.LBRACE().symbol.line;
+        const startChar = ctx.LBRACE().symbol.column;
+        const endLine = ctx.RBRACE().symbol.line;
+        const endChar = ctx.RBRACE().symbol.column;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getMethodDeclarationRange(ctx: MethodDeclContext): vscode.Range {
+        const startLine = ctx.start!.line - 1;
+        const startChar = ctx.start!.column;
+        const endLine = ctx.RPAREN().symbol.line - 1;
+        const endChar = ctx.RPAREN().symbol.column;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getMethodBodyRange(ctx: MethodDeclContext): vscode.Range {
+        const startLine = ctx.block().start!.line - 1;
+        const startChar = ctx.block().start!.column;
+        const endLine = ctx.block().stop!.line - 1;
+        const endChar = ctx.block().stop!.column;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getWhileConditionRange(ctx: WhileLoopContext): vscode.Range {
+        const startLine = ctx.LPAREN().symbol.line - 1;
+        const startChar = ctx.LPAREN().symbol.column;
+        const endLine = ctx.RPAREN().symbol.line - 1;
+        const endChar = ctx.RPAREN().symbol.column;
+
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getWhileBodyRange(ctx: WhileLoopContext): vscode.Range {
+        const startLine = ctx.block().start!.line - 1;
+        const startChar = ctx.block().start!.column;
+        const endLine = ctx.block().stop!.line - 1;
+        const endChar = ctx.block().stop!.column;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getForConditionRange(ctx: ForLoopContext): vscode.Range {
+        const startLine = ctx.LPAREN().symbol.line - 1;
+        const startChar = ctx.LPAREN().symbol.column;
+        const endLine = ctx.RPAREN().symbol.line - 1;
+        const endChar = ctx.RPAREN().symbol.column;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getForBodyRange(ctx: ForLoopContext): vscode.Range {
+        const startLine = ctx.block().start!.line - 1;
+        const startChar = ctx.block().start!.column;
+        const endLine = ctx.block().stop!.line - 1;
+        const endChar = ctx.block().stop!.column;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getConditionRange(ctx: IfStatementContext | ElifStatementContext): vscode.Range {
+        const startLine = ctx.LPAREN().symbol.line - 1;
+        const startChar = ctx.LPAREN().symbol.column;
+        const endLine = ctx.RPAREN().symbol.line - 1;
+        const endChar = ctx.RPAREN().symbol.column;
+
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getConditionBodyRange(ctx: IfStatementContext | ElifStatementContext | ElseStatementContext): vscode.Range {
+        const startLine = ctx.block().start!.line - 1;
+        const startChar = ctx.block().start!.column;
+        const endLine = ctx.block().stop!.line - 1;
+        const endChar = ctx.block().stop!.column;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getRangeAfterConditionBlock(ctx: IfStatementContext | ElifStatementContext | ElseStatementContext): vscode.Range {
+        const blockEndLine = ctx.block().stop!.line - 1;
+        const blockEndChar = ctx.block().stop!.column;
+
+        const nextStatementStartLine = blockEndLine + 1;
+        const nextStatementStartChar = blockEndChar + 1;
+
+        return new vscode.Range(
+            new vscode.Position(blockEndLine, blockEndChar),
+            new vscode.Position(nextStatementStartLine, nextStatementStartChar)
+        );
     }
 }

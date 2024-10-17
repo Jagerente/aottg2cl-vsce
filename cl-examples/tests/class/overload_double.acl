@@ -1,0 +1,35 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Instance creation with double overload in class");
+
+        testClassInstance1 = TestClass(100);
+        testClassInstance2 = TestClass(200, "Overloaded");
+
+        testClassInstance1.LogMethod();
+        testClassInstance2.LogMethod();
+    }
+}
+
+class TestClass {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function Init(foo)
+    {
+        self.PublicField = foo;
+    }
+
+    function Init(foo, bar) # Multiple ctors are not allowed
+    {
+        self.PublicField = foo;
+        self._privateField = bar;
+    }
+
+    function LogMethod()
+    {
+        Game.Print(self.PublicField);
+        Game.Print(self._privateField);
+    }
+}

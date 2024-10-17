@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { DiagnosticUtils } from './DiagnosticUtils';
-
 import { CommentAwareTextProcessor } from './CommentAwareTextProcessor';
+import { IValidator } from './DiagnosticManager';
 
-export class IncompleteMemberAccessValidator {
-    public static validate(document: vscode.TextDocument): vscode.Diagnostic[] {
+export class IncompleteMemberAccessValidator implements IValidator {
+    public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         const diagnostics: vscode.Diagnostic[] = [];
         const processor = new CommentAwareTextProcessor(document);
 

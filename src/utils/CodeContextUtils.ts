@@ -2,6 +2,69 @@ import * as vscode from 'vscode';
 import { StringAwareParser as StringAwareParser } from './StringAwareParser';
 import { CommentAwareTextProcessor } from '../diagnostic/CommentAwareTextProcessor';
 
+/**
+ * Matches any class definition (class, component, extension, cutscene).
+ * 
+ * @example
+ * 'class MyClass' -> ['class MyClass', 'class', 'MyClass']
+ * 'component MyComponent' -> ['component MyComponent', 'component', 'MyComponent']
+ * 
+ * @returns
+ *  - [0]: the full match (e.g., 'class MyClass')
+ *  - [1]: the type of class (e.g., 'class', 'component', 'extension', or 'cutscene')
+ *  - [2]: the name of the class (e.g., 'MyClass', 'MyComponent')
+ */
+export const REGEX_ANY_CLASS = /\b(class|component|extension|cutscene)\s+(\w+)/;
+
+/**
+ * Matches class definitions.
+ * 
+ * @example
+ * 'class MyClass' -> ['class MyClass', 'MyClass']
+ * 
+ * @returns
+ *  - [0]: the full match (e.g., 'class MyClass')
+ *  - [1]: the name of the class (e.g., 'MyClass')
+ */
+export const REGEX_CLASS = /\bclass\s+(\w+)/;
+
+/**
+ * Matches component definitions.
+ * 
+ * @example
+ * 'component MyComponent' -> ['component MyComponent', 'MyComponent']
+ * 
+ * @returns
+ *  - [0]: the full match (e.g., 'component MyComponent')
+ *  - [1]: the name of the component (e.g., 'MyComponent')
+ */
+export const REGEX_COMPONENT = /\bcomponent\s+(\w+)/;
+
+/**
+ * Matches extension definitions.
+ * 
+ * @example
+ * 'extension MyExtension' -> ['extension MyExtension', 'MyExtension']
+ * 
+ * @returns
+ *  - [0]: the full match (e.g., 'extension MyExtension')
+ *  - [1]: the name of the extension (e.g., 'MyExtension')
+ */
+export const REGEX_EXTENSION = /\bextension\s+(\w+)/;
+
+/**
+ * Matches cutscene definitions.
+ * 
+ * @example
+ * 'cutscene MyCutscene' -> ['cutscene MyCutscene', 'MyCutscene']
+ * 
+ * @returns
+ *  - [0]: the full match (e.g., 'cutscene MyCutscene')
+ *  - [1]: the name of the cutscene (e.g., 'MyCutscene')
+ */
+export const REGEX_CUTSCENE = /\bcutscene\s+(\w+)/;
+
+
 export class CodeContextUtils {
     public static canSuggestElse(document: vscode.TextDocument, position: vscode.Position): boolean {
         let openBracesCount = 0;
@@ -12,16 +75,18 @@ export class CodeContextUtils {
         for (let i = position.line - 1; i >= 0; i--) {
             const lineText = document.lineAt(i).text.trim();
 
-            if (lineText === '' || lineText === '{' || lineText === '}') continue;
+            if (lineText === '' || lineText === '{' || lineText === '}') {
+                continue;
+            }
 
-            if (lineText.startsWith('if') || lineText.startsWith('elif')) {
+            if (lineText.startsWith('if ') || lineText.startsWith('elif ')) {
                 hasIf = true;
                 if (openBracesCount === closeBracesCount) {
                     return true;
                 }
             }
 
-            if (lineText.startsWith('else')) {
+            if (lineText.startsWith('else ')) {
                 hasElse = true;
                 if (openBracesCount === closeBracesCount) {
                     return false;
@@ -31,7 +96,14 @@ export class CodeContextUtils {
             closeBracesCount += (lineText.match(/\}/g) || []).length;
             openBracesCount += (lineText.match(/\{/g) || []).length;
 
-            if (lineText.startsWith('for') || lineText.startsWith('while') || lineText.startsWith('function') || lineText.startsWith('coroutine') || lineText.startsWith('cutscene') || lineText.startsWith('class') || lineText.startsWith('component') || lineText.startsWith('component')) {
+            if (lineText.startsWith('for ')
+                || lineText.startsWith('while ')
+                || lineText.startsWith('function ')
+                || lineText.startsWith('coroutine ')
+                || lineText.startsWith('cutscene ')
+                || lineText.startsWith('class ')
+                || lineText.startsWith('component ')
+                || lineText.startsWith('extensions ')) {
                 return false;
             }
         }
@@ -58,10 +130,10 @@ export class CodeContextUtils {
             }
 
             let resultLine = lineText.trim();
-            resultLine = stringAwareParser.parseLine(resultLine);  // Обрабатываем строку без строковых литералов
+            resultLine = stringAwareParser.parseLine(resultLine);
             resultLine = resultLine.trim();
 
-            if (resultLine.startsWith('for') || resultLine.startsWith('while')) {
+            if (resultLine.startsWith('for ') || resultLine.startsWith('while ')) {
                 if (openBracesCount > closeBracesCount) {
                     return true;
                 }
@@ -74,7 +146,14 @@ export class CodeContextUtils {
                 return false;
             }
 
-            if (resultLine.startsWith('function') || resultLine.startsWith('coroutine') || resultLine.startsWith('cutscene') || resultLine.startsWith('class') || resultLine.startsWith('component')) {
+            if (resultLine.startsWith('function ')
+                || resultLine.startsWith('coroutine ')
+                || resultLine.startsWith('cutscene ')
+                || resultLine.startsWith('class ')
+                || resultLine.startsWith('component ')
+                || resultLine.startsWith('extensions ')
+                || resultLine.startsWith('cutscene ')
+            ) {
                 return false;
             }
         }
@@ -110,7 +189,12 @@ export class CodeContextUtils {
 
     public static isDeclaringFunction(document: vscode.TextDocument, position: vscode.Position): boolean {
         const line = document.lineAt(position).text;
-        return line.match(/\bfunction\s+$/) !== null;
+        return line.trim().startsWith('function');
+    }
+
+    public static isDeclaringCoroutine(document: vscode.TextDocument, position: vscode.Position): boolean {
+        const line = document.lineAt(position).text;
+        return line.trim().startsWith('coroutine');
     }
 
     private static isInside(document: vscode.TextDocument, position: vscode.Position, keyword: string): boolean {
@@ -130,45 +214,6 @@ export class CodeContextUtils {
         return false;
     }
 
-    public static isInsideComment(document: vscode.TextDocument, position: vscode.Position): boolean {
-        const lineNumber = position.line;
-        const charIndex = position.character;
-
-        const lineText = document.lineAt(lineNumber).text;
-        const textBeforeCursor = lineText.substring(0, charIndex);
-
-        const hashIndex = textBeforeCursor.indexOf('#');
-        if (hashIndex !== -1) {
-            const lineUpToHash = textBeforeCursor.substring(0, hashIndex);
-            const doubleQuotes = (lineUpToHash.match(/"/g) || []).length;
-            if (doubleQuotes % 2 === 0) {
-                return true;
-            }
-        }
-
-        const textUpToPosition = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
-
-        const textWithoutStrings = textUpToPosition.replace(/"(?:\\.|[^"\\])*"/g, '');
-
-        const blockCommentStartRegex = /\/\*/g;
-        const blockCommentEndRegex = /\*\//g;
-
-        let blockCommentStarts = 0;
-        let blockCommentEnds = 0;
-
-        let match: RegExpExecArray | null;
-
-        while ((match = blockCommentStartRegex.exec(textWithoutStrings)) !== null) {
-            blockCommentStarts++;
-        }
-
-        while ((match = blockCommentEndRegex.exec(textWithoutStrings)) !== null) {
-            blockCommentEnds++;
-        }
-
-        return blockCommentStarts > blockCommentEnds;
-    }
-
     public static isInsideConditionDefinition(document: vscode.TextDocument, position: vscode.Position): boolean {
         let openParensCount = 0;
         let closeParensCount = 0;
@@ -177,7 +222,7 @@ export class CodeContextUtils {
         for (let i = position.line; i >= 0; i--) {
             const lineText = document.lineAt(i).text;
 
-            if (lineText.includes('if') || lineText.includes('elif')) {
+            if (lineText.includes('if ') || lineText.includes('elif ')) {
                 isInsideCondition = true;
             }
 
@@ -203,7 +248,7 @@ export class CodeContextUtils {
         for (let lineIndex = position.line; lineIndex >= 0; lineIndex--) {
             const line = lines[lineIndex].trim();
 
-            const classMatch = line.match(/^(class|component)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(\{)?\s*$/);
+            const classMatch = line.match(REGEX_ANY_CLASS);
             if (classMatch) {
                 return classMatch[2];
             }
@@ -221,7 +266,7 @@ export class CodeContextUtils {
 
         for (let lineIndex = position.line; lineIndex >= 0; lineIndex--) {
             const line = lines[lineIndex].trim();
-            if (/^\s*(function|coroutine|cutscene)\s+\w+\s*\(.*?\)\s*$/.test(line)) {
+            if (/^\s*(function|coroutine)\s+\w+\s*\(.*?\)\s*(\{)?\s*$/.test(line)) {
                 return lineIndex;
             }
         }
@@ -290,17 +335,7 @@ export class CodeContextUtils {
         let stringChar: string | null = null;
         let escape = false;
 
-        let lastDot = input.lastIndexOf('.');
-        if (lastDot === -1) {
-            return '';
-        }
-
-        const afterDot = input.slice(lastDot + 1).trim();
-        if (/\w/.test(afterDot)) {
-            return '';
-        }
-
-        for (let i = lastDot - 1; i >= 0; i--) {
+        for (let i = input.length - 1; i >= 0; i--) {
             const char = input[i];
 
             if (inString) {

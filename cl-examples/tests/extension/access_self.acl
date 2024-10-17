@@ -1,0 +1,23 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Self access in extension");
+        Alpha.T();
+    }
+}
+
+extension Alpha {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function T()
+    {
+        Game.Print("[EXTENSION Alpha] Private field: " + self._privateField);
+        Game.Print("[EXTENSION Alpha] Public field: " + self.PublicField);
+        self._privateField = "Updated private value";
+        self.PublicField = "Updated public value";
+        Game.Print("[EXTENSION Alpha] Updated private field: " + self._privateField);
+        Game.Print("[EXTENSION Alpha] Updated public field: " + self.PublicField);
+    }
+}

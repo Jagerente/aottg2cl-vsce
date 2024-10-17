@@ -1,3 +1,4 @@
+import { BaseInstantiatableClass } from './BaseInstantiatableClass';
 import { IClass, IMethod, ClassKinds, IField } from './IClass';
 
 export class BaseMainClass implements IClass {
@@ -13,14 +14,11 @@ export class BaseMainClass implements IClass {
 
     public instanceMethods: IMethod[] = [];
 
+    public extends?: IClass[] = [];
+
     constructor(initReturnType: string) {
+        this.extends = [new BaseInstantiatableClass(initReturnType)];
         this.instanceMethods = [
-            {
-                label: 'Init',
-                returnType: initReturnType,
-                description: 'Called upon class creation.',
-                parameters: []
-            },
             {
                 label: 'OnGameStart',
                 returnType: 'void',

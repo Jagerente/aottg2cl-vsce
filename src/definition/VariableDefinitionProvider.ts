@@ -17,7 +17,7 @@ export class VariableDefinitionProvider implements vscode.DefinitionProvider {
             }
         }
 
-        const methodRegex = new RegExp(`(function|coroutine|cutscene)\\s+(\\w+)\\s*\\(`, 'g');
+        const methodRegex = new RegExp(`(function|coroutine)\\s+(\\w+)\\s*\\(`, 'g');
 
         while ((match = methodRegex.exec(text)) !== null) {
             const methodName = match[2];
@@ -28,7 +28,7 @@ export class VariableDefinitionProvider implements vscode.DefinitionProvider {
             }
         }
 
-        const classRegex = new RegExp(`(class|component)\\s+(\\w+)`, 'g');
+        const classRegex = new RegExp(`(class|component|extension|cutscene)\\s+(\\w+)`, 'g');
 
         while ((match = classRegex.exec(text)) !== null) {
             const className = match[2];
