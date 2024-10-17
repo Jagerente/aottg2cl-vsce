@@ -3,11 +3,14 @@ import { IClass } from "../classes/IClass";
 import { CharStream, CommonTokenStream } from 'antlr4ng';
 import { ACLLexer } from './ACLLexer';
 import { ACLParser } from './ACLParser';
-import { ClassesParserVisitor } from './ClassesParserVisitor';
+import { ClassesParserVisitor, IChainNode, IConditionNode, ILoopNode } from './ClassesParserVisitor';
 import { ACLErrorListener, ANTLRError as ANTLRError } from './ACLErrorListener';
 
 export class ACLManager {
-    private classes: IClass[] = [];
+    private classes: Map<string, IClass> = new Map();
+    private chains: IChainNode[][] = [];
+    private loopNodes: ILoopNode[] = [];
+    private conditionNodes: IConditionNode[] = [];
     private errors: ANTLRError[] = [];
 
     private lexerErrorListener = new ACLErrorListener();
@@ -32,19 +35,37 @@ export class ACLManager {
         const visitor = new ClassesParserVisitor();
         visitor.visit(parser.program());
 
-        this.classes = visitor.getParsedClasses()
+        this.classes = visitor.getParsedClasses();
+        this.chains = visitor.getParsedChains();
+        this.loopNodes = visitor.getParsedLoopNodes();
+        this.conditionNodes = visitor.getParsedConditionNodes();
         this.errors = this.lexerErrorListener.errors.concat(this.parserErrorListener.errors);
     }
 
     public flush(): void {
-        this.classes = [];
+        this.classes = new Map();
+        this.chains = [];
+        this.loopNodes = [];
+        this.conditionNodes = [];
         this.errors = [];
         this.lexerErrorListener.flush();
         this.parserErrorListener.flush();
     }
 
-    public getClasses(): IClass[] {
+    public getClasses(): Map<string, IClass> {
         return this.classes;
+    }
+
+    public getChains(): IChainNode[][] {
+        return this.chains;
+    }
+
+    public getLoopNodes(): ILoopNode[] {
+        return this.loopNodes;
+    }
+
+    public getConditionNodes(): IConditionNode[] {
+        return this.conditionNodes;
     }
 
     public getErrors(): ANTLRError[] {

@@ -1,20 +1,26 @@
 import * as vscode from 'vscode';
-import { CodeContextUtils } from '../utils/CodeContextUtils';
+import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
+import { ClassKinds } from '../classes/IClass';
 
 export class KeywordCompletionProvider implements vscode.CompletionItemProvider, vscode.HoverProvider {
+    private documentTreeProvider: DocumentTreeProvider;
+
+    constructor(documentTreeProvider: DocumentTreeProvider) {
+        this.documentTreeProvider = documentTreeProvider;
+    }
 
     private keywords = [
-        { label: 'class', snippet: 'class $1 \n{\n\t$0\n}', description: 'Classes allow you to create modular pieces of code.' },
-        { label: 'component', snippet: 'component $1 \n{\n\t$0\n}', description: 'Components are a type of class that can be added to map objects.' },
-        { label: 'extension', snippet: 'extension $1 \n{\n\t$0\n}', description: 'Extensions allow you to create static classes for utility functions.' },
-        { label: 'function', snippet: 'function $1() \n{\n\t$0\n}', description: 'Functions are blocks of code that can be called.' },
-        { label: 'coroutine', snippet: 'coroutine $1() \n{\n\t$0\n}', description: 'Coroutines are like functions except run in the background, while normal functions will interrupt the game until the function is completed.' },
-        { label: 'cutscene', snippet: 'cutscene $1() \n{\n\tcoroutine Start() \n\t{\n\t\t$0\n\t}\n}', description: 'Cutscenes are a type of class that can be conveniently referenced using the Cutscene static class.' },
-        { label: 'if', snippet: 'if ($1) \n{\n\t$0\n}', description: 'If statement to execute code if a condition is true.' },
-        { label: 'else', snippet: 'else \n{\n\t$0\n}', description: 'Else statement to execute code if the "if" condition is false.' },
-        { label: 'elif', snippet: 'elif ($1) \n{\n\t$0\n}', description: 'Else if statement to execute code if the "if" condition is false.' },
-        { label: 'for', snippet: 'for ($1)\n{\n\t$0\n}', description: 'For loop to iterate a block of code.' },
-        { label: 'while', snippet: 'while ($1) \n{\n\t$0\n}', description: 'While loop to execute code as long as a condition is true.' },
+        { label: 'class', snippet: 'class $1\n{\n\t$0\n}', description: 'Classes allow you to create modular pieces of code.' },
+        { label: 'component', snippet: 'component $1\n{\n\t$0\n}', description: 'Components are a type of class that can be added to map objects.' },
+        { label: 'extension', snippet: 'extension $1\n{\n\t$0\n}', description: 'Extensions allow you to create static classes for utility functions.' },
+        { label: 'function', snippet: 'function $1()\n{\n\t$0\n}', description: 'Functions are blocks of code that can be called.' },
+        { label: 'coroutine', snippet: 'coroutine $1()\n{\n\t$0\n}', description: 'Coroutines are like functions except run in the background, while normal functions will interrupt the game until the function is completed.' },
+        { label: 'cutscene', snippet: 'cutscene $1\n{\n\tcoroutine Start()\n\t{\n\t\t$0\n\t}\n}', description: 'Cutscenes are a type of class that can be conveniently referenced using the Cutscene static class.' },
+        { label: 'if', snippet: 'if ($1)\n{\n\t$2\n}\n$0', description: 'If statement to execute code if a condition is true.' },
+        { label: 'else', snippet: 'else\n{\n\t$0\n}', description: 'Else statement to execute code if the "if" condition is false.' },
+        { label: 'elif', snippet: 'elif ($1)\n{\n\t$2\n}\n$0', description: 'Else if statement to execute code if the "if" condition is false.' },
+        { label: 'for', snippet: 'for ($1 in $2)\n{\n\t$0\n}', description: 'For loop to iterate a block of code.' },
+        { label: 'while', snippet: 'while ($1)\n{\n\t$0\n}', description: 'While loop to execute code as long as a condition is true.' },
         { label: 'break', snippet: 'break;$0', description: 'Breaks the current loop' },
         { label: 'continue', snippet: 'continue;$0', description: 'Skips to the next iteration of the loop' },
         { label: 'return', snippet: 'return$0;', description: 'Return statement to exit a function and return a value.' },
@@ -23,19 +29,16 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
     public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
         const items: vscode.CompletionItem[] = [];
 
-        const isInsideClass = CodeContextUtils.isInsideClass(document, position);
-        const isInsideComponent = CodeContextUtils.isInsideComponent(document, position);
-        const isInsideExtension = CodeContextUtils.isInsideExtension(document, position);
-        const isInsideCutscene = CodeContextUtils.isInsideCutscene(document, position);
+        const isInsideClass = this.documentTreeProvider.isInsideClassBody(position);
+        const isInsideComponent = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.COMPONENT);
+        const isInsideExtension = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.EXTENSION);
+        const isInsideCutscene = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.CUTSCENE);
         const isInsideAnyClass = isInsideClass || isInsideComponent || isInsideExtension || isInsideCutscene;
 
-        const isInsideFunction = CodeContextUtils.isInsideFunction(document, position);
-        const isInsideCoroutine = CodeContextUtils.isInsideCoroutine(document, position);
-        const isInsideAnyFunction = isInsideFunction || isInsideCoroutine || isInsideCutscene;
+        const isInsideAnyFunction = this.documentTreeProvider.isInsideAnyMethodBody(position);
 
-        const isInsideLoop = CodeContextUtils.isInsideLoop(document, position);
-
-        const canSuggestElse = CodeContextUtils.canSuggestElse(document, position);
+        const isInsideLoop = this.documentTreeProvider.isInsideLoopBody(position);
+        const canSuggestElif = this.documentTreeProvider.canSuggestElif(position);
 
         if (!isInsideAnyClass) {
             items.push(this.createCompletionItem('class'));
@@ -52,7 +55,7 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
         if (isInsideAnyFunction) {
             items.push(this.createCompletionItem('self'));
             items.push(this.createCompletionItem('if'));
-            if (canSuggestElse) {
+            if (canSuggestElif) {
                 items.push(this.createCompletionItem('else'));
                 items.push(this.createCompletionItem('elif'));
             }

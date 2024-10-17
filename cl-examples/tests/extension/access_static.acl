@@ -1,0 +1,23 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Static access in extension");
+
+        Game.Print("[MAIN] Public field: " + Alpha.PublicField);
+        Game.Print("[MAIN] Trying to access private field:");
+        Game.Print("[MAIN] Private field: " + Alpha._privateField);
+
+        Alpha.T();
+    }
+}
+
+extension Alpha {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function T()
+    {
+        Game.Print("[EXTENSION Alpha] Method T called");
+    }
+}

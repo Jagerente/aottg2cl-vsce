@@ -1,7 +1,6 @@
 import { CameraClassInstance } from "./CameraClass";
 import { CharacterClassInstance } from "./CharacterClass";
 import { ColorClassInstance } from "./ColorClass";
-import { ComponentClassInstance } from "./ComponentClass";
 import { ConvertClassInstance } from "./ConvertClass";
 import { CutsceneClassInstance } from "./CutsceneClass";
 import { DictClassInstance } from "./DictClass";
@@ -50,7 +49,6 @@ export const AvailableClasses: IClass[] = [
     PersistentDataClassInstance,
     JsonClassInstance,
     PhysicsClassInstance,
-    ComponentClassInstance,
     ObjectClassInstance,
     CharacterClassInstance,
     HumanClassInstance,
@@ -86,7 +84,6 @@ export const AvailableClassesMap: Map<string, IClass> = new Map([
     [PersistentDataClassInstance.name, PersistentDataClassInstance],
     [JsonClassInstance.name, JsonClassInstance],
     [PhysicsClassInstance.name, PhysicsClassInstance],
-    [ComponentClassInstance.name, ComponentClassInstance],
     [ObjectClassInstance.name, ObjectClassInstance],
     [CharacterClassInstance.name, CharacterClassInstance],
     [HumanClassInstance.name, HumanClassInstance],

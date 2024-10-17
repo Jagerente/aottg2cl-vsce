@@ -2,49 +2,61 @@ import * as vscode from 'vscode';
 import { KeywordCompletionProvider } from './completions/KeywordCompletionProvider';
 import { VariableCompletionProvider } from './completions/VariableCompletionProvider';
 import { MainFunctionsCompletionProvider } from './completions/MainFunctionsCompletionProvider';
-import { ClassUsageValidator } from './diagnostic/ClassUsageValidator';
-import { CustomClassValidator } from './diagnostic/CustomClassValidator';
 import { VariableDefinitionProvider } from './definition/VariableDefinitionProvider';
-import { IncompleteMemberAccessValidator } from './diagnostic/IncompleteMemberAccessValidator';
-import { AvailableClasses, AvailableClassesMap } from './classes/AvailableClasses';
+import { AvailableClassesMap } from './classes/AvailableClasses';
 import { ACLManager } from './antlr/ACLManager';
+import { DiagnosticManager } from './diagnostic/DiagnosticManager';
+import { DocumentTreeProvider } from './utils/DocumentTreeProvider';
+import { VariableCollector } from './utils/VariableCollector';
 
 export function activate(context: vscode.ExtensionContext) {
-	const keywordsProvider = new KeywordCompletionProvider();
-	const variablesProvider = new VariableCompletionProvider(AvailableClassesMap);
+	const aclManager = new ACLManager();
+	const documentTreeProvider = new DocumentTreeProvider(aclManager, AvailableClassesMap);
+	const variableCollector = new VariableCollector(documentTreeProvider);
+	const keywordsProvider = new KeywordCompletionProvider(documentTreeProvider);
+	const variablesProvider = new VariableCompletionProvider(documentTreeProvider, variableCollector);
+	const callbacksProvider = new MainFunctionsCompletionProvider(documentTreeProvider);
+	const variableDefinitionProvider = new VariableDefinitionProvider();
+	const diagnosticCollection = vscode.languages.createDiagnosticCollection('acl');
+	const diagnosticManager = new DiagnosticManager(diagnosticCollection, aclManager, documentTreeProvider);
+
 	context.subscriptions.push(
 		vscode.languages.registerCompletionItemProvider({ language: 'acl' }, variablesProvider, ' ', '.'),
-		vscode.languages.registerHoverProvider({ language: 'acl' }, variablesProvider),
-		vscode.languages.registerSignatureHelpProvider({ language: 'acl' }, variablesProvider, '(', ',', ' '),
 		vscode.languages.registerCompletionItemProvider({ language: 'acl' }, keywordsProvider, ' '),
-		vscode.languages.registerCompletionItemProvider({ language: 'acl' }, new MainFunctionsCompletionProvider(), ' '),
-		vscode.languages.registerHoverProvider({ language: 'acl' }, keywordsProvider)
+		vscode.languages.registerCompletionItemProvider({ language: 'acl' }, callbacksProvider, ' '),
+		vscode.languages.registerHoverProvider({ language: 'acl' }, variablesProvider),
+		vscode.languages.registerHoverProvider({ language: 'acl' }, keywordsProvider),
+		vscode.languages.registerSignatureHelpProvider({ language: 'acl' }, variablesProvider, '(', ',', ' '),
+		vscode.languages.registerDefinitionProvider({ language: 'acl' }, variableDefinitionProvider),
+		diagnosticCollection,
 	);
 
-	const diagnosticCollection = vscode.languages.createDiagnosticCollection('acl');
-	context.subscriptions.push(diagnosticCollection);
+	const refetchDocumentData = (document: vscode.TextDocument) => {
+		documentTreeProvider.refetchUserDefinedClasses(document);
+		diagnosticManager.validateDocument(document);
+	};
 
-	const antlrManager = new ACLManager();
-
-	vscode.workspace.onDidOpenTextDocument(doc => antlrManager.refetch(doc));
-	vscode.workspace.onDidChangeTextDocument(event => antlrManager.refetch(event.document));
-	vscode.workspace.onDidOpenTextDocument(doc => validateDocument(doc, diagnosticCollection, AvailableClasses));
-	vscode.workspace.onDidChangeTextDocument(event => validateDocument(event.document, diagnosticCollection, AvailableClasses));
-
-	vscode.languages.registerDefinitionProvider({ language: 'acl' }, new VariableDefinitionProvider());
-
-	function validateDocument(document: vscode.TextDocument, diagnosticCollection: vscode.DiagnosticCollection, availableClasses: any[]) {
-		if (document.languageId !== 'acl') return;
-
-		let diagnostics: vscode.Diagnostic[] = [];
-
-		diagnostics = diagnostics.concat(antlrManager.getDiagnostics());
-		diagnostics = diagnostics.concat(new ClassUsageValidator(availableClasses).validate(document));
-		diagnostics = diagnostics.concat(new CustomClassValidator().validate(document));
-		diagnostics = diagnostics.concat(IncompleteMemberAccessValidator.validate(document));
-
-		diagnosticCollection.set(document.uri, diagnostics);
-	}
+	vscode.workspace.onDidOpenTextDocument(document => {
+		refetchDocumentData(document);
+	});
+	vscode.workspace.onDidChangeTextDocument(event => {
+		const document = event.document;
+		refetchDocumentData(document);
+	});
+	vscode.window.onDidChangeActiveTextEditor(editor => {
+		if (editor && editor.document.languageId === 'acl') {
+			refetchDocumentData(editor.document);
+		}
+	});
+	vscode.window.onDidChangeWindowState(event => {
+		if (event.focused) {
+			vscode.workspace.textDocuments.forEach(document => {
+				if (document.languageId === 'acl') {
+					refetchDocumentData(document);
+				}
+			});
+		}
+	});
 }
 
 export function deactivate() { }

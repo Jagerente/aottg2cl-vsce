@@ -44,6 +44,7 @@ export class ClassParser {
                 className = classMatch[2];
                 let classType: ClassKinds;
                 let extendsList: IClass[] = [];
+                let classDescription = '';
 
                 switch (classMatch[1]) {
                     case 'class':
@@ -54,7 +55,8 @@ export class ClassParser {
                         break;
                     case 'component':
                         classType = ClassKinds.COMPONENT;
-                        extendsList = [new BaseComponentsClass(className)]
+                        extendsList = [new BaseComponentsClass(className)];
+                        classDescription = 'Represents a component script attached to a MapObject.';
                         break;
                     case 'extension':
                         classType = ClassKinds.EXTENSION;
@@ -70,7 +72,7 @@ export class ClassParser {
                 currentClass = {
                     kind: classType,
                     name: className,
-                    description: '',
+                    description: classDescription,
                     extends: extendsList,
                     staticFields: [],
                     staticMethods: [],
@@ -97,16 +99,10 @@ export class ClassParser {
                     continue;
                 }
 
-                const functionMatch = line.match(/^\s*(function|coroutine)\s+\w+\s*\(.*?\)\s*$/);
+                const functionMatch = line.match(/^\s*(function|coroutine)\s+\w+\s*\(.*?\)\s*(\{)?\s*$/);
                 if (functionMatch) {
                     isInsideFunction = true;
                     this.parseMethod(line, currentClass);
-                    continue;
-                }
-
-                const nestedClassMatch = line.match(/^(class|component|extension|cutscene)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(\{)?\s*$/);
-                if (nestedClassMatch) {
-                    lineIndex = this.parseClass(lines, lineIndex, classes, availableClasses);
                     continue;
                 }
 
@@ -151,7 +147,6 @@ export class ClassParser {
     ): void {
         const methodMatch = line.match(/^\s*(function|coroutine)\s+(\w+)\s*\((.*?)\)\s*(\{)?\s*$/);
 
-        currentClass.extends?.forEach
         if (methodMatch) {
             const methodKind = methodMatch[1] === 'coroutine' ? MethodKinds.COROUTINE : MethodKinds.FUNCTION;
             const methodName = methodMatch[2];
@@ -262,7 +257,7 @@ export class ClassParser {
 
             if (field) {
                 currentType = field.type;
-                continue
+                continue;
             }
 
             if (/^\s*\w+\s*\(.*\)\s*$/.test(identifier)) {

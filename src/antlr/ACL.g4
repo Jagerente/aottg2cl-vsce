@@ -101,7 +101,6 @@ whileLoop: WHILE LPAREN expression RPAREN block;
 
 forLoop: FOR LPAREN ID IN expression RPAREN block;
 
-//ifStatement: IF LPAREN expression RPAREN block elifBlock?;
 ifStatement: IF LPAREN expression RPAREN block (elifStatement)* elseStatement?;
 
 elifBlock: (elifStatement)* elseStatement?;
@@ -160,7 +159,7 @@ postfixOperator
     ;
 
 methodCall
-    : LPAREN argumentList? RPAREN
+    : (DOT ID | ID) LPAREN argumentList? RPAREN
     ;
 
 fieldAccess
@@ -171,7 +170,7 @@ primaryExpression
     : literal
     | SELF
     | ID
-    | LPAREN expression RPAREN
+    | methodCall
     ;
 
 literal

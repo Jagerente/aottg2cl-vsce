@@ -1,0 +1,36 @@
+class Main 
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Double overload constructor in component");
+
+        supplyStation1 = SupplyStation(100);
+        supplyStation2 = SupplyStation(100, "Custom private value");
+
+        supplyStation1.LogMethod();
+        supplyStation2.LogMethod();
+    } 
+}
+
+component SupplyStation {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function Init(foo) # Multiple ctors are not allowed
+    {
+        self.PublicField = foo;
+        self._privateField = "Single constructor overload called.";
+    }
+
+    function Init(foo, bar) # Multiple ctors are not allowed
+    {
+        self.PublicField = foo;
+        self._privateField = bar;
+    }
+
+    function LogMethod()
+    {
+        Game.Print("[COMPONENT SupplyStation] PublicField: " + self.PublicField);
+        Game.Print("[COMPONENT SupplyStation] _privateField: " + self._privateField);
+    }
+}

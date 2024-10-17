@@ -1,0 +1,27 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Single overload constructor in cutscene");
+
+        cinematic = Cinematic("Single argument");
+        cinematic.LogMethod();
+    }
+}
+
+cutscene Cinematic {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function Init(arg)
+    {
+        self.PublicField = arg;
+        self._privateField = "Single constructor overload called.";
+    }
+
+    function LogMethod()
+    {
+        Game.Print("[CUTSCENE Cinematic] PublicField: " + self.PublicField);
+        Game.Print("[CUTSCENE Cinematic] _privateField: " + self._privateField);
+    }
+}

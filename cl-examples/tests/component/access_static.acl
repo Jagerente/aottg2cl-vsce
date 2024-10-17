@@ -1,0 +1,24 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Static access in component");
+
+        Game.Print("[MAIN] Public field: " + SupplyStation.PublicField); # PROHIBITED
+        Game.Print("[MAIN] Trying to access private field:");
+        Game.Print("[MAIN] Private field: " + SupplyStation._privateField); # PROHIBITED
+
+        SupplyStation.LogMethod(); # PROHIBITED
+    }
+}
+
+component SupplyStation {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function LogMethod()
+    {
+        Game.Print("[COMPONENT SupplyStation] Private field: " + self._privateField);
+        Game.Print("[COMPONENT SupplyStation] Public field: " + self.PublicField);
+    }
+}

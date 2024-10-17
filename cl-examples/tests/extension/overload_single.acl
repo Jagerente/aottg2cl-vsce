@@ -1,0 +1,27 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Single overload constructor in extension");
+
+        alpha = Alpha(42);
+        alpha.T();
+    }
+}
+
+extension Alpha {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function Init(foo)
+    {
+        self.PublicField = foo;
+        self._privateField = "Single constructor overload called.";
+    }
+
+    function T()
+    {
+        Game.Print("[EXTENSION Alpha] PublicField: " + self.PublicField);
+        Game.Print("[EXTENSION Alpha] _privateField: " + self._privateField);
+    }
+}

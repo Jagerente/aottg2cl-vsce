@@ -1,0 +1,31 @@
+class Main
+{
+    function OnGameStart()
+    {
+        supplyStationInstance = SupplyStation();
+        supplyStationInstance.LogMethod();
+
+        SupplyStation.LogMethod(); # PROHIBITED
+    }
+}
+
+component SupplyStation {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function OnGameStart()
+    {
+        Game.Print("[COMPONENT OnGameStart] Self access in component");
+        self.LogMethod();
+    }
+
+    function LogMethod()
+    {
+        Game.Print("[COMPONENT T] Private field: " + self._privateField);
+        Game.Print("[COMPONENT T] Public field: " + self.PublicField);
+        self._privateField = "Updated private value";
+        self.PublicField = "Updated public value";
+        Game.Print("[COMPONENT T] Updated private field: " + self._privateField);
+        Game.Print("[COMPONENT T] Updated public field: " + self.PublicField);
+    }
+}

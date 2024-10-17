@@ -1,0 +1,36 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Double overload constructor in cutscene");
+
+        cinematic1 = Cinematic(42);
+        cinematic1.LogMethod();
+
+        cinematic2 = Cinematic(42, "Double arguments");
+        cinematic2.LogMethod();
+    }
+}
+
+cutscene Cinematic {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function Init(foo)
+    {
+        self.PublicField = foo;
+        self._privateField = "First constructor overload called.";
+    }
+
+    function Init(foo, bar)
+    {
+        self.PublicField = foo;
+        self._privateField = bar;
+    }
+
+    function LogMethod()
+    {
+        Game.Print("[CUTSCENE Cinematic] PublicField: " + self.PublicField);
+        Game.Print("[CUTSCENE Cinematic] _privateField: " + self._privateField);
+    }
+}

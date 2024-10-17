@@ -1,0 +1,30 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Instance creation and access in class");
+
+        testClassInstance = TestClass();
+
+        Game.Print("[MAIN] Public field (before change): " + testClassInstance.PublicField);
+        Game.Print("[MAIN] Trying to access private field:");
+        Game.Print("[MAIN] Private field (before change): " + testClassInstance._privateField);
+
+        testClassInstance.PublicField = "Updated public value from Main";
+        testClassInstance._privateField = "Updated private value from Main";
+
+        Game.Print("[MAIN] Public field (after change): " + testClassInstance.PublicField);
+        Game.Print("[MAIN] Private field (after change): " + testClassInstance._privateField);
+
+    }
+}
+
+class TestClass {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function LogMethod()
+    {
+        Game.Print("[CLASS TestClass] LogMethod called.");
+    }
+}
