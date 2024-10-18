@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { ACLManager } from "../antlr/ACLManager";
+import { ACLManager } from "../antlr4ts/ACLManager";
 import { IValidator } from "./DiagnosticManager";
 
 

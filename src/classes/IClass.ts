@@ -12,6 +12,26 @@ export enum MethodKinds {
     COROUTINE = 'coroutine'
 }
 
+export interface IChainNode {
+    text: string;
+    startLine: number;
+    startColumn: number;
+    isMethodCall: boolean;
+    methodArguments?: string[];
+}
+
+export interface ILoopNode {
+    conditionsRange: vscode.Range;
+    bodyRange: vscode.Range;
+}
+
+export interface IConditionNode {
+    type: string;
+    conditionRange?: vscode.Range;
+    bodyRange: vscode.Range;
+    afterBlockRange: vscode.Range;
+}
+
 export interface IVariable {
     name: string;
     value: string;
@@ -180,4 +200,10 @@ export function FindConstructorInClassHierarchy(classDef: IClass, argCount: numb
         }
     }
     return null;
+}
+export interface IError {
+    line: number;
+    charPositionInLine: number;
+    msg: string;
+    offendingSymbol?: string;
 }

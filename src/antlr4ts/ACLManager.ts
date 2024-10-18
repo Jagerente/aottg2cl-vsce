@@ -1,33 +1,33 @@
 import * as vscode from 'vscode';
-import { IClass } from "../classes/IClass";
-import { CharStream, CommonTokenStream } from 'antlr4ng';
+import { IChainNode, IClass, IConditionNode, ILoopNode } from "../classes/IClass";
 import { ACLLexer } from './ACLLexer';
 import { ACLParser } from './ACLParser';
-import { ClassesParserVisitor, IChainNode, IConditionNode, ILoopNode } from './ClassesParserVisitor';
-import { ACLErrorListener, ANTLRError as ANTLRError } from './ACLErrorListener';
+import { LexerErrorListener, ParserErrorListener } from './ACLErrorListener';
+import { IError as IError } from '../classes/IClass';
+import { CharStreams, CommonTokenStream, Token } from 'antlr4ts';
+import { ClassesParserVisitor } from './ClassesParserVisitor';
 
 export class ACLManager {
     private classes: Map<string, IClass> = new Map();
     private chains: IChainNode[][] = [];
     private loopNodes: ILoopNode[] = [];
     private conditionNodes: IConditionNode[] = [];
-    private errors: ANTLRError[] = [];
+    private errors: IError[] = [];
 
-    private lexerErrorListener = new ACLErrorListener();
-    private parserErrorListener = new ACLErrorListener();
+    private lexerErrorListener = new LexerErrorListener();
+    private parserErrorListener = new ParserErrorListener();
 
     public refetch(document: vscode.TextDocument): void {
         this.flush();
 
         const input = document.getText();
-        const inputStream = CharStream.fromString(input);
+        const inputStream = CharStreams.fromString(input);
         const lexer = new ACLLexer(inputStream);
         const tokenStream = new CommonTokenStream(lexer);
         const parser = new ACLParser(tokenStream);
 
         lexer.removeErrorListeners();
         parser.removeErrorListeners();
-
 
         lexer.addErrorListener(this.lexerErrorListener);
         parser.addErrorListener(this.parserErrorListener);
@@ -68,7 +68,7 @@ export class ACLManager {
         return this.conditionNodes;
     }
 
-    public getErrors(): ANTLRError[] {
+    public getErrors(): IError[] {
         return this.errors;
     }
 
@@ -76,11 +76,14 @@ export class ACLManager {
         return this.errors.map(error => ACLManager.createDiagnostic(error));
     }
 
-    private static createDiagnostic(error: ANTLRError): vscode.Diagnostic {
+    private static createDiagnostic(error: IError): vscode.Diagnostic {
         const startLine = error.line - 1;
         const startCharacter = error.charPositionInLine;
         const endLine = startLine;
-        const endCharacter = startCharacter + 1;
+        let endCharacter = startCharacter + 1;
+        if (error.offendingSymbol) {
+            endCharacter = startCharacter + error.offendingSymbol.length;
+        }
 
         const range = new vscode.Range(startLine, startCharacter, endLine, endCharacter);
 

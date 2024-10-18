@@ -1,8 +1,7 @@
 import * as vscode from 'vscode';
-import { ClassKinds, FindConstructorInClassHierarchy, FindFieldInClassHierarchy, FindMethodInClassHierarchy, IClass, IField, IMethod } from '../classes/IClass';
+import { ClassKinds, FindConstructorInClassHierarchy, FindFieldInClassHierarchy, FindMethodInClassHierarchy, IChainNode, IClass, IField, IMethod } from '../classes/IClass';
 import { IValidator } from './DiagnosticManager';
 import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
-import { IChainNode } from '../antlr/ClassesParserVisitor';
 
 export class ClassUsageValidator implements IValidator {
     private documentTreeProvider: DocumentTreeProvider;
