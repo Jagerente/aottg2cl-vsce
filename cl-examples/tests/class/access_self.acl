@@ -1,0 +1,30 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Self access in class");
+        testClassInstance = TestClass();
+        testClassInstance.LogMethod();
+
+        TestClass.LogMethod(); # PROHIBITED
+    }
+}
+
+class TestClass {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function LogMethod()
+    {
+        Game.Print("[CLASS TestClass] Accessing fields through self");
+        Game.Print("[CLASS TestClass] Private field: " + self._privateField);
+        Game.Print("[CLASS TestClass] Public field: " + self.PublicField);
+
+        Game.Print("[CLASS TestClass] Updating fields through self");
+        self._privateField = "Updated private value in TestClass";
+        self.PublicField = "Updated public value in TestClass";
+
+        Game.Print("CLASS [TestClass] Updated private field: " + self._privateField);
+        Game.Print("CLASS [TestClass] Updated public field: " + self.PublicField);
+    }
+}

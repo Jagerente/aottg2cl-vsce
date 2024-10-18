@@ -1,0 +1,27 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Single overload constructor in component");
+
+        supplyStation = SupplyStation(100);
+        supplyStation.LogMethod();
+    }
+}
+
+component SupplyStation {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function Init(foo)
+    {
+        self.PublicField = foo;
+        self._privateField = "Single constructor overload called.";
+    }
+
+    function LogMethod()
+    {
+        Game.Print("[COMPONENT SupplyStation] PublicField: " + self._privateField);
+        Game.Print("[COMPONENT SupplyStation] _privateField: " + self.PublicField);
+    }
+}

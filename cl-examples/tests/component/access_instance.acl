@@ -1,0 +1,28 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Instance access in component");
+
+        supplyStation = SupplyStation();
+
+        Game.Print("[MAIN] Public field: " + supplyStation.PublicField);
+        Game.Print("[MAIN] Trying to access private field:");
+        Game.Print("[MAIN] Private field: " + supplyStation._privateField);
+
+        supplyStation.PublicField = "Main updated public value";
+        supplyStation._privateField = "Main updated private value";
+
+        supplyStation.LogMethod();
+    }
+}
+
+component SupplyStation {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function LogMethod()
+    {
+        Game.Print("[COMPONENT SupplyStation] LogMethod called");
+    }
+}

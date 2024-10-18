@@ -1,3 +1,4 @@
+import { CharacterClassInstance } from './CharacterClass';
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class TitanClass implements IClass {
@@ -5,6 +6,8 @@ export class TitanClass implements IClass {
     public name = 'Titan';
     public description = 'Titan inherits from Character. Only character owner can modify fields and call functions unless otherwise specified.';
 
+    public extends?: IClass[] = [CharacterClassInstance];
+    
     public instanceFields: IField[] = [
         { label: 'Size', type: 'float', description: 'Titan\'s size.' },
         { label: 'DetectRange', type: 'float', description: '(AI) titan\'s detect range.' },

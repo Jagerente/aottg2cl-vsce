@@ -3,8 +3,8 @@ import { BaseMainClass } from './BaseMainClass';
 import { BaseNetworkClassInstance } from './BaseNetworkClass';
 
 export class BaseComponentsClass implements IClass {
-    public kind = ClassKinds.COMPONENT;
-    public name = 'BaseComponents';
+    public kind = ClassKinds.CLASS;
+    public name = 'BaseComponent';
     public description = 'Base class for components, providing callback functions specific to components. Components also inherit all callbacks from Main.';
 
     public extends: IClass[] = [];
@@ -13,7 +13,18 @@ export class BaseComponentsClass implements IClass {
 
     public staticMethods: IMethod[] = [];
 
-    public instanceFields: IField[] = [];
+    public instanceFields: IField[] = [
+        {
+            label: 'MapObject',
+            type: 'MapObject',
+            description: 'The MapObject the component is attached to.',
+        },
+        {
+            label: 'NetworkView',
+            type: 'NetworkView',
+            description: 'The NetworkView attached to the MapObject, if Networked is enabled.',
+        },
+    ];
 
     public instanceMethods: IMethod[] = [
         {

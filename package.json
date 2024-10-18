@@ -2,7 +2,7 @@
   "name": "aottg2cl",
   "displayName": "AoTTG 2 Custom Logic Language Support",
   "description": "Syntax highlighting and autocomplete for AoTTG 2 Custom Logic",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "Jagerente",
   "repository": {
     "type": "git",
@@ -50,7 +50,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "antlr4ts": "antlr4ts -o ./src/antlr4ts/ -visitor -listener ./src/antlr/ACL.g4"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.8",
@@ -60,8 +61,12 @@
     "@typescript-eslint/parser": "^8.7.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1",
+    "antlr4ts-cli": "^0.5.0-alpha.4",
     "esbuild": "^0.24.0",
     "eslint": "^9.11.1",
     "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "antlr4ts": "^0.5.0-alpha.4"
   }
 }

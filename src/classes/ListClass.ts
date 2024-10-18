@@ -1,9 +1,12 @@
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
+import { ObjectClassInstance } from './ObjectClass';
 
 export class ListClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'List';
     public description = 'Lists allow you to keep an ordered array of objects.';
+
+    public extends?: IClass[] = [ObjectClassInstance];
 
     public instanceFields: IField[] = [
         { label: 'Count', type: 'int', description: 'Number of items in the list.' }

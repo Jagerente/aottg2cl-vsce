@@ -1,0 +1,250 @@
+/**/ extension Utility /* ho hoh o*/
+{
+    PublicUBool = true;
+    PublicUInt = 1;
+    PublicUFloat = 5.0;
+    PublicUString = "qwe";
+    _privateUBool = false;
+    _privateUInt = 2;
+    _privateUFloat = 8.3;
+    _privateUString = "zxc";
+
+    function AccessTest()
+    {
+        a = self.PublicUBool;
+    }
+
+    function Log(message) 
+    {
+        Vector3(2,4,Vector3().X);
+        Game.A;
+
+        a = Main();
+
+        a = WrongCutscene();
+        Vector3();
+        Game.SpawnTitan("default").NapePosition.Normalized.Normalized.Normalized.Scale(Vector3(Vector3(Vector3(Vector3())))).Magnitude;
+        Do();
+        self.Do();
+        Console.WriteLine(message);
+        Game.SpawnTitan(type).AddForce(force, mode);
+    }
+
+    function CheckTitanLimit(titanCount) {
+        return titanCount >= self.PublicUInt;
+    }
+
+    function CheckPlayer(player) 
+    {
+        return player.IsHuman && !player.IsSpectator;
+    }
+
+    function IsPlayerSpectating(player) {
+        return player.IsSpectator;
+    }
+
+    coroutine UtilityCoroutine() 
+    {
+        Vector515();
+    }
+}
+
+class Main {
+    # Single-line comment
+    Description = "Survive as long as possible.";
+    MaxTitans = 10;
+    TitanSpawnRate = 5.0;
+    Vector = Vector3();
+    _isGameOver = false;
+    _spawnedTitans = 0;
+    _titanKills = 0;
+
+    /* 
+       Multi-line comment: This function starts the game
+       and spawns titans at a fixed rate.
+    */
+    function Start() {
+        self._spawnedTitans = 0;
+
+        for (i in Range(1, 1, 1))
+        {
+            Game.Print("Hello world!");
+        }
+            
+
+        while (Game.SpawnTitan("default").NapePosition.Normalized.Normalized.Normalized.Scale(Game.SpawnTitan("default").Position).Magnitude)
+        {
+            break;
+        }
+
+        # TODO: Handle err here
+        while (_spawnedTitans < MaxTitans) /* 
+                qweqwe*/ {  /**/ # Inline comment after code 
+                
+            self._spawnedTitans += 1;
+            self.OnTitanKill(victim);
+            self.OnTitanKill(1, 2);
+            Game.SpawnTitan("Default");
+            Game.UnknownMethod();
+            
+            self.What();
+            # c = Game.Deep.Access().Also(I.Can.Call(Maybe.Here() && And.Here).Here);
+
+            self.MaxTitans += 1;
+            self.TitanSpawnRate *= 2.0;
+            
+            # Deep Access Example
+            Game.SpawnTitan("default").NapePosition.Normalized.Normalized.Normalized.Scale(Vector3()).Magnitude;
+
+            Utility.NonExisten();
+
+            vector = Vector3(5,5,5);
+
+            # Deep Access In Assignment
+            deep = Game.SpawnTitan("default").NapePosition.Normalized.Normalized.Normalized.Scale(Vector3()).Magnitude;
+
+            # Deep Access In Conditions
+
+            
+            if (Game.SpawnTitan("default").NapePosition.Normalized.Normalized.Normalized.Scale(Vector3()).Magnitude) 
+            {    
+                Game.Print("Hello world!");
+            }
+
+            for (item in Range(1, 10, 1))
+            {
+                Game.Print("Hello: " + item);
+            }
+            
+
+            while (Game.SpawnTitan("default").NapePosition.Normalized.Normalized.Normalized.Scale(Game.SpawnTitan("default").Position).Magnitude)
+            {
+                break;
+            }
+
+
+            self.TitanSpawnRate /= 2.0;
+            self._titanKills -= 1;
+            self._isGameOver = self._spawnedTitans >= self.MaxTitans || self._titanKills < 0;
+
+            if (
+                # Comment
+                Utility.CheckTitanLimit(_spawnedTitans) 
+                && _spawnedTitans > 5
+            ) {
+                Utility.Log("Titan limit reached.");
+            }
+
+            if (d == e) {
+                a = c;
+            } else {
+                a = b;
+            }
+        }
+
+        self.OnTitanKill(1,2);
+    }
+
+    function OnTitanKill(killer, victim) {
+        if (victim.Type == "Titan" && killer.IsPlayer) {
+            self._titanKills += 1;
+            self.MaxTitans -= 1;
+
+            if (
+                Utility.CheckPlayer(killer) && 
+                !Utility.IsPlayerSpectating(killer)
+            ) {
+                Utility.Log("Player killed a titan!");
+            }
+        } elif (victim.IsPlayer || victim.Type == "Human") {
+            return "Player killed!";
+        } elif (false) {
+            return "123";
+        } else {
+            return null;
+        }
+    }
+
+    function OnCharacterDie(victim, killer, killerName)
+    {
+        
+    }
+
+    function GameOver() {
+        self._isGameOver = true;
+        return "Game over!"; 
+    }
+
+    function ResetGame() {
+        self.MaxTitans = 10;
+        self._titanKills = 0;
+        self._spawnedTitans = 0;
+        self._isGameOver = false;
+    }
+
+    coroutine TestCoroutine() {
+        wait 2.0;
+        Camera.LookAt(Vector3(0,8,3));
+        wait 5.0;
+        Camera.SetFOV(15);
+    }
+}
+
+cutscene CompleteCutscene
+{
+    coroutine Start() 
+    {
+
+    }
+}
+
+cutscene WrongCutscene
+{
+    coroutine Start(a) 
+    {
+
+    }
+}
+
+cutscene IncompleteCutscene
+{
+    function Start() 
+    {
+        
+    }
+}
+
+component Monke 
+{
+    PublicMBool = true;
+    PublicMInt = 1;
+    PublicMFloat = 5.0;
+    PublicMString = "qwe";
+    _privateMBool = false;
+    _privateMInt = 2;
+    _privateMFloat = 8.3;
+    _privateMString = "zxc";
+
+    function Foo(message) {
+        Console.WriteLine(message);
+    }
+
+    function Bar(titanCount) {
+        a = self.PublicMBool;
+        b = self._privateMBool;
+        return titanCount >= self.PublicUInt;
+    }
+
+    function CheckPlayer(player) {
+        return player.IsHuman && !player.IsSpectator;
+    }
+
+    function IsPlayerSpectating(player) {
+        return player.IsSpectator;
+    }
+
+    coroutine Jump() 
+    {
+        
+    }
+}

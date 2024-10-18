@@ -1,0 +1,29 @@
+class Main
+{
+    function OnGameStart()
+    {
+        Game.Print("[MAIN] Instance creation with single overload in class");
+
+        testClassInstance = TestClass(42);
+
+        testClassInstance.LogMethod();
+    }
+}
+
+class TestClass {
+    _privateField = "Default private value";
+    PublicField = "Default public value";
+
+    function Init(foo)
+    {
+        self.PublicField = foo;
+        self._privateField = "Private value set in overload";
+    }
+
+    function LogMethod()
+    {
+        Game.Print("[CLASS TestClass] LogMethod called.");
+        Game.Print("[CLASS TestClass] Public field: " + self.PublicField);
+        Game.Print("[CLASS TestClass] Private field: " + self._privateField);
+    }
+}

@@ -5,6 +5,43 @@ All notable changes to the "aottg2cl" extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.3-preview] - 2024-10-18
+
+### Added
+
+- Inheritance hierarchy for global classes (Human < Character < Object etc.).
+- `break` and `continue` keywords support.
+- ANTLR integration
+
+### Changed
+
+- Extended cutscenes support:
+    - Snippet
+    - Better context auto-completions
+    - Definition and usage error validation
+- Extended loops and conditions support
+    - Snippet
+    - Better context auto-completions
+- Extended callbacks support:
+    - Improved snippet on callback declaring.
+    - Improved callbacks hints information.
+- Extended variables parsing:
+    - Improved parsing
+    - Added current method arguments as variables support
+- Improved class, methods and calls parsing.
+- Improved code navigation utils.
+- New code diagnostics:
+    - Class usage
+        - Wrong self casting
+        - Wrong static usage
+        - Wrong instance usage
+        - Wrong ctor calling
+        - Wrong methods usage
+        - Multiple class ctors definitions
+        - Incomplete cutscene class definition
+    - ANTLR parser provided
+        - Brackets, semicolons, wrong positioning and much more.
+
 ## [0.0.2-preview] - 2024-10-09
 
 ### Added
