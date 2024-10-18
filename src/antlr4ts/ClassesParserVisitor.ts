@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { ACLVisitor } from './ACLVisitor';
 import {
     ClassDeclContext,
     MethodDeclContext,
@@ -20,33 +19,17 @@ import {
     IParameter,
     ClassKinds,
     MethodKinds,
-    FindMethodInClassParentsHierarchy
+    FindMethodInClassParentsHierarchy,
+    IChainNode,
+    ILoopNode,
+    IConditionNode
 } from '../classes/IClass';
 import { BaseMainClass } from '../classes/BaseMainClass';
 import { BaseComponentsClass } from '../classes/BaseComponentsClass';
 import { BaseInstantiatableClass } from '../classes/BaseInstantiatableClass';
+import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
 
-export interface IChainNode {
-    text: string;
-    startLine: number;
-    startColumn: number;
-    isMethodCall: boolean;
-    methodArguments?: string[];
-}
-
-export interface ILoopNode {
-    conditionsRange: vscode.Range;
-    bodyRange: vscode.Range;
-}
-
-export interface IConditionNode {
-    type: string;
-    conditionRange?: vscode.Range;
-    bodyRange: vscode.Range;
-    afterBlockRange: vscode.Range;
-}
-
-export class ClassesParserVisitor extends ACLVisitor<void> {
+export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     public classes: Map<string, IClass> = new Map();
     private currentClass: IClass | null = null;
     private currentMethod: IMethod | null = null;
@@ -59,7 +42,7 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
     public visitClassDecl = (ctx: ClassDeclContext): void => {
         this.currentMethod = null;
 
-        const className = ctx.ID().getText();
+        const className = ctx.ID().text;
         let classKind = ClassKinds.CLASS;
         let extendsList: IClass[] = [];
         let classDescription = '';
@@ -101,8 +84,12 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
         this.visitChildren(ctx);
     };
 
+    public defaultResult() {
+        return;
+    }
+
     public visitMethodDecl = (ctx: MethodDeclContext): void => {
-        const methodName = ctx.ID().getText();
+        const methodName = ctx.ID().text;
 
         const declarationRange: vscode.Range = this.getMethodDeclarationRange(ctx);
         const bodyRange = this.getMethodBodyRange(ctx);
@@ -114,7 +101,7 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
         if (this.currentClass) {
             const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
-            const parametersList: string[] = ctx.paramList()?.ID().map(id => id.getText()) || [];
+            const parametersList: string[] = ctx.paramList()?.ID().map(id => id.text) || [];
             let parameters: IParameter[] = parametersList.map(param => ({
                 name: param,
                 type: 'any',
@@ -165,7 +152,7 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
         }
 
         if (this.currentClass) {
-            const fieldName = ctx.ID()?.getText();
+            const fieldName = ctx.ID()?.text;
             if (!fieldName) {
                 this.visitChildren(ctx);
                 return;
@@ -197,10 +184,10 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
         this.currentChain = [];
 
         if (!ctx.primaryExpression().methodCall()) {
-            const primaryExpr = ctx.primaryExpression().getText();
+            const primaryExpr = ctx.primaryExpression().text;
             const startToken = ctx.primaryExpression().start;
             const startLine = startToken!.line;
-            const startColumn = startToken!.column;
+            const startColumn = startToken!.charPositionInLine;
 
             this.currentChain.push({
                 text: primaryExpr,
@@ -220,11 +207,11 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
     };
 
     public visitMethodCall = (ctx: MethodCallContext): void => {
-        const methodName = ctx.ID()!.getText();
-        const argumentList = ctx.argumentList()?.expression().map(expr => expr.getText()) || [];
+        const methodName = ctx.ID()!.text;
+        const argumentList = ctx.argumentList()?.expression().map(expr => expr.text) || [];
         const startToken = ctx.start;
         const startLine = startToken!.line;
-        const startColumn = startToken!.column + (ctx.DOT() ? 1 : 0);
+        const startColumn = startToken!.charPositionInLine + (ctx.DOT() ? 1 : 0);
 
         this.currentChain.push({
             text: `${methodName}(${argumentList.join(', ')})`,
@@ -238,10 +225,10 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
     };
 
     public visitFieldAccess = (ctx: FieldAccessContext): void => {
-        const fieldName = ctx.ID().getText();
+        const fieldName = ctx.ID().text;
         const startToken = ctx.start;
         const startLine = startToken!.line;
-        const startColumn = startToken!.column + 1;
+        const startColumn = startToken!.charPositionInLine + 1;
 
         this.currentChain.push({
             text: fieldName,
@@ -328,9 +315,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getClassDeclarationRange(ctx: ClassDeclContext): vscode.Range {
         const startLine = ctx.start!.line - 1;
-        const startChar = ctx.start!.column;
+        const startChar = ctx.start!.charPositionInLine;
         const endLine = ctx.ID().symbol.line - 1;
-        const endChar = ctx.ID().symbol.column + ctx.ID().symbol.text!.length;
+        const endChar = ctx.ID().symbol.charPositionInLine + ctx.ID().symbol.text!.length;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -339,9 +326,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getClassBodyRange(ctx: ClassDeclContext): vscode.Range {
         const startLine = ctx.LBRACE().symbol.line;
-        const startChar = ctx.LBRACE().symbol.column;
+        const startChar = ctx.LBRACE().symbol.charPositionInLine;
         const endLine = ctx.RBRACE().symbol.line;
-        const endChar = ctx.RBRACE().symbol.column;
+        const endChar = ctx.RBRACE().symbol.charPositionInLine;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -350,9 +337,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getMethodDeclarationRange(ctx: MethodDeclContext): vscode.Range {
         const startLine = ctx.start!.line - 1;
-        const startChar = ctx.start!.column;
+        const startChar = ctx.start!.charPositionInLine;
         const endLine = ctx.RPAREN().symbol.line - 1;
-        const endChar = ctx.RPAREN().symbol.column;
+        const endChar = ctx.RPAREN().symbol.charPositionInLine;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -361,9 +348,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getMethodBodyRange(ctx: MethodDeclContext): vscode.Range {
         const startLine = ctx.block().start!.line - 1;
-        const startChar = ctx.block().start!.column;
+        const startChar = ctx.block().start!.charPositionInLine;
         const endLine = ctx.block().stop!.line - 1;
-        const endChar = ctx.block().stop!.column;
+        const endChar = ctx.block().stop!.charPositionInLine;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -372,9 +359,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getWhileConditionRange(ctx: WhileLoopContext): vscode.Range {
         const startLine = ctx.LPAREN().symbol.line - 1;
-        const startChar = ctx.LPAREN().symbol.column;
+        const startChar = ctx.LPAREN().symbol.charPositionInLine;
         const endLine = ctx.RPAREN().symbol.line - 1;
-        const endChar = ctx.RPAREN().symbol.column;
+        const endChar = ctx.RPAREN().symbol.charPositionInLine;
 
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
@@ -384,9 +371,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getWhileBodyRange(ctx: WhileLoopContext): vscode.Range {
         const startLine = ctx.block().start!.line - 1;
-        const startChar = ctx.block().start!.column;
+        const startChar = ctx.block().start!.charPositionInLine;
         const endLine = ctx.block().stop!.line - 1;
-        const endChar = ctx.block().stop!.column;
+        const endChar = ctx.block().stop!.charPositionInLine;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -395,9 +382,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getForConditionRange(ctx: ForLoopContext): vscode.Range {
         const startLine = ctx.LPAREN().symbol.line - 1;
-        const startChar = ctx.LPAREN().symbol.column;
+        const startChar = ctx.LPAREN().symbol.charPositionInLine;
         const endLine = ctx.RPAREN().symbol.line - 1;
-        const endChar = ctx.RPAREN().symbol.column;
+        const endChar = ctx.RPAREN().symbol.charPositionInLine;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -406,9 +393,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getForBodyRange(ctx: ForLoopContext): vscode.Range {
         const startLine = ctx.block().start!.line - 1;
-        const startChar = ctx.block().start!.column;
+        const startChar = ctx.block().start!.charPositionInLine;
         const endLine = ctx.block().stop!.line - 1;
-        const endChar = ctx.block().stop!.column;
+        const endChar = ctx.block().stop!.charPositionInLine;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -417,9 +404,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getConditionRange(ctx: IfStatementContext | ElifStatementContext): vscode.Range {
         const startLine = ctx.LPAREN().symbol.line - 1;
-        const startChar = ctx.LPAREN().symbol.column;
+        const startChar = ctx.LPAREN().symbol.charPositionInLine;
         const endLine = ctx.RPAREN().symbol.line - 1;
-        const endChar = ctx.RPAREN().symbol.column;
+        const endChar = ctx.RPAREN().symbol.charPositionInLine;
 
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
@@ -429,9 +416,9 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getConditionBodyRange(ctx: IfStatementContext | ElifStatementContext | ElseStatementContext): vscode.Range {
         const startLine = ctx.block().start!.line - 1;
-        const startChar = ctx.block().start!.column;
+        const startChar = ctx.block().start!.charPositionInLine;
         const endLine = ctx.block().stop!.line - 1;
-        const endChar = ctx.block().stop!.column;
+        const endChar = ctx.block().stop!.charPositionInLine;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -440,7 +427,7 @@ export class ClassesParserVisitor extends ACLVisitor<void> {
 
     private getRangeAfterConditionBlock(ctx: IfStatementContext | ElifStatementContext | ElseStatementContext): vscode.Range {
         const blockEndLine = ctx.block().stop!.line - 1;
-        const blockEndChar = ctx.block().stop!.column;
+        const blockEndChar = ctx.block().stop!.charPositionInLine;
 
         const nextStatementStartLine = blockEndLine + 1;
         const nextStatementStartChar = blockEndChar + 1;

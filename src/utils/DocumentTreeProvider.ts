@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
-import { ClassKinds, IClass, IConstructor, IMethod } from "../classes/IClass";
-import { ACLManager } from '../antlr/ACLManager';
-import { IChainNode, ILoopNode } from '../antlr/ClassesParserVisitor';
+import { ClassKinds, IChainNode, IClass, IConstructor, ILoopNode, IMethod } from "../classes/IClass";
+import { ACLManager } from '../antlr4ts/ACLManager';
 
 export class DocumentTreeProvider {
     private aclManager: ACLManager;

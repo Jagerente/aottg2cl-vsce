@@ -4,7 +4,7 @@ import { VariableCompletionProvider } from './completions/VariableCompletionProv
 import { MainFunctionsCompletionProvider } from './completions/MainFunctionsCompletionProvider';
 import { VariableDefinitionProvider } from './definition/VariableDefinitionProvider';
 import { AvailableClassesMap } from './classes/AvailableClasses';
-import { ACLManager } from './antlr/ACLManager';
+import { ACLManager } from './antlr4ts/ACLManager';
 import { DiagnosticManager } from './diagnostic/DiagnosticManager';
 import { DocumentTreeProvider } from './utils/DocumentTreeProvider';
 import { VariableCollector } from './utils/VariableCollector';
