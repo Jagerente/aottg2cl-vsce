@@ -132,7 +132,30 @@ export function FindMethodInClassHierarchy(
         : [];
 
     const methods = [...instanceMethods, ...staticMethods];
-    const method = methods.find(m => m.label === methodName && (argCount === -1 || m.parameters.length === argCount));
+    const method = methods.find(m => {
+        if (m.label !== methodName) {
+            return false;
+        }
+
+        const parameterCount = m.parameters.length;
+    
+        if (argCount === -1) {
+            return true; 
+        }
+    
+        const requiredParams = m.parameters.filter(param => !param.isOptional && !param.isVariadic).length;
+    
+        if (argCount < requiredParams) {
+            return false;
+        }
+    
+        if (m.parameters.some(param => param.isVariadic)) {
+            return true;
+        }
+    
+        return parameterCount === argCount;
+    });
+    
     if (method) {
         return method;
     }

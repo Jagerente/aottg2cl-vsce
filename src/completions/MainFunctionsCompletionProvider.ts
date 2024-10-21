@@ -28,21 +28,45 @@ export class MainFunctionsCompletionProvider implements vscode.CompletionItemPro
         { label: 'OnButtonClick', snippet: 'OnButtonClick(buttonName: string)\n{\n\t$0\n}', description: 'Called upon a UI button with a given name being pressed' }
     ];
 
+    private componentFunctions = [
+        { label: 'OnCollisionEnter', snippet: 'OnCollisionEnter(other: Object)\n{\n\t$0\n}', description: 'Called upon another object first colliding with the attached MapObject.' },
+        { label: 'OnCollisionStay', snippet: 'OnCollisionStay(other: Object)\n{\n\t$0\n}', description: 'Called every frame while another object is colliding with the attached MapObject.' },
+        { label: 'OnCollisionExit', snippet: 'OnCollisionExit(other: Object)\n{\n\t$0\n}', description: 'Called upon another object exiting collision with the attached MapObject.' },
+        { label: 'OnGetHit', snippet: 'OnGetHit(character: Character, name: string, damage: int, type: string)\n{\n\t$0\n}', description: 'Called upon getting hit by a hitbox, such as a blade or titan attack.' },
+        { label: 'OnGetHooked', snippet: 'OnGetHooked(human: Human, hookPosition: Vector3, leftHook: bool)\n{\n\t$0\n}', description: 'Called upon getting hit by a hook.' },
+        { label: 'OnNetworkTransfer', snippet: 'OnNetworkTransfer(oldOwner: Player, newOwner: Player)\n{\n\t$0\n}', description: 'Called upon the NetworkView changing ownership.' },
+        { label: 'SendNetworkStream', snippet: 'SendNetworkStream()\n{\n\t$0\n}', description: 'Called every frame for the owner.' },
+        { label: 'OnNetworkStream', snippet: 'OnNetworkStream()\n{\n\t$0\n}', description: 'Called every frame for every non-owner observer.' },
+        { label: 'OnNetworkMessage', snippet: 'OnNetworkMessage(sender: Player, message: string)\n{\n\t$0\n}', description: 'Called upon receiving a self.NetworkView.SendMessage call.' },
+    ];
+
     public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
         const isInsideClass = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.CLASS);
         const isInsideComponent = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.COMPONENT);
         const isInsideCutscene = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.CUTSCENE);
 
+        const completionItems: vscode.CompletionItem[] = [];
+
         if (isInsideClass || isInsideComponent) {
             const isDeclaringFunction = CodeContextUtils.isDeclaringFunction(document, position);
             if (isDeclaringFunction) {
-                return this.reservedFunctions.map(fn => {
+                this.reservedFunctions.forEach(fn => {
                     const item = new vscode.CompletionItem(fn.label, vscode.CompletionItemKind.Function);
                     item.detail = 'Reserved function';
                     item.insertText = new vscode.SnippetString(fn.snippet);
                     item.documentation = new vscode.MarkdownString(fn.description);
-                    return item;
+                    completionItems.push(item);
                 });
+
+                if (isInsideComponent) {
+                    this.componentFunctions.forEach(fn => {
+                        const item = new vscode.CompletionItem(fn.label, vscode.CompletionItemKind.Function);
+                        item.detail = 'Reserved function';
+                        item.insertText = new vscode.SnippetString(fn.snippet);
+                        item.documentation = new vscode.MarkdownString(fn.description);
+                        completionItems.push(item);
+                    });
+                }
             }
         } else if (isInsideCutscene) {
             const isDeclaringCoroutine = CodeContextUtils.isDeclaringCoroutine(document, position);
@@ -51,10 +75,10 @@ export class MainFunctionsCompletionProvider implements vscode.CompletionItemPro
                 item.detail = 'Cutscene entry point';
                 item.insertText = new vscode.SnippetString('Start()\n{\n\t$0\n}');
                 item.documentation = new vscode.MarkdownString('Cutscene entry point');
-                return [item];
+                completionItems.push(item);
             }
         }
 
-        return [];
+        return completionItems;
     }
 }

@@ -1,4 +1,4 @@
-// Generated from ./src/antlr/ACL.g4 by ANTLR 4.9.0-SNAPSHOT
+// Generated from ./src/antlr4ts/ACL.g4 by ANTLR 4.9.0-SNAPSHOT
 
 
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";

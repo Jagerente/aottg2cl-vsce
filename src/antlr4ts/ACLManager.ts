@@ -33,7 +33,11 @@ export class ACLManager {
         parser.addErrorListener(this.parserErrorListener);
 
         const visitor = new ClassesParserVisitor();
-        visitor.visit(parser.program());
+        try {
+            visitor.visit(parser.program());
+        } catch (e) {
+            console.log(e);
+        }
 
         this.classes = visitor.getParsedClasses();
         this.chains = visitor.getParsedChains();

@@ -73,9 +73,9 @@ export class ClassUsageValidator implements IValidator {
                     let method: IMethod | null = null;
 
                     if (selfCast) {
-                        method = FindMethodInClassHierarchy(currentClass!, methodName, currentLink.methodArguments!.length, true, true);
+                        method = FindMethodInClassHierarchy(currentClass, methodName, currentLink.methodArguments!.length, true, true);
                     } else {
-                        method = FindMethodInClassHierarchy(currentClass!, methodName, currentLink.methodArguments!.length, !isStatic, isStatic);
+                        method = FindMethodInClassHierarchy(currentClass, methodName, currentLink.methodArguments!.length, !isStatic, isStatic);
                     }
 
                     if (!method) {
@@ -88,9 +88,9 @@ export class ClassUsageValidator implements IValidator {
                     let field: IField | null = null;
 
                     if (selfCast) {
-                        field = FindFieldInClassHierarchy(currentClass!, currentLink.text, true, true, true, true);
+                        field = FindFieldInClassHierarchy(currentClass, currentLink.text, true, true, true, true);
                     } else {
-                        field = FindFieldInClassHierarchy(currentClass!, currentLink.text, !isStatic, isStatic, true, true);
+                        field = FindFieldInClassHierarchy(currentClass, currentLink.text, !isStatic, isStatic, true, true);
                     }
 
                     if (!field) {
@@ -101,6 +101,10 @@ export class ClassUsageValidator implements IValidator {
                     returnType = field.type;
                 }
                 currentClass = availableClasses.get(returnType);
+                if (!currentClass) {
+                    // diagnostics.push(this.createDiagnostic(firstLink, `Class definition for '${firstLink.text}' not found.`));
+                    return;
+                }
                 isStatic = false;
                 selfCast = false;
             }

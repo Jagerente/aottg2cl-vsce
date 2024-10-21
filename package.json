@@ -51,7 +51,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test",
-    "antlr4ts": "antlr4ts -o ./src/antlr4ts/ -visitor -listener ./src/antlr/ACL.g4"
+    "antlr4ts": "antlr4ts -o ./src/antlr4ts/ -visitor -listener ./src/antlr4ts/ACL.g4"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.8",
