@@ -1,9 +1,12 @@
+import { BaseInstantiatableClass } from './BaseInstantiatableClass';
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class ObjectClass implements IClass {
     public kind = ClassKinds.CLASS;
     public name = 'Object';
     public description = 'Base class for all objects in custom logic.';
+
+    public extends?: IClass[] = [new BaseInstantiatableClass('List')];
 
     public instanceFields: IField[] = [
         {
