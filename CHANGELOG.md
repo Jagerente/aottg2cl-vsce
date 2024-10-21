@@ -5,6 +5,18 @@ All notable changes to the "aottg2cl" extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.4-preview] - 2024-10-22
+
+### Added
+
+- Add component callbacks.
+- Add objects default ctors.
+
+### Changed
+
+- Fix chain auto-completion starting with '!'.
+- Fix parsing error.
+
 ## [0.0.3-preview] - 2024-10-18
 
 ### Added
