@@ -368,7 +368,7 @@ export class CodeContextUtils {
             }
 
             if (char === '.' && bracesDepth === 0) {
-            } else if (/\s/.test(char) && bracesDepth === 0) {
+            } else if ((/\s/.test(char) || char === '!') && bracesDepth === 0) {
                 break;
             }
 
