@@ -137,8 +137,6 @@ export function FindMethodInClassHierarchy(
             return false;
         }
 
-        const parameterCount = m.parameters.length;
-    
         if (argCount === -1) {
             return true; 
         }
@@ -153,7 +151,7 @@ export function FindMethodInClassHierarchy(
             return true;
         }
     
-        return parameterCount === argCount;
+        return argCount === requiredParams;
     });
     
     if (method) {
