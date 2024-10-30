@@ -47,11 +47,12 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         let extendsList: IClass[] = [];
         let classDescription = '';
 
-        if (ctx.CLASS()) {
-            classKind = ClassKinds.CLASS;
-            // if (className === 'Main') {
+        if (className === 'Main') {
+            classKind = ClassKinds.EXTENSION;
             extendsList = [new BaseMainClass(className)];
-            // }
+        } else if (ctx.CLASS()) {
+            classKind = ClassKinds.CLASS;
+            extendsList = [new BaseMainClass(className)];
         } else if (ctx.COMPONENT()) {
             classKind = ClassKinds.COMPONENT;
             extendsList = [new BaseComponentsClass(className)];
