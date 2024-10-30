@@ -41,13 +41,14 @@ export class MainFunctionsCompletionProvider implements vscode.CompletionItemPro
     ];
 
     public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
+        const currentClass = this.documentTreeProvider.getCurrentClass(position);
         const isInsideClass = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.CLASS);
         const isInsideComponent = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.COMPONENT);
         const isInsideCutscene = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.CUTSCENE);
 
         const completionItems: vscode.CompletionItem[] = [];
 
-        if (isInsideClass || isInsideComponent) {
+        if (isInsideClass || isInsideComponent || currentClass?.name === 'Main') {
             const isDeclaringFunction = CodeContextUtils.isDeclaringFunction(document, position);
             if (isDeclaringFunction) {
                 this.reservedFunctions.forEach(fn => {
