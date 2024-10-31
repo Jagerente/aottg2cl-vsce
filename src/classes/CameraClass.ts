@@ -17,6 +17,8 @@ export class CameraClass implements IClass {
         { label: 'FOV', type: 'float', description: 'Current camera field of view if set using SetFOV().', readonly: true },
         { label: 'FollowDistance', type: 'float', description: 'Current camera follow distance from target character.', readonly: false },
         { label: 'Forward', type: 'Vector3', description: 'The forward direction of the camera.', readonly: false },
+        { label: 'Right', type: 'Vector3', description: 'The right direction of the camera.', readonly: false },
+        { label: 'Up', type: 'Vector3', description: 'The up direction of the camera.', readonly: false }
     ];
 
     public staticMethods: IMethod[] = [
@@ -67,7 +69,27 @@ export class CameraClass implements IClass {
             parameters: [
                 { name: 'fov', type: 'float', description: 'The new field of view.' }
             ]
-        }
+        },
+        {
+            label: 'SetCameraMode',
+            returnType: 'null',
+            description: 'Forces the player to use a certain camera mode, taking priority over their camera setting. Accepted values are TPS, Original, FPS.',
+            parameters: [
+                { name: 'mode', type: 'string', description: 'The camera mode to set.' }
+            ]
+        },
+        {
+            label: 'ResetDistance',
+            returnType: 'null',
+            description: 'Resets the follow distance to player\'s settings.',
+            parameters: []
+        },
+        {
+            label: 'ResetCameraMode',
+            returnType: 'null',
+            description: 'Resets the camera mode to player\'s settings.',
+            parameters: []
+        }        
     ];
 }
 

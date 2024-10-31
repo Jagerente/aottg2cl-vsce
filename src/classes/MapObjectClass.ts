@@ -29,6 +29,8 @@ export class MapObjectClass implements IClass {
         { label: 'TextureTilingY', type: 'float', description: 'Sets the texture tiling y of the first renderer.' },
         { label: 'TextureOffsetX', type: 'float', description: 'Sets the texture offset x of the first renderer.' },
         { label: 'TextureOffsetY', type: 'float', description: 'Sets the texture offset y of the first renderer.' },
+        { label: 'QuaternionRotation', type: 'Quaternion', description: 'Quaternion rotation of the map object.' },
+        { label: 'QuaternionLocalRotation', type: 'Quaternion', description: 'Quaternion local rotation of the map object.' }
     ];
 
     public instanceMethods: IMethod[] = [
@@ -120,6 +122,73 @@ export class MapObjectClass implements IClass {
             label: 'GetBoundsAverageCenter',
             returnType: 'Vector3',
             description: 'Gets the center of all of the bounds of all hitboxes on the object.',
+            parameters: []
+        },
+        {
+            label: 'SetComponentEnabled',
+            returnType: 'null',
+            description: 'Sets the attached component to enabled or not.',
+            parameters: [
+                { name: 'name', type: 'string', description: 'The name of the component to set.' },
+                { name: 'enabled', type: 'bool', description: 'True to enable, false to disable.' }
+            ]
+        },
+        {
+            label: 'SetComponentsEnabled',
+            returnType: 'null',
+            description: 'Sets all attached components to enabled or not.',
+            parameters: [
+                { name: 'enabled', type: 'bool', description: 'True to enable all components, false to disable.' }
+            ]
+        },
+        {
+            label: 'AddSphereTarget',
+            returnType: 'MapTargetable',
+            description: 'Adds a sphere collider as a region with the layer of "HitBoxes" and sets it as a targetable object.',
+            parameters: [
+                { name: 'team', type: 'string', description: 'The team of the target.' },
+                { name: 'center', type: 'Vector3', description: 'The center of the sphere.' },
+                { name: 'radius', type: 'float', description: 'The radius of the sphere.' }
+            ]
+        },
+        {
+            label: 'AddBoxTarget',
+            returnType: 'MapTargetable',
+            description: 'Adds a box collider as a region with the layer of "HitBoxes" and sets it as a targetable object.',
+            parameters: [
+                { name: 'team', type: 'string', description: 'The team of the target.' },
+                { name: 'center', type: 'Vector3', description: 'The center of the box.' },
+                { name: 'size', type: 'Vector3', description: 'The size of the box.' }
+            ]
+        },
+        {
+            label: 'GetBoundsCenter',
+            returnType: 'Vector3',
+            description: 'Gets the center of the first (main) hitbox on the object.',
+            parameters: []
+        },
+        {
+            label: 'GetBoundsSize',
+            returnType: 'Vector3',
+            description: 'Gets the size of the bounds. Returns null if there are no colliders.',
+            parameters: []
+        },
+        {
+            label: 'GetBoundsMin',
+            returnType: 'Vector3',
+            description: 'Gets the lower corner of the Bounds. Returns null if there are no colliders.',
+            parameters: []
+        },
+        {
+            label: 'GetBoundsMax',
+            returnType: 'Vector3',
+            description: 'Gets the upper corner of the Bounds. Returns null if there are no colliders.',
+            parameters: []
+        },
+        {
+            label: 'GetCorners',
+            returnType: 'List(Vector3)',
+            description: 'Gets all eight corners of the bounds. Returns null if there are no colliders.',
             parameters: []
         }
     ];

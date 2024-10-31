@@ -26,7 +26,9 @@ export class PlayerClass implements IClass {
         { label: 'Deaths', type: 'int', description: 'Player deaths.' },
         { label: 'HighestDamage', type: 'int', description: 'Player highest damage.' },
         { label: 'TotalDamage', type: 'int', description: 'Player total damage.' },
-        { label: 'SpawnPoint', type: 'Vector3', description: "Player\'s respawn point. Can be null." }
+        { label: 'SpawnPoint', type: 'Vector3', description: "Player\'s respawn point. Can be null." },
+        { label: 'Ping', type: 'int', description: "The player's connection ping." },
+        { label: 'SpectateID', type: 'int', description: "The player's spectating ID. If not spectating anyone, returns -1." }
     ];
 
     public instanceMethods: IMethod[] = [

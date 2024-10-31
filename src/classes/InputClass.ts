@@ -49,7 +49,41 @@ export class InputClass implements IClass {
             returnType: 'Vector3',
             description: 'Gets a Vector3 that represents the point the mouse pointer is aiming at. Note that this is not a direction but a world-space position of the closest object the mouse is aiming at.',
             parameters: []
-        }
+        },
+        {
+            label: 'GetMouseSpeed',
+            returnType: 'Vector3',
+            description: 'Gets the user mouse speed.',
+            parameters: []
+        },
+        {
+            label: 'GetMousePosition',
+            returnType: 'Vector3',
+            description: 'Gets the user mouse position.',
+            parameters: []
+        },
+        {
+            label: 'GetScreenDimensions',
+            returnType: 'Vector3',
+            description: 'Gets the user screen dimensions.',
+            parameters: []
+        },
+        {
+            label: 'SetKeyDefaultEnabled',
+            returnType: 'null',
+            description: 'Enables or disables the default behavior for the specified keybind. If set to false, the keybind will not trigger the normal in-game action.',
+            parameters: [
+                { name: 'key', type: 'string', description: 'The key setting to modify.' }
+            ]
+        },
+        {
+            label: 'SetKeyHold',
+            returnType: 'null',
+            description: 'Simulates holding down the specified keybind. If set to true, the game will act as if the player is holding down the key.',
+            parameters: [
+                { name: 'key', type: 'string', description: 'The key setting to modify.' }
+            ]
+        }        
     ];
 }
 
