@@ -14,7 +14,25 @@ export class TitanClass implements IClass {
         { label: 'FocusRange', type: 'float', description: '(AI) titan\'s focus range.' },
         { label: 'NapePosition', type: 'Vector3', description: 'The titan\'s nape position.' },
         { label: 'IsCrawler', type: 'bool', description: 'Is titan a crawler.' },
-        { label: 'UsePathfinding', type: 'bool', description: 'Determines whether the (AI) titan uses pathfinding (Smart Movement in titan settings).' }
+        { label: 'UsePathfinding', type: 'bool', description: 'Determines whether the (AI) titan uses pathfinding (Smart Movement in titan settings).' },
+        { label: 'FocusTime', type: 'float', description: '(AI) titan\'s focus time.' },
+        { label: 'RunSpeedBase', type: 'float', description: 'Titan\'s base run speed. Final run speed is RunSpeedBase + Size * RunSpeedPerLevel.' },
+        { label: 'WalkSpeedBase', type: 'float', description: 'Titan\'s base walk speed. Final walk speed is WalkSpeedBase + Size * WalkSpeedPerLevel.' },
+        { label: 'RunSpeedPerLevel', type: 'float', description: 'Titan\'s run speed added per size.' },
+        { label: 'WalkSpeedPerLevel', type: 'float', description: 'Titan\'s walk speed added per size.' },
+        { label: 'TurnSpeed', type: 'float', description: 'Titan\'s turn animation speed.' },
+        { label: 'RotateSpeed', type: 'float', description: 'Titan\'s rotate speed.' },
+        { label: 'JumpForce', type: 'float', description: 'Titan\'s jump force.' },
+        { label: 'ActionPause', type: 'float', description: 'Titan\'s pause delay after performing an action.' },
+        { label: 'AttackPause', type: 'float', description: 'Titan\'s pause delay after performing an attack.' },
+        { label: 'TurnPause', type: 'float', description: 'Titan\'s pause delay after performing a turn.' },
+        { label: 'FarAttackCooldown', type: 'float', description: '(AI) Titan\'s cooldown after performing a ranged attack.' },
+        { label: 'AttackWait', type: 'float', description: '(AI) Titan\'s wait time between being in range and performing an attack.' },
+        { label: 'CanRun', type: 'bool', description: '(AI) Titan can run or only walk.' },
+        { label: 'AttackSpeedMultiplier', type: 'float', description: 'Titan\'s attack animation speed.' },
+        { label: 'HeadMount', type: 'Transform', description: 'Titan\'s head transform.' },
+        { label: 'NeckMount', type: 'Transform', description: 'Titan\'s neck transform.' }
+
     ];
 
     public instanceMethods: IMethod[] = [
@@ -72,26 +90,6 @@ export class TitanClass implements IClass {
             parameters: [
                 { name: 'emote', type: 'string', description: 'The emote to play.' }
             ]
-        },
-        {
-            label: 'Reveal',
-            returnType: 'null',
-            description: 'Outlines the titan for the given duration.',
-            parameters: [
-                { name: 'duration', type: 'float', description: 'The duration of the outline in seconds.' }
-            ]
-        },
-        {
-            label: 'AddOutline',
-            returnType: 'null',
-            description: 'Outlines the titan.',
-            parameters: []
-        },
-        {
-            label: 'RemoveOutline',
-            returnType: 'null',
-            description: 'Removes the outline on the titan if it is outlined.',
-            parameters: []
         }
     ];
 

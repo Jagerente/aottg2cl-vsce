@@ -194,7 +194,16 @@ export class MathClass implements IClass {
             parameters: [
                 { name: 'a', type: 'float', description: 'The value to get sign.' }
             ]
-        }
+        },
+        {
+            label: 'Atan2',
+            returnType: 'float',
+            description: 'Atan2 of a and b.',
+            parameters: [
+                { name: 'a', type: 'float', description: 'The first value.' },
+                { name: 'b', type: 'float', description: 'The second value.' }
+            ]
+        }        
     ];
 }
 

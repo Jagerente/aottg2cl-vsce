@@ -13,7 +13,8 @@ export class NetworkClass implements IClass {
         { label: 'IsMasterClient', type: 'bool', description: 'Indicates if the current player is the master client.' },
         { label: 'Players', type: 'List(Player)', description: 'List of all players in the room.' },
         { label: 'MasterClient', type: 'Player', description: 'The current master client.' },
-        { label: 'MyPlayer', type: 'Player', description: 'The player object representing yourself.' }
+        { label: 'MyPlayer', type: 'Player', description: 'The player object representing yourself.' },
+        { label: 'NetworkTime', type: 'float', description: 'The current photon network time. This will probably be different from the Game time.' }
     ];
 
     public staticMethods: IMethod[] = [

@@ -33,7 +33,10 @@ export class HumanClass implements IClass {
         { label: 'LeftHookEnabled', type: 'bool', description: 'Disables/Enables the left hook.' },
         { label: 'RightHookEnabled', type: 'bool', description: 'Disables/Enables the right hook.' },
         { label: 'IsInvincible', type: 'bool', description: 'Disables/Enables whether human is invincible.' },
-        { label: 'InvincibleTimeLeft', type: 'float', description: 'Amount of time before IsInvincible is set to false.' }
+        { label: 'InvincibleTimeLeft', type: 'float', description: 'Amount of time before IsInvincible is set to false.' },
+        { label: 'SpecialCooldown', type: 'float', description: 'Maximum cooldown on special ability.' },
+        { label: 'ShifterLiveTime', type: 'float', description: 'If shifter special is equipped, how much live time for transforming.' },
+        { label: 'SpecialCooldownRatio', type: 'float', description: 'Ratio of CurrentCooldown / SpecialCooldown. 1.0 means ability is ready.' }
     ];
 
     public instanceMethods: IMethod[] = [
@@ -100,6 +103,12 @@ export class HumanClass implements IClass {
             parameters: [
                 { name: 'special', type: 'string', description: 'The special to set.' }
             ]
+        },
+        {
+            label: 'ActivateSpecial',
+            returnType: 'null',
+            description: 'Triggers the special to activate..',
+            parameters: []
         },
         {
             label: 'SetWeapon',
