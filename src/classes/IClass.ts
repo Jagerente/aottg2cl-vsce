@@ -137,23 +137,29 @@ export function FindMethodInClassHierarchy(
             return false;
         }
 
-        const parameterCount = m.parameters.length;
-    
         if (argCount === -1) {
-            return true; 
+            return true;
         }
-    
-        const requiredParams = m.parameters.filter(param => !param.isOptional && !param.isVariadic).length;
-    
+
+        const requiredParams = m.parameters.filter(
+            param => !param.isOptional && !param.isVariadic
+        ).length;
+
+        const maxParams = m.parameters.filter(
+            param => !param.isVariadic
+        ).length;
+
+        const hasVariadic = m.parameters.some(param => param.isVariadic);
+
         if (argCount < requiredParams) {
             return false;
         }
-    
-        if (m.parameters.some(param => param.isVariadic)) {
+
+        if (hasVariadic) {
             return true;
         }
-    
-        return parameterCount === argCount;
+
+        return argCount <= maxParams;
     });
     
     if (method) {
