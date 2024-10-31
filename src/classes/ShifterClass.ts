@@ -13,7 +13,22 @@ export class ShifterClass implements IClass {
         { label: 'DetectRange', type: 'float', description: '(AI) shifter\'s detect range.' },
         { label: 'FocusRange', type: 'float', description: '(AI) shifter\'s focus range.' },
         { label: 'NapePosition', type: 'Vector3', description: 'The shifter\'s nape position.' },
-        { label: 'DeathAnimLength', type: 'float', description: 'The length of the death animation.' }
+        { label: 'DeathAnimLength', type: 'float', description: 'The length of the death animation.' },
+        { label: 'FocusTime', type: 'float', description: '(AI) shifter\'s focus time before switching targets.' },
+        { label: 'RunSpeedBase', type: 'float', description: 'Shifter\'s base run speed. Final run speed is RunSpeedBase + Size * RunSpeedPerLevel.' },
+        { label: 'WalkSpeedBase', type: 'float', description: 'Shifter\'s base walk speed. Final walk speed is WalkSpeedBase + Size * WalkSpeedPerLevel.' },
+        { label: 'RunSpeedPerLevel', type: 'float', description: 'Shifter\'s run speed added per level.' },
+        { label: 'WalkSpeedPerLevel', type: 'float', description: 'Shifter\'s walk speed added per level.' },
+        { label: 'TurnSpeed', type: 'float', description: 'Shifter\'s turn speed when running turn animation.' },
+        { label: 'RotateSpeed', type: 'float', description: 'Shifter\'s rotate speed when rotating body.' },
+        { label: 'JumpForce', type: 'float', description: 'Shifter\'s jump force when jumping.' },
+        { label: 'ActionPause', type: 'float', description: 'Shifter\'s pause delay after performing an action.' },
+        { label: 'AttackPause', type: 'float', description: 'Shifter\'s pause delay after performing an attack.' },
+        { label: 'TurnPause', type: 'float', description: 'Shifter\'s pause delay after performing a turn.' },
+        { label: 'FarAttackCooldown', type: 'float', description: '(AI) Shifter\'s cooldown after performing a ranged attack.' },
+        { label: 'AttackWait', type: 'float', description: '(AI) Shifter\'s wait time between being in range to attack and performing the attack.' },
+        { label: 'AttackSpeedMultiplier', type: 'float', description: 'Shifter\'s attack animation speed.' },
+        { label: 'UsePathfinding', type: 'bool', description: '(AI) Shifter uses pathfinding.' }
     ];
 
     public instanceMethods: IMethod[] = [

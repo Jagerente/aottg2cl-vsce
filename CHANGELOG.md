@@ -5,6 +5,16 @@ All notable changes to the "aottg2cl" extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.5-preview] - 2024-11-01
+
+### Changed
+
+- Updated global classes definitions to the latest game update. (https://github.com/Jagerente/aottg2cl-vsce/commit/e769039c8aafe6d5f2d5ef6c821d5dd8e8066125)
+- Improved completions for Main access. Treated as static (extension) now.
+- Improved local variables parsing: better typing, loop variables support.
+- Fixed optional/variadic function arguments diagnostic.
+- Removed unsupported tokens `[]` & `'` (by oryxoik).
+
 ## [0.0.4-preview] - 2024-10-22
 
 ### Added

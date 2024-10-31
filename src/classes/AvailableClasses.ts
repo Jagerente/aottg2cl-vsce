@@ -13,6 +13,7 @@ import { LineCastHitResultClassInstance } from "./LineCastHitResultClass";
 import { ListClassInstance } from "./ListClass";
 import { MapClassInstance } from "./MapClass";
 import { MapObjectClassInstance } from "./MapObjectClass";
+import { MapTargetableClassInstance } from "./MapTargetableClass";
 import { MathClassInstance } from "./MathClass";
 import { NetworkClassInstance } from "./NetworkClass";
 import { NetworkViewClassInstance } from "./NetworkViewClass";
@@ -55,6 +56,7 @@ export const AvailableClasses: IClass[] = [
     TitanClassInstance,
     ShifterClassInstance,
     MapObjectClassInstance,
+    MapTargetableClassInstance,
     TransformClassInstance,
     PlayerClassInstance,
     NetworkViewClassInstance,
@@ -90,6 +92,7 @@ export const AvailableClassesMap: Map<string, IClass> = new Map([
     [TitanClassInstance.name, TitanClassInstance],
     [ShifterClassInstance.name, ShifterClassInstance],
     [MapObjectClassInstance.name, MapObjectClassInstance],
+    [MapTargetableClassInstance.name, MapTargetableClassInstance],
     [TransformClassInstance.name, TransformClassInstance],
     [PlayerClassInstance.name, PlayerClassInstance],
     [NetworkViewClassInstance.name, NetworkViewClassInstance],

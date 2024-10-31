@@ -47,11 +47,12 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         let extendsList: IClass[] = [];
         let classDescription = '';
 
-        if (ctx.CLASS()) {
-            classKind = ClassKinds.CLASS;
-            // if (className === 'Main') {
+        if (className === 'Main') {
+            classKind = ClassKinds.EXTENSION;
             extendsList = [new BaseMainClass(className)];
-            // }
+        } else if (ctx.CLASS()) {
+            classKind = ClassKinds.CLASS;
+            extendsList = [new BaseMainClass(className)];
         } else if (ctx.COMPONENT()) {
             classKind = ClassKinds.COMPONENT;
             extendsList = [new BaseComponentsClass(className)];
@@ -158,7 +159,31 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 return;
             }
 
-            const fieldType = 'any';
+            let fieldType = 'any';
+            if (ctx.ASSIGN()) {
+                const value = ctx.expression()!.text.trim();
+
+                if (/^".*"$/.test(value)) {
+                    fieldType = 'string';
+                }
+
+                if (/^\d+\.\d+$/.test(value)) {
+                    fieldType = 'float';
+                }
+
+                if (/^\d+$/.test(value)) {
+                    fieldType = 'int';
+                }
+
+                if (value === 'true' || value === 'false') {
+                    fieldType = 'bool';
+                }
+
+                const constructorMatch = value.match(/^(.*?)\(/);
+                if (constructorMatch) {
+                    fieldType = constructorMatch[1];
+                }
+            }
             const description = '';
 
             const field: IField = {

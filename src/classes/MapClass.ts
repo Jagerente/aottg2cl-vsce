@@ -95,6 +95,20 @@ export class MapClass implements IClass {
             returnType: 'null',
             description: 'Updates the Navmesh (host only) asynchronously and should not hang.',
             parameters: []
+        },
+        {
+            label: 'FindAllMapObjects',
+            returnType: 'List(MapObject)',
+            description: 'Returns all map objects in the game.',
+            parameters: []
+        },
+        {
+            label: 'DestroyMapTargetable',
+            returnType: 'null',
+            description: 'Destroys the given map targetable.',
+            parameters: [
+                { name: 'obj', type: 'MapTargetable', description: 'The map targetable to destroy.' }
+            ]
         }
     ];
 }

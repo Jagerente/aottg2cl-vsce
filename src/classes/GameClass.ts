@@ -21,7 +21,14 @@ export class GameClass implements IClass {
         { label: 'PlayerTitans', type: 'List(Titan)', description: 'List of player titans currently alive.' },
         { label: 'PlayerShifters', type: 'List(Shifter)', description: 'List of player shifters currently alive.' },
         { label: 'PlayerHumans', type: 'List(Human)', description: 'List of player humans currently alive.' },
-        { label: 'Loadouts', type: 'List(string)', description: 'List of allowed player loadouts.' }
+        { label: 'Loadouts', type: 'List(string)', description: 'List of allowed player loadouts.' },
+        { label: 'DefaultShowKillScore', type: 'bool', description: 'If false, kill scores will not automatically show upon player dealing character damage.' },
+        { label: 'DefaultShowKillFeed', type: 'bool', description: 'If false, kill feeds will not automatically show upon player kills.' },
+        { label: 'DefaultAddKillScore', type: 'bool', description: 'If false, kills will not automatically modify kills/damage/deaths stats.' },
+        { label: 'ShowScoreboardStatus', type: 'bool', description: 'Whether to show player alive/dead status in the scoreboard.' },
+        { label: 'ShowScoreboardLoadout', type: 'bool', description: 'Whether to show player character/loadout in the scoreboard.' },
+        { label: 'ForcedCharacterType', type: 'string', description: 'The forced character for the local player for the next spawn.' },
+        { label: 'ForcedLoadout', type: 'string', description: 'The forced loadout for the local player for the next spawn.' }
     ];
 
     public staticMethods: IMethod[] = [
@@ -258,6 +265,36 @@ export class GameClass implements IClass {
             description: 'Returns a character by its network view ID.',
             parameters: [
                 { name: 'viewID', type: 'int', description: 'Network view ID of the character.' }
+            ]
+        },
+        {
+            label: 'ShowKillScore',
+            returnType: 'void',
+            description: 'Locally shows a kill score popup for the player.',
+            parameters: [
+                { name: 'score', type: 'int', description: 'The score to display.' }
+            ]
+        },
+        {
+            label: 'ShowKillFeed',
+            returnType: 'void',
+            description: 'Locally shows a kill feed for the player.',
+            parameters: [
+                { name: 'killer', type: 'string', description: 'Name of the killer.' },
+                { name: 'victim', type: 'string', description: 'Name of the victim.' },
+                { name: 'score', type: 'int', description: 'Score value.' },
+                { name: 'weapon', type: 'string', description: 'Weapon used. Valid options: Blades, AHSS, APG, Thunderspear, Titan, Shifter.' }
+            ]
+        },
+        {
+            label: 'ShowKillFeedAll',
+            returnType: 'void',
+            description: 'Shows a kill feed for all players.',
+            parameters: [
+                { name: 'killer', type: 'string', description: 'Name of the killer.' },
+                { name: 'victim', type: 'string', description: 'Name of the victim.' },
+                { name: 'score', type: 'int', description: 'Score value.' },
+                { name: 'weapon', type: 'string', description: 'Weapon used. Valid options: Blades, AHSS, APG, Thunderspear, Titan, Shifter.' }
             ]
         }
     ];

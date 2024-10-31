@@ -122,7 +122,31 @@ export class StringClass implements IClass {
                 { name: 'insert', type: 'string', description: 'The string to insert.' },
                 { name: 'index', type: 'int', description: 'The index to insert at.' }
             ]
-        }
+        },
+        {
+            label: 'Capitalize',
+            returnType: 'string',
+            description: 'Capitalizes the first letter of the string.',
+            parameters: [
+                { name: 'value', type: 'string', description: 'The string to capitalize.' }
+            ]
+        },
+        {
+            label: 'ToUpper',
+            returnType: 'string',
+            description: 'Converts the string to upper case.',
+            parameters: [
+                { name: 'value', type: 'string', description: 'The string to convert.' }
+            ]
+        },
+        {
+            label: 'ToLower',
+            returnType: 'string',
+            description: 'Converts the string to lower case.',
+            parameters: [
+                { name: 'value', type: 'string', description: 'The string to convert.' }
+            ]
+        }        
     ];
 }
 

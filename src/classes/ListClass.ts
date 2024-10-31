@@ -82,6 +82,12 @@ export class ListClass implements IClass {
             returnType: 'null',
             description: 'Sorts the items in the list in place if the items are comparable (int, float, string).',
             parameters: []
+        },
+        {
+            label: 'Randomize',
+            returnType: 'null',
+            description: 'Randomizes the list order.',
+            parameters: []
         }
     ];
 

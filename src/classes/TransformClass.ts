@@ -16,7 +16,9 @@ export class TransformClass implements IClass {
         { label: 'Scale', type: 'Vector3', description: 'Scale of the transform.' },
         { label: 'Forward', type: 'Vector3', description: 'Forward vector of the transform.' },
         { label: 'Up', type: 'Vector3', description: 'Up vector of the transform.' },
-        { label: 'Right', type: 'Vector3', description: 'Right vector of the transform.' }
+        { label: 'Right', type: 'Vector3', description: 'Right vector of the transform.' },
+        { label: 'QuaternionRotation', type: 'Quaternion', description: 'Quaternion rotation of the transform.' },
+        { label: 'QuaternionLocalRotation', type: 'Quaternion', description: 'Local quaternion rotation of the transform.' }
     ];
 
     public instanceMethods: IMethod[] = [
@@ -109,6 +111,32 @@ export class TransformClass implements IClass {
             description: 'Transforms a direction from local space to world space.',
             parameters: [
                 { name: 'direction', type: 'Vector3', description: 'The direction to transform.' }
+            ]
+        },
+        {
+            label: 'RotateAround',
+            returnType: 'null',
+            description: 'Rotates the transform around a point, given axis and angle.',
+            parameters: [
+                { name: 'point', type: 'Vector3', description: 'The point around which to rotate.' },
+                { name: 'axis', type: 'Vector3', description: 'The axis to rotate around.' },
+                { name: 'angle', type: 'float', description: 'The angle in degrees to rotate.' }
+            ]
+        },
+        {
+            label: 'LookAt',
+            returnType: 'null',
+            description: 'Rotates the transform such that it is facing the specified point.',
+            parameters: [
+                { name: 'position', type: 'Vector3', description: 'The position to look at.' }
+            ]
+        },
+        {
+            label: 'SetRenderersEnabled',
+            returnType: 'null',
+            description: 'Toggles the renderers attached to the transform and its children.',
+            parameters: [
+                { name: 'enabled', type: 'bool', description: 'True to enable, false to disable renderers.' }
             ]
         }
     ];
