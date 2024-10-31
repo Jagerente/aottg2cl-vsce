@@ -25,10 +25,11 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         const isInsideExtension = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.EXTENSION);
         const isInsideCutscene = this.documentTreeProvider.isInsideClassKindBody(position, ClassKinds.CUTSCENE);
         const isInsideAnyClass = isInsideClass || isInsideComponent || isInsideExtension || isInsideCutscene;
+        const isInsideAnyMethodBody = this.documentTreeProvider.isInsideAnyMethodBody(position);
 
         const isDeclaringFunction = this.documentTreeProvider.isInsideAnyMethodDeclaration(position);
 
-        if (!isInsideAnyClass || isDeclaringFunction) {
+        if (!isInsideAnyClass || isDeclaringFunction && !isInsideAnyMethodBody) {
             return [];
         }
 

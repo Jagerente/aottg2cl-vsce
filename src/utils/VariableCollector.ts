@@ -3,6 +3,11 @@ import { IClass, IVariable } from '../classes/IClass';
 import { CodeContextUtils } from './CodeContextUtils';
 import { DocumentTreeProvider } from './DocumentTreeProvider';
 
+interface Scope {
+    variables: Map<string, IVariable>;
+    parent: Scope | null;
+}
+
 export class VariableCollector {
     private documentTreeProvider: DocumentTreeProvider;
 
@@ -18,51 +23,97 @@ export class VariableCollector {
         const text = document.getText();
         const lines = text.split(/\r?\n/);
 
-        const variables = new Map<string, IVariable>();
-        const scopeStack: Array<Map<string, IVariable>> = [];
-        let currentScopeVars = new Map<string, IVariable>();
-
-        let braceDepth = 0;
         let contextStartLine = CodeContextUtils.findContextStartLine(document, position);
         const currentClassName = CodeContextUtils.findCurrentClassName(document, position);
         const currentClass = currentClassName ? availableClasses.get(currentClassName) : null;
 
         if (contextStartLine === null || !currentClass) {
-            return variables;
+            return new Map<string, IVariable>();
         }
 
+        interface Scope {
+            variables: Map<string, IVariable>;
+            parent: Scope | null;
+        }
+
+        let currentScope: Scope = { variables: new Map<string, IVariable>(), parent: null };
+        const scopeStack: Scope[] = [currentScope];
+        let pendingControlStructure: boolean = false;
+
         for (let lineIndex = contextStartLine; lineIndex <= position.line; lineIndex++) {
-            const line = lines[lineIndex].trim();
+            const line = lines[lineIndex];
 
-            const openBraces = (line.match(/\{/g) || []).length;
-            const closeBraces = (line.match(/\}/g) || []).length;
-            braceDepth += openBraces;
-            braceDepth -= closeBraces;
+            const forLoopMatch = line.match(/^\s*for\s*\(\s*(\w+)\s+in\s+(.+)\s*\)/);
+            if (forLoopMatch) {
+                const variableName = forLoopMatch[1];
+                const iterableExpression = forLoopMatch[2].trim();
 
-            if (openBraces > 0) {
-                scopeStack.push(currentScopeVars);
-                currentScopeVars = new Map<string, IVariable>();
+                const iterableType = this.inferType(iterableExpression, availableClasses, currentClass, currentScope.variables);
+
+                const elementType = this.inferElementType(iterableType);
+
+                currentScope = { variables: new Map<string, IVariable>(), parent: currentScope };
+                scopeStack.push(currentScope);
+
+                currentScope.variables.set(variableName, { name: variableName, type: elementType, value: 'iterable element' });
+
+                pendingControlStructure = true;
+                continue;
             }
 
-            this.collectVariablesFromLine(line, currentScopeVars, availableClasses, currentClass);
-
-            if (closeBraces > 0) {
-                const previousScope = scopeStack.pop();
-                if (previousScope) {
-                    previousScope.forEach((value, key) => currentScopeVars.set(key, value));
-                    currentScopeVars = previousScope;
+            const openBraceMatch = line.match(/\{/g);
+            if (openBraceMatch) {
+                for (let i = 0; i < openBraceMatch.length; i++) {
+                    if (pendingControlStructure) {
+                        pendingControlStructure = false;
+                    } else {
+                        currentScope = { variables: new Map<string, IVariable>(), parent: currentScope };
+                        scopeStack.push(currentScope);
+                    }
                 }
+            }
+
+            this.collectVariablesFromLine(line.trim(), currentScope.variables, availableClasses, currentClass);
+
+            const closeBraceMatch = line.match(/\}/g);
+            if (closeBraceMatch) {
+                for (let i = 0; i < closeBraceMatch.length; i++) {
+                    if (currentScope.parent) {
+                        scopeStack.pop();
+                        currentScope = currentScope.parent;
+                    }
+                }
+            }
+
+            if (pendingControlStructure && !openBraceMatch) {
+                currentScope = { variables: new Map<string, IVariable>(), parent: currentScope };
+                scopeStack.push(currentScope);
+                pendingControlStructure = false;
             }
         }
 
         const currentMethod = this.documentTreeProvider.getCurrentMethod(position);
         if (currentMethod) {
             currentMethod.parameters.forEach(param => {
-                currentScopeVars.set(param.name, { name: param.name, type: param.type, value: 'unknown' });
+                currentScope.variables.set(param.name, { name: param.name, type: param.type, value: 'unknown' });
             });
         }
 
-        return currentScopeVars;
+        return this.getAllVariables(currentScope);
+    }
+
+    private getAllVariables(scope: Scope): Map<string, IVariable> {
+        const variables = new Map<string, IVariable>();
+        let current: Scope | null = scope;
+        while (current) {
+            current.variables.forEach((value, key) => {
+                if (!variables.has(key)) {
+                    variables.set(key, value);
+                }
+            });
+            current = current.parent;
+        }
+        return variables;
     }
 
     private collectVariablesFromLine(
@@ -78,6 +129,18 @@ export class VariableCollector {
 
             const inferredType = this.inferType(variableValue, availableClasses, currentClass, variables);
             variables.set(variableName, { name: variableName, type: inferredType, value: variableValue });
+        }
+    }
+
+    private inferElementType(iterableType: string): string {
+        const listTypeMatch = iterableType.match(/^List\((.+)\)$/);
+        const rangeMatch = iterableType.match(/^Range/);
+        if (listTypeMatch) {
+            return listTypeMatch[1];
+        } else if (rangeMatch) {
+            return 'int';
+        } else {
+            return 'any';
         }
     }
 

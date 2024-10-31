@@ -158,7 +158,31 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 return;
             }
 
-            const fieldType = 'any';
+            let fieldType = 'any';
+            if (ctx.ASSIGN()) {
+                const value = ctx.expression()!.text.trim();
+
+                if (/^".*"$/.test(value)) {
+                    fieldType = 'string';
+                }
+
+                if (/^\d+\.\d+$/.test(value)) {
+                    fieldType = 'float';
+                }
+
+                if (/^\d+$/.test(value)) {
+                    fieldType = 'int';
+                }
+
+                if (value === 'true' || value === 'false') {
+                    fieldType = 'bool';
+                }
+
+                const constructorMatch = value.match(/^(.*?)\(/);
+                if (constructorMatch) {
+                    fieldType = constructorMatch[1];
+                }
+            }
             const description = '';
 
             const field: IField = {
