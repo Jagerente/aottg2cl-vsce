@@ -15,7 +15,6 @@ import { StatementContext } from "./ACLParser";
 import { WhileLoopContext } from "./ACLParser";
 import { ForLoopContext } from "./ACLParser";
 import { IfStatementContext } from "./ACLParser";
-import { ElifBlockContext } from "./ACLParser";
 import { ElifStatementContext } from "./ACLParser";
 import { ElseStatementContext } from "./ACLParser";
 import { ReturnStatementContext } from "./ACLParser";
@@ -174,17 +173,6 @@ export interface ACLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitIfStatement?: (ctx: IfStatementContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `ACLParser.elifBlock`.
-	 * @param ctx the parse tree
-	 */
-	enterElifBlock?: (ctx: ElifBlockContext) => void;
-	/**
-	 * Exit a parse tree produced by `ACLParser.elifBlock`.
-	 * @param ctx the parse tree
-	 */
-	exitElifBlock?: (ctx: ElifBlockContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `ACLParser.elifStatement`.
