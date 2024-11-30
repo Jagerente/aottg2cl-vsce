@@ -82,6 +82,42 @@ export class QuaternionClass implements IClass {
             parameters: [
                 { name: 'v', type: 'Vector3', description: 'Euler angles as a Vector3.' }
             ]
+        },
+        {
+            label: 'LookRotation',
+            returnType: 'Quaternion',
+            description: 'Returns the Quaternion rotation with the specified forward and (optional) up Vector.',
+            parameters: [
+                { name: 'forward', type: 'Vector3', description: 'Forward vector.' },
+                { name: 'up', type: 'Vector3', description: 'Forward vector.', isOptional: true }
+            ]
+        },
+        {
+            label: 'FromToRotation',
+            returnType: 'Quaternion',
+            description: 'Returns the Quaternion rotation with the specified forward and (optional) up Vector.',
+            parameters: [
+                { name: 'from', type: 'Vector3', description: 'From vector.' },
+                { name: 'to', type: 'Vector3', description: 'To vector.', isOptional: true }
+            ]
+        },
+        {
+            label: 'Inverse',
+            returnType: 'Quaternion',
+            description: 'Returns the inverse of the given Quaternion.',
+            parameters: [
+                { name: 'a', type: 'Quaternion', description: 'Quaternion to inverse.' }
+            ]
+        },
+        {
+            label: 'RotateTowards',
+            returnType: 'Quaternion',
+            description: 'Returns the inverse of the given Quaternion.',
+            parameters: [
+                { name: 'from', type: 'Quaternion', description: 'From Quaternion.' },
+                { name: 'to', type: 'Quaternion', description: 'To Quaternion.' },
+                { name: 'maxDegrees', type: 'float', description: 'Maximum degrees.' }
+            ]
         }
     ];
 }
