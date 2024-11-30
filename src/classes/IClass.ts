@@ -69,6 +69,7 @@ export interface IField {
     description: string;
     readonly?: boolean;
     private?: boolean
+    declarationRange?: vscode.Range;
 }
 
 export interface IClass {

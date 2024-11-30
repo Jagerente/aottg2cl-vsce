@@ -6,6 +6,7 @@ import { IncompleteMemberAccessValidator } from './IncompleteMemberAccessValidat
 import { CutsceneValidator } from './CutsceneValidator';
 import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
 import { CtorValidator } from './CtorValidator';
+import { DuplicatesValidator } from './DuplicatesValidator';
 // import { TestRangeHighliterValidator } from './TestRangeHighliterValidator';
 
 export class DiagnosticManager {
@@ -16,6 +17,7 @@ export class DiagnosticManager {
         this.diagnosticCollection = diagnosticCollection;
         this.validators = this.validators.concat(new ANTLRValidator(aclManager));
         this.validators = this.validators.concat(new ClassUsageValidator(documentTreeProvider));
+        this.validators = this.validators.concat(new DuplicatesValidator(documentTreeProvider));
         this.validators = this.validators.concat(new IncompleteMemberAccessValidator());
         this.validators = this.validators.concat(new CutsceneValidator(documentTreeProvider));
         this.validators = this.validators.concat(new CtorValidator(documentTreeProvider));

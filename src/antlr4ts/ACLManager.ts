@@ -8,7 +8,7 @@ import { CharStreams, CommonTokenStream, Token } from 'antlr4ts';
 import { ClassesParserVisitor } from './ClassesParserVisitor';
 
 export class ACLManager {
-    private classes: Map<string, IClass> = new Map();
+    private classes: IClass[] = [];
     private chains: IChainNode[][] = [];
     private loopNodes: ILoopNode[] = [];
     private conditionNodes: IConditionNode[] = [];
@@ -47,7 +47,7 @@ export class ACLManager {
     }
 
     public flush(): void {
-        this.classes = new Map();
+        this.classes = [];
         this.chains = [];
         this.loopNodes = [];
         this.conditionNodes = [];
@@ -56,7 +56,7 @@ export class ACLManager {
         this.parserErrorListener.flush();
     }
 
-    public getClasses(): Map<string, IClass> {
+    public getClasses(): IClass[] {
         return this.classes;
     }
 

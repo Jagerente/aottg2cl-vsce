@@ -32,7 +32,7 @@ import { BaseInstantiatableClass } from '../classes/BaseInstantiatableClass';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
 
 export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
-    public classes: Map<string, IClass> = new Map();
+    public classes: IClass[] = [];
     private currentClass: IClass | null = null;
     private currentMethod: IMethod | null = null;
     private currentChain: IChainNode[] = [];
@@ -83,7 +83,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             bodyRange: bodyRange,
         };
 
-        this.classes.set(this.currentClass.name, this.currentClass);
+        this.classes.push(this.currentClass);
         this.visitChildren(ctx);
     };
 
@@ -188,11 +188,14 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             }
             const description = '';
 
+            const declarationRange = this.getFieldDeclarationRange(ctx);
+
             const field: IField = {
                 label: fieldName,
                 type: fieldType,
                 description: description,
                 private: ctx.PRIVATE() !== undefined,
+                declarationRange: declarationRange,
             };
 
             const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
@@ -351,7 +354,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         this.visitChildren(ctx);
     };
 
-    public getParsedClasses(): Map<string, IClass> {
+    public getParsedClasses(): IClass[] {
         return this.classes;
     }
 
@@ -383,6 +386,19 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         const startChar = ctx.LBRACE().symbol.charPositionInLine;
         const endLine = ctx.RBRACE().symbol.line;
         const endChar = ctx.RBRACE().symbol.charPositionInLine;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getFieldDeclarationRange(ctx: VariableDeclContext): vscode.Range {
+        const startToken = ctx.start!;
+        const stopToken = ctx.stop!;
+        const startLine = startToken.line - 1;
+        const startChar = startToken.charPositionInLine;
+        const endLine = stopToken.line - 1;
+        const endChar = stopToken.charPositionInLine + stopToken.text!.length;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
