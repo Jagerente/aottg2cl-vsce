@@ -104,26 +104,88 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
         if (this.currentClass) {
             const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
-            const parametersList: string[] = ctx.paramList()?.ID().map(id => id.text) || [];
-            let parameters: IParameter[] = parametersList.map(param => ({
-                name: param,
-                type: 'any',
-                description: ''
-            }));
+            let parameters: IParameter[] = [];
+            if (ctx.paramList()) {
+                for (let paramCtx of ctx.paramList()!.param()) {
+                    const paramName = paramCtx.ID().text;
+                    let paramType = 'any';
+                    let description = '';
+            
+                    if (paramCtx.annotation() && paramCtx.annotation().length > 0) {
+                        for (let annotationCtx of paramCtx.annotation()) {
+                            let annotationText = '';
+                            if (annotationCtx.ANNOTATION_COMMENT()) {
+                                annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
+                            } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+                                annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
+                            }
+                            const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                            const typeMatch = cleanedText.match(/@type\s+(\S+)/);
+                            if (typeMatch) {
+                                paramType = typeMatch[1];
+                                break;
+                            }
+                        }
+                    } else if (ctx.annotation() && ctx.annotation().length > 0) {
+                        for (let annotationCtx of ctx.annotation()) {
+                            let annotationText = '';
+                            if (annotationCtx.ANNOTATION_COMMENT()) {
+                                annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
+                            } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+                                annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
+                            }
+                            const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                            const paramMatch = cleanedText.match(new RegExp(`@param\\s+${paramName}\\s+(\\S+)`));
+                            if (paramMatch) {
+                                paramType = paramMatch[1];
+                                break;
+                            }
+                        }
+                    } else {
+                        const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
+                        if (parentMethod) {
+                            description = parentMethod.description;
+                            parameters = parentMethod.parameters;
+                        }
+                    }
+            
+                    parameters.push({
+                        name: paramName,
+                        type: paramType,
+                        description: '',
+                    });
+                }
+            }
             let returnType = 'void';
-            let description = '';
-            const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
-            if (parentMethod) {
-                returnType = parentMethod.returnType;
-                description = parentMethod.description;
-                parameters = parentMethod.parameters;
+            const annotations = ctx.annotation();
+            if (annotations && annotations.length > 0) {
+                for (let annotationCtx of annotations) {
+                    let annotationText = '';
+                    if (annotationCtx.ANNOTATION_COMMENT()) {
+                        annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
+                    } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+                        annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
+                    }
+                    const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                    const returnMatch = cleanedText.match(/@return\s+(\S+)/);
+                    if (returnMatch) {
+                        returnType = returnMatch[1];
+                        break;
+                    }
+                }
+    
+            } else {
+                const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
+                if (parentMethod) {
+                    returnType = parentMethod.returnType;
+                }
             }
 
             const method: IMethod = {
                 label: methodName,
                 kind: methodKind,
                 returnType: returnType,
-                description: description,
+                description: '',
                 parameters: parameters,
                 declarationRange: declarationRange,
                 bodyRange: bodyRange
@@ -162,7 +224,23 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             }
 
             let fieldType = 'any';
-            if (ctx.ASSIGN()) {
+            const annotations = ctx.annotation();
+            if (annotations && annotations.length > 0) {
+                for (let annotationCtx of annotations) {
+                    let annotationText = '';
+                    if (annotationCtx.ANNOTATION_COMMENT()) {
+                        annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
+                    } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+                        annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
+                    }
+                    const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                    const typeMatch = cleanedText.match(/@type\s+(\S+)/);
+                    if (typeMatch) {
+                        fieldType = typeMatch[1];
+                        break;
+                    }
+                }
+            } else {
                 const value = ctx.expression()!.text.trim();
 
                 if (/^".*"$/.test(value)) {
