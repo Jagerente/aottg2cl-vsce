@@ -24,8 +24,7 @@ export class VariableCollector {
         const lines = text.split(/\r?\n/);
 
         let contextStartLine = CodeContextUtils.findContextStartLine(document, position);
-        const currentClassName = CodeContextUtils.findCurrentClassName(document, position);
-        const currentClass = currentClassName ? availableClasses.get(currentClassName) : null;
+        const currentClass = this.documentTreeProvider.getCurrentClass(position);
 
         if (contextStartLine === null || !currentClass) {
             return new Map<string, IVariable>();
@@ -119,7 +118,7 @@ export class VariableCollector {
     private collectVariablesFromLine(
         line: string,
         variables: Map<string, IVariable>,
-        availableClasses: Map<string, IClass>,
+        availableClasses: IClass[],
         currentClass: IClass
     ): void {
         const variableMatch = line.match(/^\s*(\w+)\s*=\s*(.+);?/);
@@ -146,7 +145,7 @@ export class VariableCollector {
 
     private inferType(
         value: string,
-        availableClasses: Map<string, IClass>,
+        availableClasses: IClass[],
         currentClass?: IClass,
         currentScopeVars?: Map<string, IVariable>
     ): string {
@@ -187,7 +186,7 @@ export class VariableCollector {
 
         if (/^\s*\w+\s*\(.*\)\s*$/.test(value)) {
             const methodName = value.split('(')[0].trim();
-            if (availableClasses.has(methodName)) {
+            if (availableClasses.find((cls) => cls.name === methodName)) {
                 return methodName;
             }
         }
@@ -197,14 +196,14 @@ export class VariableCollector {
 
     private resolveChainType(
         identifierChain: string[],
-        availableClasses: Map<string, IClass>,
+        availableClasses: IClass[],
         currentScopeVars?: Map<string, IVariable>
     ): string {
         let currentType: string | undefined;
 
         for (const identifier of identifierChain) {
             if (!currentType) {
-                if (availableClasses.has(identifier)) {
+                if (availableClasses.find((cls) => cls.name === identifier)) {
                     currentType = identifier;
                 } else if (currentScopeVars && currentScopeVars.has(identifier)) {
                     currentType = currentScopeVars.get(identifier)!.type;
@@ -213,7 +212,7 @@ export class VariableCollector {
                     return 'any';
                 }
             } else {
-                const classDef = availableClasses.get(currentType);
+                const classDef = availableClasses.find((cls) => cls.name === currentType);
                 if (!classDef) {
                     return 'any';
                 }

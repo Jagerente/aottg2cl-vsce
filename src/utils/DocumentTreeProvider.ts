@@ -5,31 +5,31 @@ import { ACLManager } from '../antlr4ts/ACLManager';
 export class DocumentTreeProvider {
     private aclManager: ACLManager;
     private globalClasses: Map<string, IClass>;
-    private userDefinedClasses: Map<string, IClass>;
-    private allAvailableClasses: Map<string, IClass>;
+    private userDefinedClasses: IClass[];
+    private allAvailableClasses: IClass[];
 
     constructor(aclManager: ACLManager, globalClasses: Map<string, IClass>) {
         this.globalClasses = globalClasses;
-        this.userDefinedClasses = new Map();
-        this.allAvailableClasses = this.globalClasses;
+        this.userDefinedClasses = [];
+        this.allAvailableClasses = Array.from(this.globalClasses.values());
         this.aclManager = aclManager;
     }
 
     public refetchUserDefinedClasses(document: vscode.TextDocument): void {
         this.aclManager.refetch(document);
         this.userDefinedClasses = this.aclManager.getClasses();
-        this.allAvailableClasses = new Map([...this.globalClasses, ...this.userDefinedClasses]);
+        this.allAvailableClasses = [...Array.from(this.globalClasses.values()), ...this.userDefinedClasses];
     }
 
     public getGlobalClassesMap(): Map<string, IClass> {
         return this.globalClasses;
     }
 
-    public getUserDefinedClassesMap(): Map<string, IClass> {
+    public getUserDefinedClassesMap(): IClass[] {
         return this.userDefinedClasses;
     }
 
-    public getAllAvailableClasses(): Map<string, IClass> {
+    public getAllAvailableClasses(): IClass[] {
         return this.allAvailableClasses;
     }
 
