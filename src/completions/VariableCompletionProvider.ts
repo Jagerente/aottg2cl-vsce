@@ -518,7 +518,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
     }
 
     private findClassByName(className: string): IClass | undefined {
-        return this.documentTreeProvider.getAllAvailableClasses().get(className);
+        return this.documentTreeProvider.getAllAvailableClasses().find((cls) => cls.name === className);
     }
 
     private findMethodByName(classDef: IClass, methodName: string): IMethod | undefined {
@@ -536,7 +536,6 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         }
         return undefined;
     }
-
 
     private findMethodByNameFromAllClasses(methodName: string): IMethod | undefined {
         this.documentTreeProvider.getAllAvailableClasses().forEach((classDef) => {

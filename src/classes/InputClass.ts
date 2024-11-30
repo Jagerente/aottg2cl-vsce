@@ -73,7 +73,8 @@ export class InputClass implements IClass {
             returnType: 'null',
             description: 'Enables or disables the default behavior for the specified keybind. If set to false, the keybind will not trigger the normal in-game action.',
             parameters: [
-                { name: 'key', type: 'string', description: 'The key setting to modify.' }
+                { name: 'key', type: 'string', description: 'The key setting to modify.' },
+                { name: 'enable', type: 'bool', description: 'Enable or disable default input.' }
             ]
         },
         {

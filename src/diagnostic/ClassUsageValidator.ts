@@ -30,7 +30,7 @@ export class ClassUsageValidator implements IValidator {
                 selfCast = true;
             } else if (firstLink.isMethodCall) {
                 const className = firstLink.text.split('(')[0];
-                currentClass = availableClasses.get(className);
+                currentClass = availableClasses.find((cls) => cls.name === className);
 
                 if (currentClass) {
                     switch (currentClass.kind) {
@@ -38,7 +38,7 @@ export class ClassUsageValidator implements IValidator {
                             diagnostics.push(this.createDiagnostic(firstLink, `Cutscenes are not recommended for instantiation.`, vscode.DiagnosticSeverity.Warning));
                             return;
                         case ClassKinds.EXTENSION:
-                            diagnostics.push(this.createDiagnostic(firstLink, `Extensions are not recommended for instantiation.`));
+                            diagnostics.push(this.createDiagnostic(firstLink, `Extensions are not recommended for instantiation.`, vscode.DiagnosticSeverity.Warning));
                             return;
                     }
 
@@ -53,7 +53,7 @@ export class ClassUsageValidator implements IValidator {
                 }
             } else {
                 const className = firstLink.text;
-                currentClass = availableClasses.get(className);
+                currentClass = availableClasses.find((cls) => cls.name === className);
                 if (currentClass) {
                     isStatic = true;
                 }
@@ -100,7 +100,7 @@ export class ClassUsageValidator implements IValidator {
 
                     returnType = field.type;
                 }
-                currentClass = availableClasses.get(returnType);
+                currentClass = availableClasses.find((cls) => cls.name === returnType);
                 if (!currentClass) {
                     // diagnostics.push(this.createDiagnostic(firstLink, `Class definition for '${firstLink.text}' not found.`));
                     return;

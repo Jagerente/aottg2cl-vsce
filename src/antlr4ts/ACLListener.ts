@@ -4,18 +4,17 @@
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
 import { ProgramContext } from "./ACLParser";
-import { EntryPointDeclContext } from "./ACLParser";
 import { ClassDeclContext } from "./ACLParser";
 import { ClassBodyContext } from "./ACLParser";
 import { VariableDeclContext } from "./ACLParser";
 import { MethodDeclContext } from "./ACLParser";
 import { ParamListContext } from "./ACLParser";
+import { ParamContext } from "./ACLParser";
 import { BlockContext } from "./ACLParser";
 import { StatementContext } from "./ACLParser";
 import { WhileLoopContext } from "./ACLParser";
 import { ForLoopContext } from "./ACLParser";
 import { IfStatementContext } from "./ACLParser";
-import { ElifBlockContext } from "./ACLParser";
 import { ElifStatementContext } from "./ACLParser";
 import { ElseStatementContext } from "./ACLParser";
 import { ReturnStatementContext } from "./ACLParser";
@@ -33,9 +32,11 @@ import { PostfixExpressionContext } from "./ACLParser";
 import { PostfixOperatorContext } from "./ACLParser";
 import { MethodCallContext } from "./ACLParser";
 import { FieldAccessContext } from "./ACLParser";
+import { IncompleteFieldAccessContext } from "./ACLParser";
 import { PrimaryExpressionContext } from "./ACLParser";
 import { LiteralContext } from "./ACLParser";
 import { ArgumentListContext } from "./ACLParser";
+import { AnnotationContext } from "./ACLParser";
 
 
 /**
@@ -53,17 +54,6 @@ export interface ACLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitProgram?: (ctx: ProgramContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `ACLParser.entryPointDecl`.
-	 * @param ctx the parse tree
-	 */
-	enterEntryPointDecl?: (ctx: EntryPointDeclContext) => void;
-	/**
-	 * Exit a parse tree produced by `ACLParser.entryPointDecl`.
-	 * @param ctx the parse tree
-	 */
-	exitEntryPointDecl?: (ctx: EntryPointDeclContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `ACLParser.classDecl`.
@@ -121,6 +111,17 @@ export interface ACLListener extends ParseTreeListener {
 	exitParamList?: (ctx: ParamListContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `ACLParser.param`.
+	 * @param ctx the parse tree
+	 */
+	enterParam?: (ctx: ParamContext) => void;
+	/**
+	 * Exit a parse tree produced by `ACLParser.param`.
+	 * @param ctx the parse tree
+	 */
+	exitParam?: (ctx: ParamContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `ACLParser.block`.
 	 * @param ctx the parse tree
 	 */
@@ -174,17 +175,6 @@ export interface ACLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitIfStatement?: (ctx: IfStatementContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `ACLParser.elifBlock`.
-	 * @param ctx the parse tree
-	 */
-	enterElifBlock?: (ctx: ElifBlockContext) => void;
-	/**
-	 * Exit a parse tree produced by `ACLParser.elifBlock`.
-	 * @param ctx the parse tree
-	 */
-	exitElifBlock?: (ctx: ElifBlockContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `ACLParser.elifStatement`.
@@ -374,6 +364,17 @@ export interface ACLListener extends ParseTreeListener {
 	exitFieldAccess?: (ctx: FieldAccessContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `ACLParser.incompleteFieldAccess`.
+	 * @param ctx the parse tree
+	 */
+	enterIncompleteFieldAccess?: (ctx: IncompleteFieldAccessContext) => void;
+	/**
+	 * Exit a parse tree produced by `ACLParser.incompleteFieldAccess`.
+	 * @param ctx the parse tree
+	 */
+	exitIncompleteFieldAccess?: (ctx: IncompleteFieldAccessContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `ACLParser.primaryExpression`.
 	 * @param ctx the parse tree
 	 */
@@ -405,5 +406,16 @@ export interface ACLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitArgumentList?: (ctx: ArgumentListContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `ACLParser.annotation`.
+	 * @param ctx the parse tree
+	 */
+	enterAnnotation?: (ctx: AnnotationContext) => void;
+	/**
+	 * Exit a parse tree produced by `ACLParser.annotation`.
+	 * @param ctx the parse tree
+	 */
+	exitAnnotation?: (ctx: AnnotationContext) => void;
 }
 

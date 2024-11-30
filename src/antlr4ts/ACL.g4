@@ -31,7 +31,6 @@ ASSIGN: '=';
 SEMI: ';';
 COMMA: ',';
 
-MAIN: 'Main';
 NUMBER: [0-9]+;
 FLOAT: [0-9]+'.'[0-9]+;
 STRING: '"' (~["\\] | '\\' .)* '"';
@@ -63,24 +62,30 @@ LBRACE: '{';
 RBRACE: '}';
 LPAREN: '(';
 RPAREN: ')';
+
 WS: [ \t\r\n]+ -> skip;
 
+ANNOTATION_COMMENT: '#' WS* '@' ~[\r\n]*;
+
+ANNOTATION_BLOCK_COMMENT: '/*' .*? '@' .*? '*/';
+
 COMMENT: '#' ~[\r\n]* -> skip;
+
 BLOCK_COMMENT: '/*' .*? '*/' -> skip;
 
 program: classDecl*;
 
-entryPointDecl: CLASS MAIN LBRACE classBody RBRACE;
-
-classDecl: (CLASS | COMPONENT | EXTENSION| CUTSCENE) ID LBRACE classBody RBRACE;
+classDecl: (CLASS | COMPONENT | EXTENSION | CUTSCENE) ID LBRACE classBody RBRACE;
 
 classBody: (variableDecl | methodDecl)*;
 
-variableDecl: (PRIVATE? ID ASSIGN expression) SEMI;
+variableDecl: annotation* (PRIVATE? ID ASSIGN expression) SEMI;
 
-methodDecl: (FUNCTION | COROUTINE) ID LPAREN paramList? RPAREN block;
+methodDecl: annotation* (FUNCTION | COROUTINE) ID LPAREN paramList? RPAREN block;
 
-paramList: ID (COMMA ID)*;
+paramList: param (COMMA param)*;
+
+param: annotation* ID;
 
 block: LBRACE statement* RBRACE;
 
@@ -102,8 +107,6 @@ whileLoop: WHILE LPAREN expression RPAREN block;
 forLoop: FOR LPAREN ID IN expression RPAREN block;
 
 ifStatement: IF LPAREN expression RPAREN block (elifStatement)* elseStatement?;
-
-elifBlock: (elifStatement)* elseStatement?;
 
 elifStatement: ELIF LPAREN expression RPAREN block;
 
@@ -156,21 +159,26 @@ postfixExpression
 postfixOperator
     : methodCall
     | fieldAccess
+    | incompleteFieldAccess
     ;
 
 methodCall
-    : (DOT ID | ID) LPAREN argumentList? RPAREN
+    : LPAREN argumentList? RPAREN
     ;
 
 fieldAccess
     : DOT ID
     ;
 
+incompleteFieldAccess
+    : DOT
+    ;
+
 primaryExpression
     : literal
     | SELF
     | ID
-    | methodCall
+    | LPAREN expression RPAREN
     ;
 
 literal
@@ -183,4 +191,9 @@ literal
 
 argumentList
     : expression (COMMA expression)*
+    ;
+
+annotation
+    : ANNOTATION_COMMENT
+    | ANNOTATION_BLOCK_COMMENT
     ;

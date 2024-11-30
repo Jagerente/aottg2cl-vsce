@@ -4,18 +4,17 @@
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 
 import { ProgramContext } from "./ACLParser";
-import { EntryPointDeclContext } from "./ACLParser";
 import { ClassDeclContext } from "./ACLParser";
 import { ClassBodyContext } from "./ACLParser";
 import { VariableDeclContext } from "./ACLParser";
 import { MethodDeclContext } from "./ACLParser";
 import { ParamListContext } from "./ACLParser";
+import { ParamContext } from "./ACLParser";
 import { BlockContext } from "./ACLParser";
 import { StatementContext } from "./ACLParser";
 import { WhileLoopContext } from "./ACLParser";
 import { ForLoopContext } from "./ACLParser";
 import { IfStatementContext } from "./ACLParser";
-import { ElifBlockContext } from "./ACLParser";
 import { ElifStatementContext } from "./ACLParser";
 import { ElseStatementContext } from "./ACLParser";
 import { ReturnStatementContext } from "./ACLParser";
@@ -33,9 +32,11 @@ import { PostfixExpressionContext } from "./ACLParser";
 import { PostfixOperatorContext } from "./ACLParser";
 import { MethodCallContext } from "./ACLParser";
 import { FieldAccessContext } from "./ACLParser";
+import { IncompleteFieldAccessContext } from "./ACLParser";
 import { PrimaryExpressionContext } from "./ACLParser";
 import { LiteralContext } from "./ACLParser";
 import { ArgumentListContext } from "./ACLParser";
+import { AnnotationContext } from "./ACLParser";
 
 
 /**
@@ -52,13 +53,6 @@ export interface ACLVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitProgram?: (ctx: ProgramContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `ACLParser.entryPointDecl`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitEntryPointDecl?: (ctx: EntryPointDeclContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `ACLParser.classDecl`.
@@ -96,6 +90,13 @@ export interface ACLVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitParamList?: (ctx: ParamListContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by `ACLParser.param`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitParam?: (ctx: ParamContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `ACLParser.block`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -129,13 +130,6 @@ export interface ACLVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitIfStatement?: (ctx: IfStatementContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `ACLParser.elifBlock`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitElifBlock?: (ctx: ElifBlockContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `ACLParser.elifStatement`.
@@ -257,6 +251,13 @@ export interface ACLVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitFieldAccess?: (ctx: FieldAccessContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by `ACLParser.incompleteFieldAccess`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitIncompleteFieldAccess?: (ctx: IncompleteFieldAccessContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `ACLParser.primaryExpression`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -276,5 +277,12 @@ export interface ACLVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitArgumentList?: (ctx: ArgumentListContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `ACLParser.annotation`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitAnnotation?: (ctx: AnnotationContext) => Result;
 }
 

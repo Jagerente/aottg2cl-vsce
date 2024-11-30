@@ -32,6 +32,17 @@ export class CutsceneClass implements IClass {
             ]
         },
         {
+            label: 'ShowDialogueForTime',
+            returnType: 'null',
+            description: 'Show dialogue screen and automatically hide after time seconds.',
+            parameters: [
+                { name: 'icon', type: 'string', description: 'The icon to show.' },
+                { name: 'title', type: 'string', description: 'The title of the dialogue.' },
+                { name: 'content', type: 'string', description: 'The content of the dialogue.' },
+                { name: 'time', type: 'float', description: 'Hide after.' }
+            ]
+        },
+        {
             label: 'HideDialogue',
             returnType: 'null',
             description: 'Hides the dialogue screen.',

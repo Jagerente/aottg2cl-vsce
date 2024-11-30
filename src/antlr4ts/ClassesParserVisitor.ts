@@ -10,7 +10,9 @@ import {
     ForLoopContext,
     IfStatementContext,
     ElifStatementContext,
-    ElseStatementContext
+    ElseStatementContext,
+    PrimaryExpressionContext,
+    PostfixOperatorContext
 } from './ACLParser';
 import {
     IClass,
@@ -30,7 +32,7 @@ import { BaseInstantiatableClass } from '../classes/BaseInstantiatableClass';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
 
 export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
-    public classes: Map<string, IClass> = new Map();
+    public classes: IClass[] = [];
     private currentClass: IClass | null = null;
     private currentMethod: IMethod | null = null;
     private currentChain: IChainNode[] = [];
@@ -81,7 +83,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             bodyRange: bodyRange,
         };
 
-        this.classes.set(this.currentClass.name, this.currentClass);
+        this.classes.push(this.currentClass);
         this.visitChildren(ctx);
     };
 
@@ -102,26 +104,88 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
         if (this.currentClass) {
             const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
-            const parametersList: string[] = ctx.paramList()?.ID().map(id => id.text) || [];
-            let parameters: IParameter[] = parametersList.map(param => ({
-                name: param,
-                type: 'any',
-                description: ''
-            }));
+            let parameters: IParameter[] = [];
+            if (ctx.paramList()) {
+                for (let paramCtx of ctx.paramList()!.param()) {
+                    const paramName = paramCtx.ID().text;
+                    let paramType = 'any';
+                    let description = '';
+            
+                    if (paramCtx.annotation() && paramCtx.annotation().length > 0) {
+                        for (let annotationCtx of paramCtx.annotation()) {
+                            let annotationText = '';
+                            if (annotationCtx.ANNOTATION_COMMENT()) {
+                                annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
+                            } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+                                annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
+                            }
+                            const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                            const typeMatch = cleanedText.match(/@type\s+(\S+)/);
+                            if (typeMatch) {
+                                paramType = typeMatch[1];
+                                break;
+                            }
+                        }
+                    } else if (ctx.annotation() && ctx.annotation().length > 0) {
+                        for (let annotationCtx of ctx.annotation()) {
+                            let annotationText = '';
+                            if (annotationCtx.ANNOTATION_COMMENT()) {
+                                annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
+                            } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+                                annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
+                            }
+                            const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                            const paramMatch = cleanedText.match(new RegExp(`@param\\s+${paramName}\\s+(\\S+)`));
+                            if (paramMatch) {
+                                paramType = paramMatch[1];
+                                break;
+                            }
+                        }
+                    } else {
+                        const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
+                        if (parentMethod) {
+                            description = parentMethod.description;
+                            parameters = parentMethod.parameters;
+                        }
+                    }
+            
+                    parameters.push({
+                        name: paramName,
+                        type: paramType,
+                        description: '',
+                    });
+                }
+            }
             let returnType = 'void';
-            let description = '';
-            const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
-            if (parentMethod) {
-                returnType = parentMethod.returnType;
-                description = parentMethod.description;
-                parameters = parentMethod.parameters;
+            const annotations = ctx.annotation();
+            if (annotations && annotations.length > 0) {
+                for (let annotationCtx of annotations) {
+                    let annotationText = '';
+                    if (annotationCtx.ANNOTATION_COMMENT()) {
+                        annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
+                    } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+                        annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
+                    }
+                    const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                    const returnMatch = cleanedText.match(/@return\s+(\S+)/);
+                    if (returnMatch) {
+                        returnType = returnMatch[1];
+                        break;
+                    }
+                }
+    
+            } else {
+                const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
+                if (parentMethod) {
+                    returnType = parentMethod.returnType;
+                }
             }
 
             const method: IMethod = {
                 label: methodName,
                 kind: methodKind,
                 returnType: returnType,
-                description: description,
+                description: '',
                 parameters: parameters,
                 declarationRange: declarationRange,
                 bodyRange: bodyRange
@@ -160,7 +224,23 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             }
 
             let fieldType = 'any';
-            if (ctx.ASSIGN()) {
+            const annotations = ctx.annotation();
+            if (annotations && annotations.length > 0) {
+                for (let annotationCtx of annotations) {
+                    let annotationText = '';
+                    if (annotationCtx.ANNOTATION_COMMENT()) {
+                        annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
+                    } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+                        annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
+                    }
+                    const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                    const typeMatch = cleanedText.match(/@type\s+(\S+)/);
+                    if (typeMatch) {
+                        fieldType = typeMatch[1];
+                        break;
+                    }
+                }
+            } else {
                 const value = ctx.expression()!.text.trim();
 
                 if (/^".*"$/.test(value)) {
@@ -186,11 +266,14 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             }
             const description = '';
 
+            const declarationRange = this.getFieldDeclarationRange(ctx);
+
             const field: IField = {
                 label: fieldName,
                 type: fieldType,
                 description: description,
                 private: ctx.PRIVATE() !== undefined,
+                declarationRange: declarationRange,
             };
 
             const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
@@ -207,47 +290,76 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     public visitPostfixExpression = (ctx: PostfixExpressionContext): void => {
         this.chainStack.push([...this.currentChain]);
         this.currentChain = [];
+    
+        this.visit(ctx.primaryExpression());
+    
+        for (const postfixOp of ctx.postfixOperator()) {
+            this.visit(postfixOp);
+        }
+    
+        if (this.currentChain.length > 1 || (this.currentChain.length === 1 && this.currentChain[0].isMethodCall)) {
+            this.chains.push(this.currentChain);
+        }
+    
+        this.currentChain = this.chainStack.pop() || [];
+    };
 
-        if (!ctx.primaryExpression().methodCall()) {
-            const primaryExpr = ctx.primaryExpression().text;
-            const startToken = ctx.primaryExpression().start;
-            const startLine = startToken!.line;
-            const startColumn = startToken!.charPositionInLine;
-
+    public visitPrimaryExpression = (ctx: PrimaryExpressionContext): void => {
+        if (ctx.ID()) {
+            const text = ctx.ID()!.text;
+            const startToken = ctx.start;
+            const startLine = startToken.line;
+            const startColumn = startToken.charPositionInLine;
+    
             this.currentChain.push({
-                text: primaryExpr,
+                text,
                 startLine,
                 startColumn,
                 isMethodCall: false,
             });
+        } else if (ctx.SELF()) {
+            const text = ctx.SELF()!.text;
+            const startToken = ctx.start;
+            const startLine = startToken.line;
+            const startColumn = startToken.charPositionInLine;
+    
+            this.currentChain.push({
+                text,
+                startLine,
+                startColumn,
+                isMethodCall: false,
+            });
+        } else if (ctx.literal()) {
+        } else if (ctx.LPAREN() && ctx.expression()) {
+            this.visit(ctx.expression()!);
         }
-
-        this.visitChildren(ctx);
-
-        if (this.currentChain.length > 1 || this.currentChain.length === 1 && this.currentChain[0].isMethodCall) {
-            this.chains.push(this.currentChain);
-        }
-
-        this.currentChain = this.chainStack.pop() || [];
     };
+
+    public visitPostfixOperator = (ctx: PostfixOperatorContext): void => {
+        if (ctx.fieldAccess()) {
+            this.visit(ctx.fieldAccess()!);
+        } else if (ctx.methodCall()) {
+            this.visit(ctx.methodCall()!);
+        }
+    };
+    
 
     public visitMethodCall = (ctx: MethodCallContext): void => {
-        const methodName = ctx.ID()!.text;
+        const prevItem = this.currentChain[this.currentChain.length - 1];
+        if (!prevItem) {
+            return;
+        }
+    
         const argumentList = ctx.argumentList()?.expression().map(expr => expr.text) || [];
         const startToken = ctx.start;
-        const startLine = startToken!.line;
-        const startColumn = startToken!.charPositionInLine + (ctx.DOT() ? 1 : 0);
-
-        this.currentChain.push({
-            text: `${methodName}(${argumentList.join(', ')})`,
-            startLine,
-            startColumn,
-            isMethodCall: true,
-            methodArguments: argumentList,
-        });
-
-        this.visitChildren(ctx);
+        const startLine = startToken.line;
+        const startColumn = startToken.charPositionInLine;
+    
+        prevItem.text += `(${argumentList.join(', ')})`;
+        prevItem.isMethodCall = true;
+        prevItem.methodArguments = argumentList;
     };
+    
 
     public visitFieldAccess = (ctx: FieldAccessContext): void => {
         const fieldName = ctx.ID().text;
@@ -261,8 +373,6 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             startColumn,
             isMethodCall: false,
         });
-
-        this.visitChildren(ctx);
     };
 
     public visitWhileLoop = (ctx: WhileLoopContext): void => {
@@ -322,7 +432,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         this.visitChildren(ctx);
     };
 
-    public getParsedClasses(): Map<string, IClass> {
+    public getParsedClasses(): IClass[] {
         return this.classes;
     }
 
@@ -354,6 +464,19 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         const startChar = ctx.LBRACE().symbol.charPositionInLine;
         const endLine = ctx.RBRACE().symbol.line;
         const endChar = ctx.RBRACE().symbol.charPositionInLine;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getFieldDeclarationRange(ctx: VariableDeclContext): vscode.Range {
+        const startToken = ctx.start!;
+        const stopToken = ctx.stop!;
+        const startLine = startToken.line - 1;
+        const startChar = startToken.charPositionInLine;
+        const endLine = stopToken.line - 1;
+        const endChar = stopToken.charPositionInLine + stopToken.text!.length;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
