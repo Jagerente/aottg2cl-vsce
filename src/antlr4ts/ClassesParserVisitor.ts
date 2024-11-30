@@ -10,7 +10,9 @@ import {
     ForLoopContext,
     IfStatementContext,
     ElifStatementContext,
-    ElseStatementContext
+    ElseStatementContext,
+    PrimaryExpressionContext,
+    PostfixOperatorContext
 } from './ACLParser';
 import {
     IClass,
@@ -207,47 +209,76 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     public visitPostfixExpression = (ctx: PostfixExpressionContext): void => {
         this.chainStack.push([...this.currentChain]);
         this.currentChain = [];
+    
+        this.visit(ctx.primaryExpression());
+    
+        for (const postfixOp of ctx.postfixOperator()) {
+            this.visit(postfixOp);
+        }
+    
+        if (this.currentChain.length > 1 || (this.currentChain.length === 1 && this.currentChain[0].isMethodCall)) {
+            this.chains.push(this.currentChain);
+        }
+    
+        this.currentChain = this.chainStack.pop() || [];
+    };
 
-        if (!ctx.primaryExpression().methodCall()) {
-            const primaryExpr = ctx.primaryExpression().text;
-            const startToken = ctx.primaryExpression().start;
-            const startLine = startToken!.line;
-            const startColumn = startToken!.charPositionInLine;
-
+    public visitPrimaryExpression = (ctx: PrimaryExpressionContext): void => {
+        if (ctx.ID()) {
+            const text = ctx.ID()!.text;
+            const startToken = ctx.start;
+            const startLine = startToken.line;
+            const startColumn = startToken.charPositionInLine;
+    
             this.currentChain.push({
-                text: primaryExpr,
+                text,
                 startLine,
                 startColumn,
                 isMethodCall: false,
             });
+        } else if (ctx.SELF()) {
+            const text = ctx.SELF()!.text;
+            const startToken = ctx.start;
+            const startLine = startToken.line;
+            const startColumn = startToken.charPositionInLine;
+    
+            this.currentChain.push({
+                text,
+                startLine,
+                startColumn,
+                isMethodCall: false,
+            });
+        } else if (ctx.literal()) {
+        } else if (ctx.LPAREN() && ctx.expression()) {
+            this.visit(ctx.expression()!);
         }
-
-        this.visitChildren(ctx);
-
-        if (this.currentChain.length > 1 || this.currentChain.length === 1 && this.currentChain[0].isMethodCall) {
-            this.chains.push(this.currentChain);
-        }
-
-        this.currentChain = this.chainStack.pop() || [];
     };
+
+    public visitPostfixOperator = (ctx: PostfixOperatorContext): void => {
+        if (ctx.fieldAccess()) {
+            this.visit(ctx.fieldAccess()!);
+        } else if (ctx.methodCall()) {
+            this.visit(ctx.methodCall()!);
+        }
+    };
+    
 
     public visitMethodCall = (ctx: MethodCallContext): void => {
-        const methodName = ctx.ID()!.text;
+        const prevItem = this.currentChain[this.currentChain.length - 1];
+        if (!prevItem) {
+            return;
+        }
+    
         const argumentList = ctx.argumentList()?.expression().map(expr => expr.text) || [];
         const startToken = ctx.start;
-        const startLine = startToken!.line;
-        const startColumn = startToken!.charPositionInLine + (ctx.DOT() ? 1 : 0);
-
-        this.currentChain.push({
-            text: `${methodName}(${argumentList.join(', ')})`,
-            startLine,
-            startColumn,
-            isMethodCall: true,
-            methodArguments: argumentList,
-        });
-
-        this.visitChildren(ctx);
+        const startLine = startToken.line;
+        const startColumn = startToken.charPositionInLine;
+    
+        prevItem.text += `(${argumentList.join(', ')})`;
+        prevItem.isMethodCall = true;
+        prevItem.methodArguments = argumentList;
     };
+    
 
     public visitFieldAccess = (ctx: FieldAccessContext): void => {
         const fieldName = ctx.ID().text;
@@ -261,8 +292,6 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             startColumn,
             isMethodCall: false,
         });
-
-        this.visitChildren(ctx);
     };
 
     public visitWhileLoop = (ctx: WhileLoopContext): void => {

@@ -72,7 +72,7 @@ program: classDecl*;
 
 entryPointDecl: CLASS MAIN LBRACE classBody RBRACE;
 
-classDecl: (CLASS | COMPONENT | EXTENSION| CUTSCENE) ID LBRACE classBody RBRACE;
+classDecl: (CLASS | COMPONENT | EXTENSION | CUTSCENE) ID LBRACE classBody RBRACE;
 
 classBody: (variableDecl | methodDecl)*;
 
@@ -103,8 +103,6 @@ forLoop: FOR LPAREN ID IN expression RPAREN block;
 
 ifStatement: IF LPAREN expression RPAREN block (elifStatement)* elseStatement?;
 
-elifBlock: (elifStatement)* elseStatement?;
-
 elifStatement: ELIF LPAREN expression RPAREN block;
 
 elseStatement: ELSE block;
@@ -118,7 +116,7 @@ expression
     ;
 
 assignmentExpression
-    : logicalOrExpression ((ASSIGN | PLUS_ASSIGN | MINUS_ASSIGN | MULTIPLY_ASSIGN | DIVIDE_ASSIGN) assignmentExpression)?
+    : logicalOrExpression ( (ASSIGN | PLUS_ASSIGN | MINUS_ASSIGN | MULTIPLY_ASSIGN | DIVIDE_ASSIGN) assignmentExpression )?
     ;
 
 logicalOrExpression
@@ -130,19 +128,19 @@ logicalAndExpression
     ;
 
 equalityExpression
-    : relationalExpression ((EQUALS | NOT_EQUALS) relationalExpression)*
+    : relationalExpression ( (EQUALS | NOT_EQUALS) relationalExpression )*
     ;
 
 relationalExpression
-    : additiveExpression ((LESS | LESS_EQUAL | GREATER | GREATER_EQUAL) additiveExpression)*
+    : additiveExpression ( (LESS | LESS_EQUAL | GREATER | GREATER_EQUAL) additiveExpression )*
     ;
 
 additiveExpression
-    : multiplicativeExpression ((PLUS | MINUS) multiplicativeExpression)*
+    : multiplicativeExpression ( (PLUS | MINUS) multiplicativeExpression )*
     ;
 
 multiplicativeExpression
-    : unaryExpression ((MULTIPLY | DIVIDE) unaryExpression)*
+    : unaryExpression ( (MULTIPLY | DIVIDE) unaryExpression )*
     ;
 
 unaryExpression
@@ -159,7 +157,7 @@ postfixOperator
     ;
 
 methodCall
-    : (DOT ID | ID) LPAREN argumentList? RPAREN
+    : LPAREN argumentList? RPAREN
     ;
 
 fieldAccess
@@ -170,7 +168,7 @@ primaryExpression
     : literal
     | SELF
     | ID
-    | methodCall
+    | LPAREN expression RPAREN
     ;
 
 literal
