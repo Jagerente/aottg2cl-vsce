@@ -31,7 +31,6 @@ ASSIGN: '=';
 SEMI: ';';
 COMMA: ',';
 
-MAIN: 'Main';
 NUMBER: [0-9]+;
 FLOAT: [0-9]+'.'[0-9]+;
 STRING: '"' (~["\\] | '\\' .)* '"';
@@ -63,24 +62,30 @@ LBRACE: '{';
 RBRACE: '}';
 LPAREN: '(';
 RPAREN: ')';
+
 WS: [ \t\r\n]+ -> skip;
 
+ANNOTATION_COMMENT: '#' WS* '@' ~[\r\n]*;
+
+ANNOTATION_BLOCK_COMMENT: '/*' .*? '@' .*? '*/';
+
 COMMENT: '#' ~[\r\n]* -> skip;
+
 BLOCK_COMMENT: '/*' .*? '*/' -> skip;
 
 program: classDecl*;
-
-entryPointDecl: CLASS MAIN LBRACE classBody RBRACE;
 
 classDecl: (CLASS | COMPONENT | EXTENSION | CUTSCENE) ID LBRACE classBody RBRACE;
 
 classBody: (variableDecl | methodDecl)*;
 
-variableDecl: (PRIVATE? ID ASSIGN expression) SEMI;
+variableDecl: annotation* (PRIVATE? ID ASSIGN expression) SEMI;
 
-methodDecl: (FUNCTION | COROUTINE) ID LPAREN paramList? RPAREN block;
+methodDecl: annotation* (FUNCTION | COROUTINE) ID LPAREN paramList? RPAREN block;
 
-paramList: ID (COMMA ID)*;
+paramList: param (COMMA param)*;
+
+param: annotation* ID;
 
 block: LBRACE statement* RBRACE;
 
@@ -116,7 +121,7 @@ expression
     ;
 
 assignmentExpression
-    : logicalOrExpression ( (ASSIGN | PLUS_ASSIGN | MINUS_ASSIGN | MULTIPLY_ASSIGN | DIVIDE_ASSIGN) assignmentExpression )?
+    : logicalOrExpression ((ASSIGN | PLUS_ASSIGN | MINUS_ASSIGN | MULTIPLY_ASSIGN | DIVIDE_ASSIGN) assignmentExpression)?
     ;
 
 logicalOrExpression
@@ -128,19 +133,19 @@ logicalAndExpression
     ;
 
 equalityExpression
-    : relationalExpression ( (EQUALS | NOT_EQUALS) relationalExpression )*
+    : relationalExpression ((EQUALS | NOT_EQUALS) relationalExpression)*
     ;
 
 relationalExpression
-    : additiveExpression ( (LESS | LESS_EQUAL | GREATER | GREATER_EQUAL) additiveExpression )*
+    : additiveExpression ((LESS | LESS_EQUAL | GREATER | GREATER_EQUAL) additiveExpression)*
     ;
 
 additiveExpression
-    : multiplicativeExpression ( (PLUS | MINUS) multiplicativeExpression )*
+    : multiplicativeExpression ((PLUS | MINUS) multiplicativeExpression)*
     ;
 
 multiplicativeExpression
-    : unaryExpression ( (MULTIPLY | DIVIDE) unaryExpression )*
+    : unaryExpression ((MULTIPLY | DIVIDE) unaryExpression)*
     ;
 
 unaryExpression
@@ -154,6 +159,7 @@ postfixExpression
 postfixOperator
     : methodCall
     | fieldAccess
+    | incompleteFieldAccess
     ;
 
 methodCall
@@ -162,6 +168,10 @@ methodCall
 
 fieldAccess
     : DOT ID
+    ;
+
+incompleteFieldAccess
+    : DOT
     ;
 
 primaryExpression
@@ -181,4 +191,9 @@ literal
 
 argumentList
     : expression (COMMA expression)*
+    ;
+
+annotation
+    : ANNOTATION_COMMENT
+    | ANNOTATION_BLOCK_COMMENT
     ;
