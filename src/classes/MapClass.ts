@@ -56,7 +56,9 @@ export class MapClass implements IClass {
             label: 'FindMapObjectsByComponent',
             returnType: 'List(MapObject)',
             description: 'Returns a list of map objects which have the corresponding CL component attached.',
-            parameters: []
+            parameters: [
+                { name: 'name', type: 'string', description: 'The name of the component on the map objects to find.' }
+            ]
         },
         {
             label: 'CreateMapObjectRaw',
