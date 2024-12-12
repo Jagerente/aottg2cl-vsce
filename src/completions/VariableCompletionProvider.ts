@@ -232,7 +232,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             for (let i = 0; i < currentMethodDef.parameters.length; i++) {
                 const param = currentMethodDef.parameters[i];
                 if (param.name === word) {
-                    return new vscode.Hover(this.buildParameterMarkdown(param), wordRange);
+                    return new vscode.Hover(markdown.createParameterMarkdown(param), wordRange);
                 }
             }
         }
@@ -556,11 +556,5 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         });
         const paramsString = params.join(', ');
         return `(${paramsString})`;
-    }
-
-    private buildParameterMarkdown(paramDef: IParameter): vscode.MarkdownString {
-        return new vscode.MarkdownString(
-            `(param) ${paramDef.name}: ${paramDef.type}`
-        );
     }
 }
