@@ -218,7 +218,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                     hoverContent = markdown.createFieldMarkdown(fieldDef);
                 } else if ('name' in resolvedType && 'type' in resolvedType) {
                     const variableDef = resolvedType as IVariable;
-                    hoverContent = this.buildVariableMarkdown(variableDef);
+                    hoverContent = markdown.createVariableMarkdown(variableDef);
                 } else {
                     hoverContent = new vscode.MarkdownString(`Unknown type`);
                 }
@@ -239,7 +239,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
 
         if (this.declaredVariables.has(word)) {
             const variableInfo = this.declaredVariables.get(word);
-            return new vscode.Hover(this.buildVariableMarkdown(variableInfo!), wordRange);
+            return new vscode.Hover(markdown.createVariableMarkdown(variableInfo!), wordRange);
         }
 
         const classDef = this.findClassByName(word);
@@ -556,12 +556,6 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         });
         const paramsString = params.join(', ');
         return `(${paramsString})`;
-    }
-
-    private buildVariableMarkdown(variableDef: IVariable): vscode.MarkdownString {
-        return new vscode.MarkdownString(
-            `(var) ${variableDef.name} ${variableDef.type} = ${variableDef.value}`
-        );
     }
 
     private buildParameterMarkdown(paramDef: IParameter): vscode.MarkdownString {

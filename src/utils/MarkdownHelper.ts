@@ -1,5 +1,5 @@
 import { MarkdownString } from "vscode";
-import { IClass, IField, IMethod, MethodKinds } from "../classes/IClass";
+import { IClass, IField, IMethod, IVariable, MethodKinds } from "../classes/IClass";
 
 const horizontalLine: string = "\n\n---\n\n";
 
@@ -34,6 +34,11 @@ export function createMethodMarkdown(methodDef: IMethod, methodSignature: string
     if (methodDef.description !== "") {
         md += `${horizontalLine} ${methodDef.description}`;
     }
+    return new MarkdownString(md);
+}
+
+export function createVariableMarkdown(variableDef: IVariable): MarkdownString {
+    const md = wrapLang(`(local variable) ${variableDef.name} ${variableDef.type} = ${variableDef.value}`);
     return new MarkdownString(md);
 }
 
