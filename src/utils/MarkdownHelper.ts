@@ -1,5 +1,5 @@
 import { MarkdownString } from "vscode";
-import { IClass } from "../classes/IClass";
+import { IClass, IField } from "../classes/IClass";
 
 const horizontalLine: string = "\n\n---\n\n";
 
@@ -16,6 +16,34 @@ export function createClassMarkdown(classDef: IClass): MarkdownString {
     return new MarkdownString(md);
 }
 
+export function buildFieldMarkdown(fieldDef: IField): MarkdownString {
+    const m1 = fieldDef.private ? 'private' : 'public';
+    const m2 = fieldDef.readonly ? ' readonly' : '';
+    
+    const m3 = `(${m1}${m2} field) ${fieldDef.label} ${fieldDef.type}`;
+    var m4 = wrapLang(m3, "csharp");
+    if (fieldDef.description !== "") {
+        m4 += `${horizontalLine} ${fieldDef.description}`;
+    }
+    return new MarkdownString(m4);
+}
+
 function wrapLang(code: string, language: string = "acl"): string {
-    return `\`\`\`${language}\n${code}\n\`\`\``;
+    return '\n' + appendEscapedMarkdownCodeBlockFence(code, language) + '\n';
+}
+
+// https://github.com/microsoft/vscode/blob/main/src/vs/base/common/htmlContent.ts#L145
+export function appendEscapedMarkdownCodeBlockFence(code: string, langId: string) {
+	const longestFenceLength =
+		code.match(/^`+/gm)?.reduce((a, b) => (a.length > b.length ? a : b)).length ??
+		0;
+	const desiredFenceLength =
+		longestFenceLength >= 3 ? longestFenceLength + 1 : 3;
+
+	// the markdown result
+	return [
+		`${'`'.repeat(desiredFenceLength)}${langId}`,
+		code,
+		`${'`'.repeat(desiredFenceLength)}`,
+	].join('\n');
 }

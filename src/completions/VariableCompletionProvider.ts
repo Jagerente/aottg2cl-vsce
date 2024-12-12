@@ -215,7 +215,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                     hoverContent = this.buildMethodMarkdown(methodDef);
                 } else if ('label' in resolvedType && 'type' in resolvedType) {
                     const fieldDef = resolvedType as IField;
-                    hoverContent = this.buildFieldMarkdown(fieldDef);
+                    hoverContent = markdown.buildFieldMarkdown(fieldDef);
                 } else if ('name' in resolvedType && 'type' in resolvedType) {
                     const variableDef = resolvedType as IVariable;
                     hoverContent = this.buildVariableMarkdown(variableDef);
@@ -251,7 +251,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         if (currentClass) {
             const fieldDef = FindFieldInClassHierarchy(currentClass, word, true, true, true, true);
             if (fieldDef) {
-                return new vscode.Hover(this.buildFieldMarkdown(fieldDef), wordRange);
+                return new vscode.Hover(markdown.buildFieldMarkdown(fieldDef), wordRange);
             }
 
             const methodDef = FindMethodInClassHierarchy(currentClass, word, -1, true, true);
@@ -556,10 +556,6 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         });
         const paramsString = params.join(', ');
         return `(${paramsString})`;
-    }
-
-    private buildFieldMarkdown(fieldDef: IField): vscode.MarkdownString {
-        return new vscode.MarkdownString(`(${fieldDef.private ? 'private' : 'public'}${fieldDef.readonly ? ' readonly' : ''} field) ${fieldDef.label} ${fieldDef.type}\n\n${fieldDef.description}`);
     }
 
     private buildMethodMarkdown(methodDef: IMethod): vscode.MarkdownString {
