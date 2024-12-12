@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as markdown from '../utils/MarkdownHelper';
 import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
 import { ClassKinds } from '../classes/IClass';
 
@@ -78,7 +79,7 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
 
         const keyword = this.keywords.find(k => k.label === word);
         if (keyword) {
-            return new vscode.Hover(new vscode.MarkdownString(`**${keyword.label}**: ${keyword.description}`));
+            return new vscode.Hover(markdown.createKeywordMarkdown(keyword));
         }
 
         return undefined;
