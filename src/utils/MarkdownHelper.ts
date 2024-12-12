@@ -1,5 +1,5 @@
 import { MarkdownString } from "vscode";
-import { IClass, IField } from "../classes/IClass";
+import { IClass, IField, IMethod, MethodKinds } from "../classes/IClass";
 
 const horizontalLine: string = "\n\n---\n\n";
 
@@ -16,7 +16,7 @@ export function createClassMarkdown(classDef: IClass): MarkdownString {
     return new MarkdownString(md);
 }
 
-export function buildFieldMarkdown(fieldDef: IField): MarkdownString {
+export function createFieldMarkdown(fieldDef: IField): MarkdownString {
     const m1 = fieldDef.private ? 'private' : 'public';
     const m2 = fieldDef.readonly ? ' readonly' : '';
     
@@ -26,6 +26,15 @@ export function buildFieldMarkdown(fieldDef: IField): MarkdownString {
         m4 += `${horizontalLine} ${fieldDef.description}`;
     }
     return new MarkdownString(m4);
+}
+
+export function createMethodMarkdown(methodDef: IMethod, methodSignature: string): MarkdownString {
+    const kind = methodDef.kind ?? MethodKinds.FUNCTION;
+    var md = wrapLang(`${kind} ${methodDef.label}${methodSignature} ${methodDef.returnType}`);
+    if (methodDef.description !== "") {
+        md += `${horizontalLine} ${methodDef.description}`;
+    }
+    return new MarkdownString(md);
 }
 
 function wrapLang(code: string, language: string = "acl"): string {

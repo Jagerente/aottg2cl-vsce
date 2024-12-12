@@ -212,10 +212,10 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                     hoverContent = markdown.createClassMarkdown(classDef);
                 } else if ('parameters' in resolvedType && 'returnType' in resolvedType) {
                     const methodDef = resolvedType as IMethod;
-                    hoverContent = this.buildMethodMarkdown(methodDef);
+                    hoverContent = markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef));
                 } else if ('label' in resolvedType && 'type' in resolvedType) {
                     const fieldDef = resolvedType as IField;
-                    hoverContent = markdown.buildFieldMarkdown(fieldDef);
+                    hoverContent = markdown.createFieldMarkdown(fieldDef);
                 } else if ('name' in resolvedType && 'type' in resolvedType) {
                     const variableDef = resolvedType as IVariable;
                     hoverContent = this.buildVariableMarkdown(variableDef);
@@ -251,18 +251,18 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         if (currentClass) {
             const fieldDef = FindFieldInClassHierarchy(currentClass, word, true, true, true, true);
             if (fieldDef) {
-                return new vscode.Hover(markdown.buildFieldMarkdown(fieldDef), wordRange);
+                return new vscode.Hover(markdown.createFieldMarkdown(fieldDef), wordRange);
             }
 
             const methodDef = FindMethodInClassHierarchy(currentClass, word, -1, true, true);
             if (methodDef) {
-                return new vscode.Hover(this.buildMethodMarkdown(methodDef), wordRange);
+                return new vscode.Hover(markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef)), wordRange);
             }
         }
 
         const methodDef = this.findMethodByNameFromAllClasses(word);
         if (methodDef) {
-            return new vscode.Hover(this.buildMethodMarkdown(methodDef), wordRange);
+            return new vscode.Hover(markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef)), wordRange);
         }
 
         return undefined;
@@ -556,10 +556,6 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         });
         const paramsString = params.join(', ');
         return `(${paramsString})`;
-    }
-
-    private buildMethodMarkdown(methodDef: IMethod): vscode.MarkdownString {
-        return new vscode.MarkdownString(`${methodDef.kind ?? MethodKinds.FUNCTION} ${methodDef.label}${this.constructMethodSignature(methodDef)} ${methodDef.returnType}\n\n${methodDef.description}`);
     }
 
     private buildVariableMarkdown(variableDef: IVariable): vscode.MarkdownString {
