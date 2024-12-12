@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as markdown from '../utils/MarkdownHelper';
 import { CodeContextUtils } from '../utils/CodeContextUtils';
 import { ClassKinds, FindFieldInClassHierarchy, FindMethodInClassHierarchy, IClass, IConstructor, IField, IMethod, IParameter, IVariable, MethodKinds } from '../classes/IClass';
 import { VariableCollector } from '../utils/VariableCollector';
@@ -208,7 +209,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                 let hoverContent: vscode.MarkdownString;
                 if ('kind' in resolvedType && 'name' in resolvedType) {
                     const classDef = resolvedType as IClass;
-                    hoverContent = this.buildClassMarkdown(classDef);
+                    hoverContent = markdown.createClassMarkdown(classDef);
                 } else if ('parameters' in resolvedType && 'returnType' in resolvedType) {
                     const methodDef = resolvedType as IMethod;
                     hoverContent = this.buildMethodMarkdown(methodDef);
@@ -243,7 +244,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
 
         const classDef = this.findClassByName(word);
         if (classDef) {
-            return new vscode.Hover(this.buildClassMarkdown(classDef), wordRange);
+            return new vscode.Hover(markdown.createClassMarkdown(classDef), wordRange);
         }
 
         const currentClass = this.documentTreeProvider.getCurrentClass(position);
@@ -555,10 +556,6 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         });
         const paramsString = params.join(', ');
         return `(${paramsString})`;
-    }
-
-    private buildClassMarkdown(classDef: IClass): vscode.MarkdownString {
-        return new vscode.MarkdownString(`(${classDef.kind}) ${classDef.name}\n\n${classDef.description}`);
     }
 
     private buildFieldMarkdown(fieldDef: IField): vscode.MarkdownString {
