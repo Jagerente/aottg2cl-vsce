@@ -14,6 +14,7 @@ export class CharacterClass implements IClass {
         { label: 'IsMainCharacter', type: 'bool', description: 'Character belongs to my player and is the main character.' },
         { label: 'IsAI', type: 'bool', description: 'If the character is AI.' },
         { label: 'ViewID', type: 'int', description: 'The network view ID of the character. This is synced with the room.' },
+        { label: 'Transform', type: 'Transform', description: 'The Unity transform of the character.' },
         { label: 'Position', type: 'Vector3', description: 'Position of the character.' },
         { label: 'Rotation', type: 'Vector3', description: 'Rotation of the character.' },
         { label: 'Velocity', type: 'Vector3', description: 'Velocity of the character.' },
