@@ -190,6 +190,34 @@ export class MapObjectClass implements IClass {
             returnType: 'List(Vector3)',
             description: 'Gets all eight corners of the bounds. Returns null if there are no colliders.',
             parameters: []
+        },
+        {
+            label: 'AddBuiltinComponent',
+            returnType: 'null',
+            description: 'Adds a new built-in component with the given name and parameters.',
+            parameters: [
+                { name: 'name', type: 'string', description: 'The name of the component to add.' },
+                { name: 'params', type: 'any', description: 'Additional parameters for the component.', isVariadic: true }
+            ]
+        },
+        {
+            label: 'UpdateBuiltinComponent',
+            returnType: 'null',
+            description: 'Updates a specific field of an existing built-in component.',
+            parameters: [
+                { name: 'name', type: 'string', description: 'The name of the component to update.' },
+                { name: 'field', type: 'string', description: 'The specific field to update.' },
+                { name: 'params', type: 'any', description: 'Additional parameters.', isVariadic: true }
+            ]
+        },
+        {
+            label: 'ReadBuiltinComponent',
+            returnType: 'null',
+            description: 'Reads the value of a specific field from an existing built-in component.',
+            parameters: [
+                { name: 'name', type: 'string', description: 'The name of the component to read.' },
+                { name: 'field', type: 'string', description: 'The specific field to read.' }
+            ]
         }
     ];
 
