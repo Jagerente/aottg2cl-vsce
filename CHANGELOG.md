@@ -5,6 +5,36 @@ All notable changes to the "aottg2cl" extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [0.0.7-preview] - 2024-12-23
+
+### Added
+
+- Add missing LineRenderer class.
+- Add missing MapObject definitions.
+- Add missing Character definitions.
+
+### Changed
+
+- Updated global classes definitions to the latest game update. (https://github.com/Jagerente/aottg2cl-vsce/pull/57/commits/125895e94b726481584efdd53f685f6e2431e4cf)
+- Improved hover markdown. (by oryxoik)
+- Fixed MapObject.FindMapObjectsByComponent signature. (by ninj1337)
+
+## [0.0.6-preview] - 2024-11-30
+
+### Added
+
+- Add missing Quaternion fields
+- Add missing Cutscene fields
+- Add duplicates diagnostic
+- Add annotations strict-typing
+
+### Changed
+
+- Fixed callbacks snippets
+- Fixed Input.SetKeyDefaultEnabled signature
+- Extended ANTLR definition
+
 ## [0.0.5-preview] - 2024-11-01
 
 ### Changed

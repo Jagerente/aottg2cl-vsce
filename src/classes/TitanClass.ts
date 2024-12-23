@@ -31,7 +31,9 @@ export class TitanClass implements IClass {
         { label: 'CanRun', type: 'bool', description: '(AI) Titan can run or only walk.' },
         { label: 'AttackSpeedMultiplier', type: 'float', description: 'Titan\'s attack animation speed.' },
         { label: 'HeadMount', type: 'Transform', description: 'Titan\'s head transform.' },
-        { label: 'NeckMount', type: 'Transform', description: 'Titan\'s neck transform.' }
+        { label: 'NeckMount', type: 'Transform', description: 'Titan\'s neck transform.' },
+        { label: 'Stamina', type: 'float', description: 'PT Stamina.' },
+        { label: 'MaxStamina', type: 'float', description: 'PT Max Stamina.' },
 
     ];
 

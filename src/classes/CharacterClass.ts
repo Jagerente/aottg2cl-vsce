@@ -9,26 +9,30 @@ export class CharacterClass implements IClass {
     public extends?: IClass[] = [ObjectClassInstance];
 
     public instanceFields: IField[] = [
-        { label: 'Player', type: 'Player', description: 'The player who owns this character.' },
-        { label: 'IsMine', type: 'bool', description: 'Character belongs to my player.' },
-        { label: 'IsMainCharacter', type: 'bool', description: 'Character belongs to my player and is the main character.' },
-        { label: 'IsAI', type: 'bool', description: 'If the character is AI.' },
-        { label: 'ViewID', type: 'int', description: 'The network view ID of the character. This is synced with the room.' },
+        { label: 'Player', type: 'Player', description: 'The player who owns this character.', readonly: true },
+        { label: 'IsMine', type: 'bool', description: 'Character belongs to my player.', readonly: true },
+        { label: 'IsMainCharacter', type: 'bool', description: 'Character belongs to my player and is the main character.', readonly: true },
+        { label: 'IsAI', type: 'bool', description: 'If the character is AI.', readonly: true },
+        { label: 'ViewID', type: 'int', description: 'The network view ID of the character. This is synced with the room.', readonly: true },
+        { label: 'Transform', type: 'Transform', description: 'The Unity transform of the character.', readonly: true },
         { label: 'Position', type: 'Vector3', description: 'Position of the character.' },
         { label: 'Rotation', type: 'Vector3', description: 'Rotation of the character.' },
+        { label: 'QuaternionRotation', type: 'Quaternion', description: 'Quaternion rotation of the character.' },
         { label: 'Velocity', type: 'Vector3', description: 'Velocity of the character.' },
         { label: 'Forward', type: 'Vector3', description: 'Forward direction of the character.' },
         { label: 'Right', type: 'Vector3', description: 'Right direction of the character.' },
         { label: 'Up', type: 'Vector3', description: 'Up direction of the character.' },
-        { label: 'HasTargetDirection', type: 'bool', description: 'If the character has a target direction it is turning towards.' },
-        { label: 'TargetDirection', type: 'Vector3', description: 'The character\'s target direction.' },
-        { label: 'Team', type: 'string', description: 'Team the character belongs to.' },
-        { label: 'Name', type: 'string', description: 'The display name of the character.' },
+        { label: 'HasTargetDirection', type: 'bool', description: 'If the character has a target direction it is turning towards.', readonly: true },
+        { label: 'TargetDirection', type: 'Vector3', description: 'The character\'s target direction.', readonly: true },
+        { label: 'Team', type: 'string', description: 'Team the character belongs to ("None", "Blue", "Red", "Titan", "Human"). This can be set to any string, so any combination of teams is allowed.' },
+        { label: 'Name', type: 'string', description: 'The display name of the character. If modified, it will affect world name (if human) and feed name. All changes are local, and can be modified by non-owners.' },
+        { label: 'Guild', type: 'string', description: 'The guild name of the character. Same restrictions as Name.' },
         { label: 'Health', type: 'float', description: 'Character\'s current health. Cannot be set higher than MaxHealth.' },
         { label: 'MaxHealth', type: 'float', description: 'Character\'s maximum health.' },
         { label: 'CustomDamageEnabled', type: 'bool', description: 'Is custom damage dealing enabled.' },
         { label: 'CustomDamage', type: 'int', description: 'Amount of custom damage to deal per attack.' },
-        { label: 'CurrentAnimation', type: 'string', description: 'The character\'s current playing animation.' },
+        { label: 'CurrentAnimation', type: 'string', description: 'The character\'s current playing animation.', readonly: true },
+        { label: 'Grounded', type: 'bool', description: 'Read whether the character is currently grounded - updated every fixed update.' }
     ];
 
     public instanceMethods: IMethod[] = [
