@@ -10,6 +10,7 @@ import { IClass } from "./IClass";
 import { InputClassInstance } from "./InputClass";
 import { JsonClassInstance } from "./JsonClass";
 import { LineCastHitResultClassInstance } from "./LineCastHitResultClass";
+import { LineRendererClassInstance } from "./LineRendererClass";
 import { ListClassInstance } from "./ListClass";
 import { MapClassInstance } from "./MapClass";
 import { MapObjectClassInstance } from "./MapObjectClass";
@@ -65,6 +66,7 @@ export const AvailableClasses: IClass[] = [
     QuaternionClassInstance,
     DictClassInstance,
     ListClassInstance,
+    LineRendererClassInstance,
     RangeClassInstance,
     LineCastHitResultClassInstance,
 ];
@@ -101,6 +103,7 @@ export const AvailableClassesMap: Map<string, IClass> = new Map([
     [QuaternionClassInstance.name, QuaternionClassInstance],
     [DictClassInstance.name, DictClassInstance],
     [ListClassInstance.name, ListClassInstance],
+    [LineRendererClassInstance.name, LineRendererClassInstance],
     [RangeClassInstance.name, RangeClassInstance],
     [LineCastHitResultClassInstance.name, LineCastHitResultClassInstance],
 ]);
