@@ -40,8 +40,8 @@ export class Vector3Class implements IClass {
         { label: 'X', type: 'float', description: 'X axis of the vector.' },
         { label: 'Y', type: 'float', description: 'Y axis of the vector.' },
         { label: 'Z', type: 'float', description: 'Z axis of the vector.' },
-        { label: 'Normalized', type: 'Vector3', description: 'Normalized version of the vector.' },
-        { label: 'Magnitude', type: 'float', description: 'Returns the magnitude of the vector.' }
+        { label: 'Normalized', type: 'Vector3', description: 'Normalized version of the vector.', readonly: true },
+        { label: 'Magnitude', type: 'float', description: 'Returns the magnitude of the vector.', readonly: true }
     ];
 
     public instanceMethods: IMethod[] = [
@@ -56,13 +56,14 @@ export class Vector3Class implements IClass {
     ];
 
     public staticFields: IField[] = [
-        { label: 'Up', type: 'Vector3', description: 'Represents the upward direction.' },
-        { label: 'Down', type: 'Vector3', description: 'Represents the downward direction.' },
-        { label: 'Left', type: 'Vector3', description: 'Represents the left direction.' },
-        { label: 'Right', type: 'Vector3', description: 'Represents the right direction.' },
-        { label: 'Forward', type: 'Vector3', description: 'Represents the forward direction.' },
-        { label: 'Back', type: 'Vector3', description: 'Represents the backward direction.' },
-        { label: 'Zero', type: 'Vector3', description: 'Represents a vector with all components set to zero.' }
+        { label: 'Up', type: 'Vector3', description: 'Represents the upward direction.', readonly: true },
+        { label: 'Down', type: 'Vector3', description: 'Represents the downward direction.', readonly: true },
+        { label: 'Left', type: 'Vector3', description: 'Represents the left direction.', readonly: true },
+        { label: 'Right', type: 'Vector3', description: 'Represents the right direction.', readonly: true },
+        { label: 'Forward', type: 'Vector3', description: 'Represents the forward direction.', readonly: true },
+        { label: 'Back', type: 'Vector3', description: 'Represents the backward direction.', readonly: true },
+        { label: 'One', type: 'Vector3', description: 'Represents a unit vector with all components set to 1.', readonly: true },
+        { label: 'Zero', type: 'Vector3', description: 'Represents a vector with all components set to zero.', readonly: true }
     ];
 
     public staticMethods: IMethod[] = [

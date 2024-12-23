@@ -171,6 +171,16 @@ export class UIClass implements IClass {
             parameters: [
                 { name: 'property', type: 'string', description: 'The custom property to display.' }
             ]
+        },
+        {
+            label: 'GetThemeColor',
+            returnType: 'Color',
+            description: 'Gets the color of the specified item. See theme JSON for reference.',
+            parameters: [
+                { name: 'panel', type: 'string', description: 'The panel to query.' },
+                { name: 'category', type: 'string', description: 'The category within the panel.' },
+                { name: 'item', type: 'string', description: 'The specific item to get the color for.' }
+            ]
         }
     ];
 }

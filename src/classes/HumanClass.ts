@@ -9,7 +9,7 @@ export class HumanClass implements IClass {
     public extends?: IClass[] = [CharacterClassInstance];
 
     public instanceFields: IField[] = [
-        { label: 'Weapon', type: 'string', description: 'Human\'s current weapon ("Blade", "AHSS", "ThunderSpear", "APG").' },
+        { label: 'Weapon', type: 'string', description: 'Human\'s current weapon ("Blade", "AHSS", "ThunderSpear", "APG").', readonly: true },
         { label: 'CurrentGas', type: 'float', description: 'Current gas. Cannot be set higher than max gas.' },
         { label: 'MaxGas', type: 'float', description: 'Max gas.' },
         { label: 'CurrentBlade', type: 'int', description: 'Current number of blades left. Cannot be set higher than max blades.' },
@@ -23,12 +23,12 @@ export class HumanClass implements IClass {
         { label: 'Acceleration', type: 'int', description: 'Acceleration stat.' },
         { label: 'Speed', type: 'int', description: 'Run speed stat.' },
         { label: 'HorseSpeed', type: 'float', description: 'Horse run speed.' },
-        { label: 'IsMounted', type: 'bool', description: 'Is the human mounted to an object (does not count horses).' },
-        { label: 'MountedMapObject', type: 'MapObject', description: 'Returns the current mounted map object.' },
-        { label: 'MountedTransform', type: 'Transform', description: 'Returns the current mounted transform.' },
-        { label: 'CurrentSpecial', type: 'string', description: 'Returns the current special.' },
-        { label: 'AutoRefillGas', type: 'bool', description: 'If the human has the input setting AutoRefillGas enabled. Character owner only.' },
-        { label: 'State', type: 'string', description: 'Animation state of the human. Valid states are: Idle, Attack, GroundDodge, AirDodge, Reload, Refill, Die, Grab, EmoteAction, SpecialAttack, SpecialAction, Slide, Run, Land, MountingHorse, Stun, WallSlide.' },
+        { label: 'IsMounted', type: 'bool', description: 'Is the human mounted to an object (does not count horses).', readonly: true },
+        { label: 'MountedMapObject', type: 'MapObject', description: 'Returns the current mounted map object.', readonly: true },
+        { label: 'MountedTransform', type: 'Transform', description: 'Returns the current mounted transform.', readonly: true },
+        { label: 'CurrentSpecial', type: 'string', description: 'Returns the current special.', readonly: true },
+        { label: 'AutoRefillGas', type: 'bool', description: 'If the human has the input setting AutoRefillGas enabled. Character owner only.', readonly: true },
+        { label: 'State', type: 'string', description: 'Animation state of the human. Valid states are: Idle, Attack, GroundDodge, AirDodge, Reload, Refill, Die, Grab, EmoteAction, SpecialAttack, SpecialAction, Slide, Run, Land, MountingHorse, Stun, WallSlide.', readonly: true },
         { label: 'CanDodge', type: 'bool', description: 'Disables/Enables dodging.' },
         { label: 'LeftHookEnabled', type: 'bool', description: 'Disables/Enables the left hook.' },
         { label: 'RightHookEnabled', type: 'bool', description: 'Disables/Enables the right hook.' },
@@ -36,7 +36,7 @@ export class HumanClass implements IClass {
         { label: 'InvincibleTimeLeft', type: 'float', description: 'Amount of time before IsInvincible is set to false.' },
         { label: 'SpecialCooldown', type: 'float', description: 'Maximum cooldown on special ability.' },
         { label: 'ShifterLiveTime', type: 'float', description: 'If shifter special is equipped, how much live time for transforming.' },
-        { label: 'SpecialCooldownRatio', type: 'float', description: 'Ratio of CurrentCooldown / SpecialCooldown. 1.0 means ability is ready.' }
+        { label: 'SpecialCooldownRatio', type: 'float', description: 'Ratio of CurrentCooldown / SpecialCooldown. 1.0 means ability is ready.', readonly: true }
     ];
 
     public instanceMethods: IMethod[] = [

@@ -8,7 +8,7 @@ export class MapTargetableClass implements IClass {
     public instanceFields: IField[] = [
         { label: 'Team', type: 'string', description: 'Team the map targetable belongs to.' },
         { label: 'Enabled', type: 'bool', description: 'Whether the map targetable is enabled or not.' },
-        { label: 'Position', type: 'Vector3', description: 'World position of the map targetable.' }
+        { label: 'Position', type: 'Vector3', description: 'World position of the map targetable.', readonly: true }
     ];
 
     public instanceMethods: IMethod[] = [];

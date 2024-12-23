@@ -42,7 +42,25 @@ export class NetworkClass implements IClass {
             parameters: [
                 { name: 'message', type: 'string', description: 'The message to send.' }
             ]
-        }
+        },
+        {
+            label: 'GetTimestampDifference',
+            returnType: 'float',
+            description: 'Compute the wrapped timestamp difference from photon events. Used to determine delay.',
+            parameters: [
+                { name: 't1', type: 'float', description: 'The first timestamp.' },
+                { name: 't2', type: 'float', description: 'The second timestamp.' }
+            ]
+        },
+        {
+            label: 'KickPlayer',
+            returnType: 'null',
+            description: 'Kick the player via ID or Player object from the room, only callable by the host.',
+            parameters: [
+                { name: 'player', type: 'Player | int', description: 'The player object or ID to kick.' },
+                { name: 'reason', type: 'string', description: 'Optional reason for kicking the player.', isOptional: true }
+            ]
+        }        
     ];
 }
 
