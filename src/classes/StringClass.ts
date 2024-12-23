@@ -10,7 +10,7 @@ export class StringClass implements IClass {
     public instanceMethods: IMethod[] = [];
     
     public staticFields: IField[] = [
-        { label: 'Newline', type: 'string', description: 'Returns the newline character.' }
+        { label: 'Newline', type: 'string', description: 'Returns the newline character.' },
     ];
 
     public staticMethods: IMethod[] = [
@@ -24,12 +24,22 @@ export class StringClass implements IClass {
             ]
         },
         {
+            label: 'FormatFromList',
+            returnType: 'string',
+            description: 'Equivalent to C# string.format(string, List<string>).',
+            parameters: [
+                { name: 'value', type: 'string', description: 'The string to format.' },
+                { name: 'formatter', type: 'list', description: 'The list of formatting values.' }
+            ]
+        },
+        {
             label: 'Split',
             returnType: 'List(string)',
-            description: 'Split the string into a list.',
+            description: 'Split the string into a list. Can pass in either a string to split on or a list of strings to split on, the last optional param can remove all empty entries.',
             parameters: [
                 { name: 'value', type: 'string', description: 'The string to split.' },
-                { name: 'separator', type: 'string', description: 'The separator used to split the string.' }
+                { name: 'splitter', type: 'string | List(string)', description: 'The string or list of strings to split on.' },
+                { name: 'removeEmpty', type: 'bool', description: 'If true, removes empty entries.', isOptional: true }
             ]
         },
         {
@@ -146,7 +156,16 @@ export class StringClass implements IClass {
             parameters: [
                 { name: 'value', type: 'string', description: 'The string to convert.' }
             ]
-        }        
+        },
+        {
+            label: 'IndexOf',
+            returnType: 'int',
+            description: 'Returns the index of the given string.',
+            parameters: [
+                { name: 'value', type: 'string', description: 'The string to search.' },
+                { name: 'item', type: 'string', description: 'The substring to find.' }
+            ]
+        }
     ];
 }
 

@@ -18,7 +18,7 @@ export class MapObjectClass implements IClass {
         { label: 'Up', type: 'Vector3', description: 'Up vector of the map object.' },
         { label: 'Right', type: 'Vector3', description: 'Right vector of the map object.' },
         { label: 'Scale', type: 'Vector3', description: 'Scale of the map object.' },
-        { label: 'Parent', type: 'MapObject', description: 'Parent of the map object. Returns null if there is no parent.' },
+        { label: 'Parent', type: 'MapObject | Transform', description: 'Parent of the map object. Returns null if there is no parent.' },
         { label: 'Active', type: 'bool', description: 'Whether or not the map object is active.' },
         { label: 'Static', type: 'bool', description: 'Whether or not the map object is static.' },
         { label: 'Transform', type: 'Transform', description: 'Gets the transform component of the map object.' },

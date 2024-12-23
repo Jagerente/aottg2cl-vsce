@@ -84,6 +84,12 @@ export class InputClass implements IClass {
             parameters: [
                 { name: 'key', type: 'string', description: 'The key setting to modify.' }
             ]
+        },
+        {
+            label: 'CursorAimDirection',
+            returnType: 'Vector3',
+            description: 'Gets the direction ray of the cursor.',
+            parameters: []
         }        
     ];
 }
