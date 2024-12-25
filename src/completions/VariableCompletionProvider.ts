@@ -41,13 +41,15 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         const lineText = document.lineAt(position).text;
         let textBeforeCursor = lineText.substring(0, position.character);
 
-        let lastDot = textBeforeCursor.lastIndexOf('.');
-        const afterDot = lastDot === -1 ? '' : textBeforeCursor.slice(lastDot + 1).trim();
-        const afterDotBeforeCursor = textBeforeCursor.slice(lastDot + 1, position.character).trim();
-        const textBeforeDot = textBeforeCursor.slice(0, lastDot + 1).trim();
+        const callChainString = CodeContextUtils.parseCallChain(textBeforeCursor);
 
-        const callChainString = CodeContextUtils.parseCallChain(textBeforeDot);
-        const callChainArray = CodeContextUtils.splitCallChain(callChainString);
+        let lastDot = callChainString.lastIndexOf('.');
+        const afterDot = lastDot === -1 ? '' : callChainString.slice(lastDot + 1).trim();
+        const afterDotBeforeCursor = callChainString.slice(lastDot + 1, position.character).trim();
+        
+        const textBeforeDot = callChainString.slice(0, lastDot + 1).trim();
+
+        const callChainArray = CodeContextUtils.splitCallChain(textBeforeDot);
 
         if (callChainArray.length > 0) {
             const resolvedType = this.resolveChainType(callChainArray, currentClassDef);
