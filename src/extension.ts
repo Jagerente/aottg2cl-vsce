@@ -10,6 +10,8 @@ import { DiagnosticManager } from './diagnostic/DiagnosticManager';
 import { DocumentTreeProvider } from './utils/DocumentTreeProvider';
 import { VariableCollector } from './utils/VariableCollector';
 import { buildFinalFile } from './commands/BuildFinalFile';
+import { SemanticTokensProvider } from './providers/SemanticTokensProvider';
+import { SemanticTokensLegend } from './utils/SemanticTokensLegend';
 
 export async function activate(context: vscode.ExtensionContext) {
 	const aclManager = new ACLManager();
@@ -19,6 +21,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const variablesProvider = new VariableCompletionProvider(documentTreeProvider, variableCollector);
 	const callbacksProvider = new MainFunctionsCompletionProvider(documentTreeProvider);
 	const variableDefinitionProvider = new VariableDefinitionProvider(documentTreeProvider, variableCollector);
+	const semanticTokensProvider = new SemanticTokensProvider(documentTreeProvider);
 	const diagnosticCollection = vscode.languages.createDiagnosticCollection('acl');
 	const diagnosticManager = new DiagnosticManager(diagnosticCollection, aclManager, documentTreeProvider);
 	const symbolProvider = new SymbolProvider(documentTreeProvider);
@@ -31,6 +34,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.languages.registerHoverProvider({ language: 'acl' }, keywordsProvider),
 		vscode.languages.registerSignatureHelpProvider({ language: 'acl' }, variablesProvider, '(', ',', ' '),
 		vscode.languages.registerDefinitionProvider({ language: 'acl' }, variableDefinitionProvider),
+		vscode.languages.registerDocumentSemanticTokensProvider({ language: 'acl' }, semanticTokensProvider, SemanticTokensLegend),
 		diagnosticCollection,
 		vscode.commands.registerCommand('extension.buildScript', buildFinalFile),
 		vscode.languages.registerDocumentSymbolProvider({ language: 'acl', scheme: 'file' }, symbolProvider),

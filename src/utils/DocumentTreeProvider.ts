@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { ClassKinds, IChainNode, IClass, IConstructor, ILoopNode, IMethod } from "../classes/IClass";
 import { ACLManager } from '../antlr4ts/ACLManager';
+import { ISemanticToken } from '../antlr4ts/ISemanticToken';
 
 export class DocumentTreeProvider {
     private aclManager: ACLManager;
@@ -8,6 +9,7 @@ export class DocumentTreeProvider {
     private userDefinedClasses: IClass[];
     private importedClasses: Map<string, IClass>;
     private allAvailableClasses: IClass[];
+    private semanticTokens: ISemanticToken[] = [];
 
     constructor(aclManager: ACLManager, globalClasses: Map<string, IClass>) {
         this.globalClasses = globalClasses;
@@ -15,6 +17,7 @@ export class DocumentTreeProvider {
         this.importedClasses = new Map<string, IClass>();
         this.allAvailableClasses = Array.from(this.globalClasses.values());
         this.aclManager = aclManager;
+        this.semanticTokens = aclManager.getSemanticTokens();
     }
 
     public async refetchUserDefinedClasses(document: vscode.TextDocument): Promise<void> {
@@ -22,6 +25,7 @@ export class DocumentTreeProvider {
         this.userDefinedClasses = this.aclManager.getClasses();
         this.importedClasses = this.aclManager.getImportedClasses();
         this.allAvailableClasses = [...Array.from(this.globalClasses.values()), ...this.userDefinedClasses, ...Array.from(this.importedClasses.values())];
+        this.semanticTokens = this.aclManager.getSemanticTokens();
     }
 
     public getGlobalClassesMap(): Map<string, IClass> {
@@ -34,6 +38,10 @@ export class DocumentTreeProvider {
 
     public getAllAvailableClasses(): IClass[] {
         return this.allAvailableClasses;
+    }
+
+    public getSemanticTokens(): ISemanticToken[] {
+        return this.semanticTokens;
     }
 
     public getChains(): IChainNode[][] {

@@ -8,6 +8,9 @@ import { CharStreams, CommonTokenStream } from 'antlr4ts';
 import { ClassesParserVisitor } from './ClassesParserVisitor';
 import * as fs from 'fs/promises';
 import { buildImportChain } from '../utils/DependencyChain';
+import { SemanticTokensListener } from './SemanticTokensListener';
+import { ISemanticToken } from './ISemanticToken';
+import { ParseTreeWalker } from 'antlr4ts/tree';
 
 export class ACLManager {
     private classes: IClass[] = [];
@@ -16,6 +19,7 @@ export class ACLManager {
     private loopNodes: ILoopNode[] = [];
     private conditionNodes: IConditionNode[] = [];
     private errors: IError[] = [];
+    private semanticTokens: ISemanticToken[] = [];
 
     private lexerErrorListener = new LexerErrorListener();
     private parserErrorListener = new ParserErrorListener();
@@ -38,6 +42,11 @@ export class ACLManager {
         const visitor = new ClassesParserVisitor();
         try {
             visitor.visit(parser.program());
+
+            parser.reset();
+            const semanticTokensListener = new SemanticTokensListener(visitor.getParsedClasses());
+            ParseTreeWalker.DEFAULT.walk(semanticTokensListener, parser.program());
+            this.semanticTokens = semanticTokensListener.semanticTokens;
         } catch (e) {
             console.log(e);
         }
@@ -91,19 +100,19 @@ export class ACLManager {
             console.error('Error building import chain:', err);
         }
     }
-    
+
     public parseContent(content: string, sourceUri?: vscode.Uri): IClass[] {
         const inputStream = CharStreams.fromString(content);
         const lexer = new ACLLexer(inputStream);
         const tokenStream = new CommonTokenStream(lexer);
         const parser = new ACLParser(tokenStream);
-    
+
         lexer.removeErrorListeners();
         parser.removeErrorListeners();
-    
+
         lexer.addErrorListener(this.lexerErrorListener);
         parser.addErrorListener(this.parserErrorListener);
-    
+
         const visitor = new ClassesParserVisitor();
         try {
             visitor.visit(parser.program());
@@ -137,7 +146,7 @@ export class ACLManager {
             return cls;
         });
     }
-    
+
 
     public flush(): void {
         this.classes = [];
@@ -173,6 +182,11 @@ export class ACLManager {
     public getErrors(): IError[] {
         return this.errors;
     }
+
+    public getSemanticTokens(): ISemanticToken[] {
+        return this.semanticTokens;
+    }
+
 
     public getDiagnostics(): vscode.Diagnostic[] {
         return this.errors.map(error => ACLManager.createDiagnostic(error));
