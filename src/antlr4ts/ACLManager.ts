@@ -6,6 +6,9 @@ import { LexerErrorListener, ParserErrorListener } from './ACLErrorListener';
 import { IError as IError } from '../classes/IClass';
 import { CharStreams, CommonTokenStream, Token } from 'antlr4ts';
 import { ClassesParserVisitor } from './ClassesParserVisitor';
+import { SemanticTokensListener } from './SemanticTokensListener';
+import { ISemanticToken } from './ISemanticToken';
+import { ParseTreeWalker } from 'antlr4ts/tree';
 
 export class ACLManager {
     private classes: IClass[] = [];
@@ -13,6 +16,7 @@ export class ACLManager {
     private loopNodes: ILoopNode[] = [];
     private conditionNodes: IConditionNode[] = [];
     private errors: IError[] = [];
+    private semanticTokens: ISemanticToken[] = [];
 
     private lexerErrorListener = new LexerErrorListener();
     private parserErrorListener = new ParserErrorListener();
@@ -35,6 +39,11 @@ export class ACLManager {
         const visitor = new ClassesParserVisitor();
         try {
             visitor.visit(parser.program());
+
+            parser.reset();
+            const semanticTokensListener = new SemanticTokensListener(visitor.getParsedClasses());
+            ParseTreeWalker.DEFAULT.walk(semanticTokensListener, parser.program());
+            this.semanticTokens = semanticTokensListener.semanticTokens;
         } catch (e) {
             console.log(e);
         }
@@ -75,6 +84,11 @@ export class ACLManager {
     public getErrors(): IError[] {
         return this.errors;
     }
+
+    public getSemanticTokens(): ISemanticToken[] {
+        return this.semanticTokens;
+    }
+
 
     public getDiagnostics(): vscode.Diagnostic[] {
         return this.errors.map(error => ACLManager.createDiagnostic(error));
