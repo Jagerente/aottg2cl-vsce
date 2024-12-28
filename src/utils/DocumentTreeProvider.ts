@@ -1,24 +1,28 @@
 import * as vscode from 'vscode';
 import { ClassKinds, IChainNode, IClass, IConstructor, ILoopNode, IMethod } from "../classes/IClass";
 import { ACLManager } from '../antlr4ts/ACLManager';
+import { ISemanticToken } from '../antlr4ts/ISemanticToken';
 
 export class DocumentTreeProvider {
     private aclManager: ACLManager;
     private globalClasses: Map<string, IClass>;
     private userDefinedClasses: IClass[];
     private allAvailableClasses: IClass[];
+    private semanticTokens: ISemanticToken[] = [];
 
     constructor(aclManager: ACLManager, globalClasses: Map<string, IClass>) {
         this.globalClasses = globalClasses;
         this.userDefinedClasses = [];
         this.allAvailableClasses = Array.from(this.globalClasses.values());
         this.aclManager = aclManager;
+        this.semanticTokens = aclManager.getSemanticTokens();
     }
 
     public refetchUserDefinedClasses(document: vscode.TextDocument): void {
         this.aclManager.refetch(document);
         this.userDefinedClasses = this.aclManager.getClasses();
         this.allAvailableClasses = [...Array.from(this.globalClasses.values()), ...this.userDefinedClasses];
+        this.semanticTokens = this.aclManager.getSemanticTokens();
     }
 
     public getGlobalClassesMap(): Map<string, IClass> {
@@ -31,6 +35,10 @@ export class DocumentTreeProvider {
 
     public getAllAvailableClasses(): IClass[] {
         return this.allAvailableClasses;
+    }
+
+    public getSemanticTokens(): ISemanticToken[] {
+        return this.semanticTokens;
     }
 
     public getChains(): IChainNode[][] {
