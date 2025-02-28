@@ -35,13 +35,19 @@ export function activate(context: vscode.ExtensionContext) {
 		documentTreeProvider.refetchUserDefinedClasses(document);
 		diagnosticManager.validateDocument(document);
 	};
+	
+	let parseTimeout: NodeJS.Timeout | null = null;
 
 	vscode.workspace.onDidOpenTextDocument(document => {
 		refetchDocumentData(document);
 	});
 	vscode.workspace.onDidChangeTextDocument(event => {
-		const document = event.document;
-		refetchDocumentData(document);
+		if (parseTimeout) {
+			clearTimeout(parseTimeout);
+		}
+		parseTimeout = setTimeout(() => {
+			refetchDocumentData(event.document);
+		}, 300);
 	});
 	vscode.window.onDidChangeActiveTextEditor(editor => {
 		if (editor && editor.document.languageId === 'acl') {
