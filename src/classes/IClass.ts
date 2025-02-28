@@ -36,6 +36,7 @@ export interface IVariable {
     name: string;
     value: string;
     type: string;
+    declarationRange?: vscode.Range;
 }
 
 export interface IParameter {
@@ -51,6 +52,7 @@ export interface IConstructor {
     description: string;
     declarationRange?: vscode.Range;
     bodyRange?: vscode.Range;
+    sourceUri?: vscode.Uri;
 }
 
 export interface IMethod {
@@ -61,6 +63,7 @@ export interface IMethod {
     parameters: IParameter[];
     declarationRange?: vscode.Range;
     bodyRange?: vscode.Range;
+    sourceUri?: vscode.Uri;
 }
 
 export interface IField {
@@ -70,6 +73,7 @@ export interface IField {
     readonly?: boolean;
     private?: boolean
     declarationRange?: vscode.Range;
+    sourceUri?: vscode.Uri;
 }
 
 export interface IClass {
@@ -84,6 +88,7 @@ export interface IClass {
     instanceMethods: IMethod[];
     declarationRange?: vscode.Range;
     bodyRange?: vscode.Range;
+    sourceUri?: vscode.Uri;
 }
 
 export function FindFieldInClassHierarchy(

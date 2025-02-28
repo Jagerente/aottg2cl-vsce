@@ -25,7 +25,7 @@
           "acl"
         ],
         "extensions": [
-          ".acl"
+          ".cl"
         ],
         "configuration": "./language-configuration.json"
       }
@@ -41,6 +41,12 @@
       {
         "language": "acl",
         "path": "./snippets/acl.code-snippets"
+      }
+    ],
+    "commands": [
+      {
+        "command": "extension.buildScript",
+        "title": "Build Final ACL Script"
       }
     ]
   },
