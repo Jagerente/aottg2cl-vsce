@@ -366,9 +366,11 @@ export class CodeContextUtils {
                     break;
                 }
             }
-
-            if (char === '.' && bracesDepth === 0) {
-            } else if ((/\s/.test(char) || char === '!') && bracesDepth === 0) {
+    
+            if (
+                bracesDepth === 0 &&
+                (char === '=' || char === '&' || char === '|' || char === '>' || char === '<' || /\s/.test(char) || char === ';' || char === ',' || char === '!')
+            ) {
                 break;
             }
 
@@ -382,8 +384,8 @@ export class CodeContextUtils {
         if (!this.areParenthesesBalanced(methodChain)) {
             return '';
         }
-
-        return methodChain;
+    
+        return methodChain.trim();
     }
 
     public static areParenthesesBalanced(str: string): boolean {
