@@ -54,7 +54,10 @@ export class VariableCollector {
                 currentScope = { variables: new Map<string, IVariable>(), parent: currentScope };
                 scopeStack.push(currentScope);
 
-                currentScope.variables.set(variableName, { name: variableName, type: elementType, value: 'iterable element' });
+                const startColumn = line.indexOf(variableName);
+                const endColumn = startColumn + variableName.length;
+                const declarationRange = new vscode.Range(new vscode.Position(lineIndex, startColumn), new vscode.Position(lineIndex, endColumn));
+                currentScope.variables.set(variableName, { name: variableName, type: elementType, value: 'iterable element', declarationRange });
 
                 pendingControlStructure = true;
                 continue;
@@ -72,7 +75,7 @@ export class VariableCollector {
                 }
             }
 
-            this.collectVariablesFromLine(line.trim(), currentScope.variables, availableClasses, currentClass);
+            this.collectVariablesFromLine(line, lineIndex, currentScope.variables, availableClasses, currentClass);
 
             const closeBraceMatch = line.match(/\}/g);
             if (closeBraceMatch) {
@@ -117,17 +120,21 @@ export class VariableCollector {
 
     private collectVariablesFromLine(
         line: string,
+        lineNumber: number,
         variables: Map<string, IVariable>,
         availableClasses: IClass[],
         currentClass: IClass
     ): void {
-        const variableMatch = line.match(/^\s*(\w+)\s*=\s*(.+);?/);
-        if (variableMatch) {
-            const variableName = variableMatch[1];
-            const variableValue = variableMatch[2].trim().replace(/;$/, '');
-
+        const regex = /^\s*(\w+)\s*=\s*(.+);?/;
+        const execResult = regex.exec(line);
+        if (execResult) {
+            const variableName = execResult[1];
+            const variableValue = execResult[2].trim().replace(/;$/, '');
             const inferredType = this.inferType(variableValue, availableClasses, currentClass, variables);
-            variables.set(variableName, { name: variableName, type: inferredType, value: variableValue });
+            const startColumn = line.indexOf(variableName);
+            const endColumn = startColumn + variableName.length;
+            const declarationRange = new vscode.Range(new vscode.Position(lineNumber, startColumn), new vscode.Position(lineNumber, endColumn));
+            variables.set(variableName, { name: variableName, type: inferredType, value: variableValue, declarationRange });
         }
     }
 

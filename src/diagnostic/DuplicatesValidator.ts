@@ -11,7 +11,7 @@ export class DuplicatesValidator {
 
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         const diagnostics: vscode.Diagnostic[] = [];
-        const classesMap = this.documentTreeProvider.getUserDefinedClassesMap();
+        const classesMap = this.documentTreeProvider.getAllAvailableClasses();
 
         const classNames = new Map<string, IClass[]>();
         classesMap.forEach((classDef) => {
@@ -23,14 +23,17 @@ export class DuplicatesValidator {
 
         classNames.forEach((classDefs, className) => {
             if (classDefs.length > 1) {
-                classDefs.forEach((classDef) => {
-                    const diagnostic = new vscode.Diagnostic(
-                        classDef.declarationRange!,
-                        `Duplicate class declaration '${className}'.`,
-                        vscode.DiagnosticSeverity.Error
-                    );
-                    diagnostics.push(diagnostic);
-                });
+                const currentClasses = classDefs.filter(cls => cls.sourceUri?.fsPath === document.uri.fsPath);
+                if (currentClasses.length > 0) {
+                    currentClasses.forEach((classDef) => {
+                        const diagnostic = new vscode.Diagnostic(
+                            classDef.declarationRange!,
+                            `Duplicate class declaration '${className}' detected (exists in ${classDefs.length} definitions).`,
+                            vscode.DiagnosticSeverity.Error
+                        );
+                        diagnostics.push(diagnostic);
+                    });
+                }
             }
         });
 
@@ -51,12 +54,14 @@ export class DuplicatesValidator {
             methodSignatures.forEach((methods, signature) => {
                 if (methods.length > 1) {
                     methods.forEach((method) => {
-                        const diagnostic = new vscode.Diagnostic(
-                            method.declarationRange!,
-                            `Duplicate method '${method.label}' with the same parameter count in class '${classDef.name}'.`,
-                            vscode.DiagnosticSeverity.Error
-                        );
-                        diagnostics.push(diagnostic);
+                        if (method.declarationRange) {
+                            const diagnostic = new vscode.Diagnostic(
+                                method.declarationRange!,
+                                `Duplicate method '${method.label}' with the same parameter count in class '${classDef.name}'.`,
+                                vscode.DiagnosticSeverity.Error
+                            );
+                            diagnostics.push(diagnostic);
+                        }
                     });
                 }
             });

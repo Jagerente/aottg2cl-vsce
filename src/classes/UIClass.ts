@@ -62,6 +62,20 @@ export class UIClass implements IClass {
             ]
         },
         {
+            label: 'IsPopupActive',
+            returnType: 'bool',
+            description: 'Whether popup is active.',
+            parameters: [
+                { name: 'name', type: 'string', description: 'Popup name.' },
+            ]
+        },
+        {
+            label: 'GetPopups',
+            returnType: 'List(string)',
+            description: 'Returns all registered custom popups.',
+            parameters: []
+        },
+        {
             label: 'ShowPopup',
             returnType: 'null',
             description: 'Shows the popup with the given name.',

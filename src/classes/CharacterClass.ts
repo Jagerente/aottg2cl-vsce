@@ -71,6 +71,15 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            label: 'ForceAnimation',
+            returnType: 'null',
+            description: 'Will put character into Emote state to play the entire animation',
+            parameters: [
+                { name: 'animation', type: 'string', description: 'The name of the animation.' },
+                { name: 'fade', type: 'float', description: 'Optional fade time.', isOptional: true }
+            ]
+        },
+        {
             label: 'GetAnimationLength',
             returnType: 'float',
             description: 'Gets the length of the animation.',

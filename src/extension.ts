@@ -8,6 +8,7 @@ import { ACLManager } from './antlr4ts/ACLManager';
 import { DiagnosticManager } from './diagnostic/DiagnosticManager';
 import { DocumentTreeProvider } from './utils/DocumentTreeProvider';
 import { VariableCollector } from './utils/VariableCollector';
+import { buildFinalFile } from './commands/BuildFinalFile';
 
 export function activate(context: vscode.ExtensionContext) {
 	const aclManager = new ACLManager();
@@ -16,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const keywordsProvider = new KeywordCompletionProvider(documentTreeProvider);
 	const variablesProvider = new VariableCompletionProvider(documentTreeProvider, variableCollector);
 	const callbacksProvider = new MainFunctionsCompletionProvider(documentTreeProvider);
-	const variableDefinitionProvider = new VariableDefinitionProvider();
+	const variableDefinitionProvider = new VariableDefinitionProvider(documentTreeProvider, variableCollector);
 	const diagnosticCollection = vscode.languages.createDiagnosticCollection('acl');
 	const diagnosticManager = new DiagnosticManager(diagnosticCollection, aclManager, documentTreeProvider);
 
@@ -29,30 +30,37 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.languages.registerSignatureHelpProvider({ language: 'acl' }, variablesProvider, '(', ',', ' '),
 		vscode.languages.registerDefinitionProvider({ language: 'acl' }, variableDefinitionProvider),
 		diagnosticCollection,
+        vscode.commands.registerCommand('extension.buildScript', buildFinalFile),
 	);
 
-	const refetchDocumentData = (document: vscode.TextDocument) => {
-		documentTreeProvider.refetchUserDefinedClasses(document);
+	const refetchDocumentData = async (document: vscode.TextDocument) => {
+		await documentTreeProvider.refetchUserDefinedClasses(document);
 		diagnosticManager.validateDocument(document);
 	};
+	
+	let parseTimeout: NodeJS.Timeout | null = null;
 
-	vscode.workspace.onDidOpenTextDocument(document => {
-		refetchDocumentData(document);
+	vscode.workspace.onDidOpenTextDocument(async document => {
+		await refetchDocumentData(document);
 	});
 	vscode.workspace.onDidChangeTextDocument(event => {
-		const document = event.document;
-		refetchDocumentData(document);
+		if (parseTimeout) {
+			clearTimeout(parseTimeout);
+		}
+		parseTimeout = setTimeout(async () => {
+			await refetchDocumentData(event.document);
+		}, 300);
 	});
-	vscode.window.onDidChangeActiveTextEditor(editor => {
+	vscode.window.onDidChangeActiveTextEditor(async editor => {
 		if (editor && editor.document.languageId === 'acl') {
-			refetchDocumentData(editor.document);
+			await refetchDocumentData(editor.document);
 		}
 	});
 	vscode.window.onDidChangeWindowState(event => {
 		if (event.focused) {
-			vscode.workspace.textDocuments.forEach(document => {
+			vscode.workspace.textDocuments.forEach(async document => {
 				if (document.languageId === 'acl') {
-					refetchDocumentData(document);
+					await refetchDocumentData(document);
 				}
 			});
 		}

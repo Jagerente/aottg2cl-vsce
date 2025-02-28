@@ -6,7 +6,7 @@ While this is a super early version of the extension, it already should signific
 
 ## Usage
 
-> Script files must be ended with `.acl` extension.
+> Script files must be ended with `.cl` extension.
 
 ### Annotations example
 
