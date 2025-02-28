@@ -6,19 +6,22 @@ export class DocumentTreeProvider {
     private aclManager: ACLManager;
     private globalClasses: Map<string, IClass>;
     private userDefinedClasses: IClass[];
+    private importedClasses: Map<string, IClass>;
     private allAvailableClasses: IClass[];
 
     constructor(aclManager: ACLManager, globalClasses: Map<string, IClass>) {
         this.globalClasses = globalClasses;
         this.userDefinedClasses = [];
+        this.importedClasses = new Map<string, IClass>();
         this.allAvailableClasses = Array.from(this.globalClasses.values());
         this.aclManager = aclManager;
     }
 
-    public refetchUserDefinedClasses(document: vscode.TextDocument): void {
-        this.aclManager.refetch(document);
+    public async refetchUserDefinedClasses(document: vscode.TextDocument): Promise<void> {
+        await this.aclManager.refetchWithImports(document);
         this.userDefinedClasses = this.aclManager.getClasses();
-        this.allAvailableClasses = [...Array.from(this.globalClasses.values()), ...this.userDefinedClasses];
+        this.importedClasses = this.aclManager.getImportedClasses();
+        this.allAvailableClasses = [...Array.from(this.globalClasses.values()), ...this.userDefinedClasses, ...Array.from(this.importedClasses.values())];
     }
 
     public getGlobalClassesMap(): Map<string, IClass> {

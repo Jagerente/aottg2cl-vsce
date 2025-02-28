@@ -73,7 +73,7 @@ COMMENT: '#' ~[\r\n]* -> skip;
 
 BLOCK_COMMENT: '/*' .*? '*/' -> skip;
 
-program: classDecl*;
+program: annotation* classDecl*;
 
 classDecl: (CLASS | COMPONENT | EXTENSION | CUTSCENE) ID LBRACE classBody RBRACE;
 
