@@ -23,6 +23,7 @@ export class HumanClass implements IClass {
         { label: 'Acceleration', type: 'int', description: 'Acceleration stat.' },
         { label: 'Speed', type: 'int', description: 'Run speed stat.' },
         { label: 'HorseSpeed', type: 'float', description: 'Horse run speed.' },
+        { label: 'IsCarried', type: 'bool', description: 'Is the human carried by other player.', readonly: true },
         { label: 'IsMounted', type: 'bool', description: 'Is the human mounted to an object (does not count horses).', readonly: true },
         { label: 'MountedMapObject', type: 'MapObject', description: 'Returns the current mounted map object.', readonly: true },
         { label: 'MountedTransform', type: 'Transform', description: 'Returns the current mounted transform.', readonly: true },
