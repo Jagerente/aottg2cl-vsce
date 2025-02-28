@@ -60,7 +60,7 @@ export class BaseMainClass implements IClass {
             {
                 label: 'OnPlayerSpawn',
                 returnType: 'void',
-                description: 'Called upon any player spawning.',
+                description: 'Called upon any player spawning. Return false to skip printing to chat.',
                 parameters: [
                     { name: 'player', type: 'Player', description: 'The player that has spawned.', isOptional: false, isVariadic: false },
                     { name: 'character', type: 'Character', description: 'The character associated with the player.', isOptional: false, isVariadic: false }
