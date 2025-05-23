@@ -49,18 +49,16 @@ export class NetworkViewClass implements IClass {
         {
             label: 'SendStream',
             returnType: 'null',
-            description: 'Send an object to the network sync stream. Should be called in the SendNetworkStream callback.',
+            description: 'Send an object to the network sync stream. This represents sending data from the object owner to all non-owner observers, and should only be called in the SendNetworkStream callback in the attached component. It only works with some object types: primitives and Vector3.',
             parameters: [
                 { name: 'item', type: 'Object', description: 'The object to send through the network stream.' }
             ]
         },
         {
             label: 'ReceiveStream',
-            returnType: 'null',
-            description: 'Receive an object through the network sync stream. Should be called in the OnNetworkStream callback.',
-            parameters: [
-                { name: 'item', type: 'Object', description: 'The object received through the network stream.' }
-            ]
+            returnType: 'Object',
+            description: 'Receive an object through the network sync stream. This represents receiving data from the object owner as a non-owner observer, and should only be called in the OnNetworkStream callback.',
+            parameters: []
         }
     ];
 
