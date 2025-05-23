@@ -213,7 +213,8 @@ export class GameClass implements IClass {
                 { name: 'velocity', type: 'Vector3', description: 'Velocity of the projectile.' },
                 { name: 'gravity', type: 'Vector3', description: 'Gravity effect on the projectile.' },
                 { name: 'liveTime', type: 'float', description: 'Duration for which the projectile will live.' },
-                { name: 'team', type: 'string', description: 'Team that the projectile belongs to.' }
+                { name: 'team', type: 'string', description: 'Team that the projectile belongs to.' },
+                { name: 'params', type: 'any', description: 'Extra params.', isVariadic: true }
             ]
         },
         {
