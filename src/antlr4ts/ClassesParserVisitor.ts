@@ -110,7 +110,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                     const paramName = paramCtx.ID().text;
                     let paramType = 'any';
                     let description = '';
-            
+
                     if (paramCtx.annotation() && paramCtx.annotation().length > 0) {
                         for (let annotationCtx of paramCtx.annotation()) {
                             let annotationText = '';
@@ -148,7 +148,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                             parameters = parentMethod.parameters;
                         }
                     }
-            
+
                     parameters.push({
                         name: paramName,
                         type: paramType,
@@ -173,7 +173,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                         break;
                     }
                 }
-    
+
             } else {
                 const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
                 if (parentMethod) {
@@ -290,17 +290,17 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     public visitPostfixExpression = (ctx: PostfixExpressionContext): void => {
         this.chainStack.push([...this.currentChain]);
         this.currentChain = [];
-    
+
         this.visit(ctx.primaryExpression());
-    
+
         for (const postfixOp of ctx.postfixOperator()) {
             this.visit(postfixOp);
         }
-    
+
         if (this.currentChain.length > 1 || (this.currentChain.length === 1 && this.currentChain[0].isMethodCall)) {
             this.chains.push(this.currentChain);
         }
-    
+
         this.currentChain = this.chainStack.pop() || [];
     };
 
@@ -310,7 +310,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             const startToken = ctx.start;
             const startLine = startToken.line;
             const startColumn = startToken.charPositionInLine;
-    
+
             this.currentChain.push({
                 text,
                 startLine,
@@ -322,7 +322,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             const startToken = ctx.start;
             const startLine = startToken.line;
             const startColumn = startToken.charPositionInLine;
-    
+
             this.currentChain.push({
                 text,
                 startLine,
@@ -342,24 +342,24 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             this.visit(ctx.methodCall()!);
         }
     };
-    
+
 
     public visitMethodCall = (ctx: MethodCallContext): void => {
         const prevItem = this.currentChain[this.currentChain.length - 1];
         if (!prevItem) {
             return;
         }
-    
+
         const argumentList = ctx.argumentList()?.expression().map(expr => expr.text) || [];
         const startToken = ctx.start;
         const startLine = startToken.line;
         const startColumn = startToken.charPositionInLine;
-    
+
         prevItem.text += `(${argumentList.join(', ')})`;
         prevItem.isMethodCall = true;
         prevItem.methodArguments = argumentList;
     };
-    
+
 
     public visitFieldAccess = (ctx: FieldAccessContext): void => {
         const fieldName = ctx.ID().text;
@@ -471,12 +471,17 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     }
 
     private getFieldDeclarationRange(ctx: VariableDeclContext): vscode.Range {
-        const startToken = ctx.start!;
-        const stopToken = ctx.stop!;
+        const startToken = ctx.PRIVATE()
+            ? ctx.PRIVATE()!.symbol
+            : ctx.ID()!.symbol;
+
+        const semiToken = ctx.SEMI().symbol;
+
         const startLine = startToken.line - 1;
         const startChar = startToken.charPositionInLine;
-        const endLine = stopToken.line - 1;
-        const endChar = stopToken.charPositionInLine + stopToken.text!.length;
+        const endLine = semiToken.line - 1;
+        const endChar = semiToken.charPositionInLine + 1;
+
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -484,10 +489,17 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     }
 
     private getMethodDeclarationRange(ctx: MethodDeclContext): vscode.Range {
-        const startLine = ctx.start!.line - 1;
-        const startChar = ctx.start!.charPositionInLine;
-        const endLine = ctx.RPAREN().symbol.line - 1;
-        const endChar = ctx.RPAREN().symbol.charPositionInLine;
+        const keywordToken = ctx.FUNCTION()
+            ? ctx.FUNCTION()!.symbol
+            : ctx.COROUTINE()!.symbol;
+
+        const startLine = keywordToken.line - 1;
+        const startChar = keywordToken.charPositionInLine;
+
+        const rparen = ctx.RPAREN().symbol;
+        const endLine = rparen.line - 1;
+        const endChar = rparen.charPositionInLine + 1;
+
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)

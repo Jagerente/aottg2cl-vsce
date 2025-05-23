@@ -5,6 +5,30 @@ All notable changes to the "aottg2cl" extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.9-preview] - 2025-02-28
+
+### Added
+
+- Symbols provider
+
+### Changed
+
+- Updated built-in definitions.
+- Updated packages
+
+## [0.0.8-preview] - 2025-02-28
+
+### Added
+
+- Added imports support
+- Added build cmd
+
+### Changed
+
+- ACL to CL ext support rename.
+- Optimized parsing calls.
+- Fixed autocompletion.
+- Updated built-in definitions.
 
 ## [0.0.7-preview] - 2024-12-23
 
