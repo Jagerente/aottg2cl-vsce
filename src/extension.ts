@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { KeywordCompletionProvider } from './completions/KeywordCompletionProvider';
 import { VariableCompletionProvider } from './completions/VariableCompletionProvider';
 import { MainFunctionsCompletionProvider } from './completions/MainFunctionsCompletionProvider';
+import { SymbolProvider } from './completions/SymbolProvider';
 import { VariableDefinitionProvider } from './definition/VariableDefinitionProvider';
 import { AvailableClassesMap } from './classes/AvailableClasses';
 import { ACLManager } from './antlr4ts/ACLManager';
@@ -10,7 +11,7 @@ import { DocumentTreeProvider } from './utils/DocumentTreeProvider';
 import { VariableCollector } from './utils/VariableCollector';
 import { buildFinalFile } from './commands/BuildFinalFile';
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 	const aclManager = new ACLManager();
 	const documentTreeProvider = new DocumentTreeProvider(aclManager, AvailableClassesMap);
 	const variableCollector = new VariableCollector(documentTreeProvider);
@@ -20,6 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const variableDefinitionProvider = new VariableDefinitionProvider(documentTreeProvider, variableCollector);
 	const diagnosticCollection = vscode.languages.createDiagnosticCollection('acl');
 	const diagnosticManager = new DiagnosticManager(diagnosticCollection, aclManager, documentTreeProvider);
+	const symbolProvider = new SymbolProvider(documentTreeProvider);
 
 	context.subscriptions.push(
 		vscode.languages.registerCompletionItemProvider({ language: 'acl' }, variablesProvider, ' ', '.'),
@@ -30,14 +32,21 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.languages.registerSignatureHelpProvider({ language: 'acl' }, variablesProvider, '(', ',', ' '),
 		vscode.languages.registerDefinitionProvider({ language: 'acl' }, variableDefinitionProvider),
 		diagnosticCollection,
-        vscode.commands.registerCommand('extension.buildScript', buildFinalFile),
+		vscode.commands.registerCommand('extension.buildScript', buildFinalFile),
+		vscode.languages.registerDocumentSymbolProvider({ language: 'acl', scheme: 'file' }, symbolProvider),
 	);
 
 	const refetchDocumentData = async (document: vscode.TextDocument) => {
 		await documentTreeProvider.refetchUserDefinedClasses(document);
 		diagnosticManager.validateDocument(document);
 	};
-	
+
+	await Promise.all(
+      vscode.workspace.textDocuments
+        .filter(doc => doc.languageId === 'acl')
+        .map(doc => refetchDocumentData(doc))
+    );
+
 	let parseTimeout: NodeJS.Timeout | null = null;
 
 	vscode.workspace.onDidOpenTextDocument(async document => {
