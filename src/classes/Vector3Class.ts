@@ -10,10 +10,12 @@ export class Vector3Class implements IClass {
 
     public constructors: IConstructor[] = [
         {
+            parent: this,
             description: "Create an empty 0,0,0 vector",
             parameters: []
         },
         {
+            parent: this,
             description: "Create a vector with specified x, y, z values",
             parameters: [
                 { name: "x", type: "float", description: "X-coordinate" },
@@ -22,12 +24,14 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             description: "Create a vector with the same x, y, z value",
             parameters: [
                 { name: "value", type: "float", description: "The value for x, y, and z coordinates" }
             ]
         },
         {
+            parent: this,
             description: "Create a vector with x and y values, z set to 0",
             parameters: [
                 { name: "x", type: "float", description: "X-coordinate" },
@@ -37,15 +41,16 @@ export class Vector3Class implements IClass {
     ];
 
     public instanceFields: IField[] = [
-        { label: 'X', type: 'float', description: 'X axis of the vector.' },
-        { label: 'Y', type: 'float', description: 'Y axis of the vector.' },
-        { label: 'Z', type: 'float', description: 'Z axis of the vector.' },
-        { label: 'Normalized', type: 'Vector3', description: 'Normalized version of the vector.', readonly: true },
-        { label: 'Magnitude', type: 'float', description: 'Returns the magnitude of the vector.', readonly: true }
+        { parent: this, label: 'X', type: 'float', description: 'X axis of the vector.' },
+        { parent: this, label: 'Y', type: 'float', description: 'Y axis of the vector.' },
+        { parent: this, label: 'Z', type: 'float', description: 'Z axis of the vector.' },
+        { parent: this, label: 'Normalized', type: 'Vector3', description: 'Normalized version of the vector.', readonly: true },
+        { parent: this, label: 'Magnitude', type: 'float', description: 'Returns the magnitude of the vector.', readonly: true }
     ];
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Scale',
             returnType: 'Vector3',
             description: 'Returns the Vector3 multiplied by the scale value.',
@@ -56,18 +61,19 @@ export class Vector3Class implements IClass {
     ];
 
     public staticFields: IField[] = [
-        { label: 'Up', type: 'Vector3', description: 'Represents the upward direction.', readonly: true },
-        { label: 'Down', type: 'Vector3', description: 'Represents the downward direction.', readonly: true },
-        { label: 'Left', type: 'Vector3', description: 'Represents the left direction.', readonly: true },
-        { label: 'Right', type: 'Vector3', description: 'Represents the right direction.', readonly: true },
-        { label: 'Forward', type: 'Vector3', description: 'Represents the forward direction.', readonly: true },
-        { label: 'Back', type: 'Vector3', description: 'Represents the backward direction.', readonly: true },
-        { label: 'One', type: 'Vector3', description: 'Represents a unit vector with all components set to 1.', readonly: true },
-        { label: 'Zero', type: 'Vector3', description: 'Represents a vector with all components set to zero.', readonly: true }
+        { parent: this, label: 'Up', type: 'Vector3', description: 'Represents the upward direction.', readonly: true },
+        { parent: this, label: 'Down', type: 'Vector3', description: 'Represents the downward direction.', readonly: true },
+        { parent: this, label: 'Left', type: 'Vector3', description: 'Represents the left direction.', readonly: true },
+        { parent: this, label: 'Right', type: 'Vector3', description: 'Represents the right direction.', readonly: true },
+        { parent: this, label: 'Forward', type: 'Vector3', description: 'Represents the forward direction.', readonly: true },
+        { parent: this, label: 'Back', type: 'Vector3', description: 'Represents the backward direction.', readonly: true },
+        { parent: this, label: 'One', type: 'Vector3', description: 'Represents a unit vector with all components set to 1.', readonly: true },
+        { parent: this, label: 'Zero', type: 'Vector3', description: 'Represents a vector with all components set to zero.', readonly: true }
     ];
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Lerp',
             returnType: 'Vector3',
             description: 'Returns a Vector3 interpolated between a and b using t.',
@@ -78,6 +84,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'LerpUnclamped',
             returnType: 'Vector3',
             description: 'Returns a Vector3 interpolated between a and b using t. The t factor is not clamped between 0 and 1.',
@@ -88,6 +95,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Slerp',
             returnType: 'Vector3',
             description: 'Returns a Vector3 spherical interpolated between a and b using t.',
@@ -98,6 +106,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SlerpUnclamped',
             returnType: 'Vector3',
             description: 'Returns a Vector3 spherical interpolated between a and b using t. The t factor is not clamped between 0 and 1.',
@@ -108,6 +117,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetRotationDirection',
             returnType: 'Vector3',
             description: 'Gets the relational Vector3 b using a as a reference.',
@@ -117,6 +127,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Distance',
             returnType: 'float',
             description: 'Returns the distance between two Vector3s.',
@@ -126,6 +137,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Project',
             returnType: 'Vector3',
             description: 'Projects a onto b.',
@@ -135,6 +147,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Multiply',
             returnType: 'Vector3',
             description: 'Returns a Vector3 where each element in a is multiplied by each element of b.',
@@ -144,6 +157,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Divide',
             returnType: 'Vector3',
             description: 'Returns a Vector3 where each element in a is divided by each element of b.',
@@ -153,6 +167,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Angle',
             returnType: 'float',
             description: 'Returns the angle between a and b.',
@@ -162,6 +177,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SignedAngle',
             returnType: 'float',
             description: 'Returns the signed angle between a and b using the given axis.',
@@ -172,6 +188,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Cross',
             returnType: 'Vector3',
             description: 'Returns the cross product of a and b.',
@@ -181,6 +198,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Dot',
             returnType: 'float',
             description: 'Returns the dot product of a and b.',
@@ -190,6 +208,7 @@ export class Vector3Class implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'RotateTowards',
             returnType: 'Vector3',
             description: 'Returns the Vector3 that is rotated from a to b using maxAngle degrees and changing magnitude by at most maxMagnitude.',

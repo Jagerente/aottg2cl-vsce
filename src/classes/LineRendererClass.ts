@@ -10,21 +10,23 @@ export class LineRendererClass implements IClass {
 
     public constructors: IConstructor[] = [
         {
+            parent: this,
             description: 'Creates a LineRenderer with default settings.',
             parameters: []
         }
     ];
 
     public instanceFields: IField[] = [
-        { label: 'StartWidth', type: 'float', description: 'Width of the line at the start point.' },
-        { label: 'EndWidth', type: 'float', description: 'Width of the line at the end point.' },
-        { label: 'LineColor', type: 'Color', description: 'Color of the line.' },
-        { label: 'PositionCount', type: 'int', description: 'Number of positions that make up the line.' },
-        { label: 'Enabled', type: 'bool', description: 'Whether the LineRenderer is enabled.' },
+        { parent: this, label: 'StartWidth', type: 'float', description: 'Width of the line at the start point.' },
+        { parent: this, label: 'EndWidth', type: 'float', description: 'Width of the line at the end point.' },
+        { parent: this, label: 'LineColor', type: 'Color', description: 'Color of the line.' },
+        { parent: this, label: 'PositionCount', type: 'int', description: 'Number of positions that make up the line.' },
+        { parent: this, label: 'Enabled', type: 'bool', description: 'Whether the LineRenderer is enabled.' },
     ];
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'SetPosition',
             returnType: 'null',
             description: 'Sets the position of a point in the line.',
@@ -34,6 +36,7 @@ export class LineRendererClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetPosition',
             returnType: 'Vector3',
             description: 'Gets the position of a point in the line.',
@@ -47,6 +50,7 @@ export class LineRendererClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'CreateLineRenderer',
             returnType: 'LineRenderer',
             description: 'Creates a default LineRenderer instance.',

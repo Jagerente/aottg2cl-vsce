@@ -12,7 +12,8 @@ import {
     ElifStatementContext,
     ElseStatementContext,
     PrimaryExpressionContext,
-    PostfixOperatorContext
+    PostfixOperatorContext,
+    ParamContext
 } from './ACLParser';
 import {
     IClass,
@@ -26,10 +27,10 @@ import {
     ILoopNode,
     IConditionNode
 } from '../classes/IClass';
-import { BaseMainClass } from '../classes/BaseMainClass';
-import { BaseComponentsClass } from '../classes/BaseComponentsClass';
-import { BaseInstantiatableClass } from '../classes/BaseInstantiatableClass';
-import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
+import {BaseMainClass} from '../classes/BaseMainClass';
+import {BaseComponentsClass} from '../classes/BaseComponentsClass';
+import {BaseInstantiatableClass} from '../classes/BaseInstantiatableClass';
+import {AbstractParseTreeVisitor} from 'antlr4ts/tree/AbstractParseTreeVisitor';
 
 export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     public classes: IClass[] = [];
@@ -51,20 +52,20 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
         if (className === 'Main') {
             classKind = ClassKinds.EXTENSION;
-            extendsList = [new BaseMainClass(className)];
+            extendsList = [new BaseMainClass()];
         } else if (ctx.CLASS()) {
             classKind = ClassKinds.CLASS;
-            extendsList = [new BaseMainClass(className)];
+            extendsList = [new BaseInstantiatableClass()];
         } else if (ctx.COMPONENT()) {
             classKind = ClassKinds.COMPONENT;
-            extendsList = [new BaseComponentsClass(className)];
+            extendsList = [new BaseComponentsClass()];
             classDescription = 'Represents a component script attached to a MapObject.';
         } else if (ctx.EXTENSION()) {
             classKind = ClassKinds.EXTENSION;
-            extendsList = [new BaseInstantiatableClass(className)];
+            extendsList = [new BaseInstantiatableClass()];
         } else if (ctx.CUTSCENE()) {
             classKind = ClassKinds.CUTSCENE;
-            extendsList = [new BaseInstantiatableClass(className)];
+            extendsList = [new BaseInstantiatableClass()];
         }
 
         const declarationRange: vscode.Range = this.getClassDeclarationRange(ctx);
@@ -97,19 +98,24 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         const declarationRange: vscode.Range = this.getMethodDeclarationRange(ctx);
         const bodyRange = this.getMethodBodyRange(ctx);
 
-        let methodKind: MethodKinds = MethodKinds.FUNCTION;
-        if (ctx.COROUTINE()) {
-            methodKind = MethodKinds.COROUTINE;
-        }
-
         if (this.currentClass) {
+            let methodKind: MethodKinds = MethodKinds.FUNCTION;
+            if (ctx.COROUTINE()) {
+                methodKind = MethodKinds.COROUTINE;
+            }
+
             const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
+            let description = '';
+            let returnType = 'void';
+
             let parameters: IParameter[] = [];
             if (ctx.paramList()) {
-                for (let paramCtx of ctx.paramList()!.param()) {
+                let i = 0;
+                for (let paramCtx of ctx.paramList()?.param() || []) {
                     const paramName = paramCtx.ID().text;
+                    const paramDeclatationRange = this.getParameterDeclarationRange(paramCtx);
                     let paramType = 'any';
-                    let description = '';
+                    let paramDescription = '';
 
                     if (paramCtx.annotation() && paramCtx.annotation().length > 0) {
                         for (let annotationCtx of paramCtx.annotation()) {
@@ -142,21 +148,26 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                             }
                         }
                     } else {
-                        const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
+                        const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, ctx.paramList()!.param.length, true, true);
                         if (parentMethod) {
-                            description = parentMethod.description;
-                            parameters = parentMethod.parameters;
+                            const param = parentMethod.parameters[parameters.length];
+                            if (param) {
+                                paramType = param.type;
+                                paramDescription = param.description;
+                            }
                         }
                     }
 
                     parameters.push({
                         name: paramName,
                         type: paramType,
-                        description: '',
+                        description: paramDescription,
+                        declarationRange: paramDeclatationRange,
+                        reassignments: []
                     });
                 }
             }
-            let returnType = 'void';
+
             const annotations = ctx.annotation();
             if (annotations && annotations.length > 0) {
                 for (let annotationCtx of annotations) {
@@ -177,18 +188,21 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             } else {
                 const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
                 if (parentMethod) {
+                    description = parentMethod.description;
                     returnType = parentMethod.returnType;
                 }
             }
 
             const method: IMethod = {
+                parent: this.currentClass,
                 label: methodName,
                 kind: methodKind,
                 returnType: returnType,
-                description: '',
+                description: description,
                 parameters: parameters,
                 declarationRange: declarationRange,
-                bodyRange: bodyRange
+                bodyRange: bodyRange,
+                localVariables: []
             };
             this.currentMethod = method;
 
@@ -212,6 +226,60 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
     public visitVariableDecl = (ctx: VariableDeclContext): void => {
         if (this.currentMethod) {
+            const name = ctx.ID()?.text;
+            if (name) {
+                const value = ctx.expression()?.text.trim() ?? '';
+                const start = ctx.start;
+                const startPos = new vscode.Position(start.line - 1, start.charPositionInLine);
+                const endPos = new vscode.Position(start.line - 1, start.charPositionInLine + name.length);
+                const declRange = new vscode.Range(
+                    startPos,
+                    endPos
+                );
+                const param = this.currentMethod.parameters.find(p => p.name === name);
+                if (param) {
+                    param.reassignments?.push({range: declRange, value: value});
+                } else {
+                    let local = this.currentMethod.localVariables?.find(v => v.name === name);
+                    if (!local) {
+                        let varType = 'any';
+                        const annotations = ctx.annotation();
+                        if (annotations && annotations.length > 0) {
+                            for (let annotationCtx of annotations) {
+                                let annotationText = '';
+                                if (annotationCtx.ANNOTATION_COMMENT()) {
+                                    annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
+                                } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+                                    annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
+                                }
+                                const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                                const typeMatch = cleanedText.match(/@type\s+(\S+)/);
+                                if (typeMatch) {
+                                    varType = typeMatch[1];
+                                    break;
+                                }
+                            }
+                        } else {
+                            varType = this.parseType(value);
+                        }
+
+                        local = {
+                            name: name,
+                            value: value,
+                            type: varType,
+                            declarationRange: declRange,
+                            scopeRange: new vscode.Range(
+                                startPos,
+                                this.currentMethod.bodyRange?.end ?? endPos
+                            ),
+                            reassignments: []
+                        };
+                        this.currentMethod.localVariables?.push(local);
+                    } else {
+                        local.reassignments?.push({range: declRange, value: value});
+                    }
+                }
+            }
             this.visitChildren(ctx);
             return;
         }
@@ -243,32 +311,14 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             } else {
                 const value = ctx.expression()!.text.trim();
 
-                if (/^".*"$/.test(value)) {
-                    fieldType = 'string';
-                }
-
-                if (/^\d+\.\d+$/.test(value)) {
-                    fieldType = 'float';
-                }
-
-                if (/^\d+$/.test(value)) {
-                    fieldType = 'int';
-                }
-
-                if (value === 'true' || value === 'false') {
-                    fieldType = 'bool';
-                }
-
-                const constructorMatch = value.match(/^(.*?)\(/);
-                if (constructorMatch) {
-                    fieldType = constructorMatch[1];
-                }
+                fieldType = this.parseType(value);
             }
             const description = '';
 
             const declarationRange = this.getFieldDeclarationRange(ctx);
 
             const field: IField = {
+                parent: this.currentClass,
                 label: fieldName,
                 type: fieldType,
                 description: description,
@@ -308,7 +358,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         if (ctx.ID()) {
             const text = ctx.ID()!.text;
             const startToken = ctx.start;
-            const startLine = startToken.line;
+            const startLine = startToken.line - 1;
             const startColumn = startToken.charPositionInLine;
 
             this.currentChain.push({
@@ -320,7 +370,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         } else if (ctx.SELF()) {
             const text = ctx.SELF()!.text;
             const startToken = ctx.start;
-            const startLine = startToken.line;
+            const startLine = startToken.line - 1;
             const startColumn = startToken.charPositionInLine;
 
             this.currentChain.push({
@@ -358,13 +408,15 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         prevItem.text += `(${argumentList.join(', ')})`;
         prevItem.isMethodCall = true;
         prevItem.methodArguments = argumentList;
+
+        this.visitChildren(ctx);
     };
 
 
     public visitFieldAccess = (ctx: FieldAccessContext): void => {
         const fieldName = ctx.ID().text;
         const startToken = ctx.start;
-        const startLine = startToken!.line;
+        const startLine = startToken!.line - 1;
         const startColumn = startToken!.charPositionInLine + 1;
 
         this.currentChain.push({
@@ -392,6 +444,28 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         this.loopNodes.push({
             conditionsRange: conditionRange,
             bodyRange: bodyRange,
+        });
+
+        const name = ctx.ID().text;
+        const exprText = ctx.expression().text.trim();
+
+        const start = ctx.ID().symbol;
+        const startPos = new vscode.Position(start.line - 1, start.charPositionInLine);
+        const endPos = new vscode.Position(start.line - 1, start.charPositionInLine + name.length);
+        const declRange = new vscode.Range(
+            startPos,
+            endPos
+        );
+        this.currentMethod?.localVariables?.push({
+            name,
+            value: exprText,
+            type: exprText.startsWith('Range(') ? 'int' : 'any',
+            declarationRange: declRange,
+            scopeRange: new vscode.Range(
+                new vscode.Position(ctx.LPAREN().symbol.line - 1, ctx.LPAREN().symbol.charPositionInLine,),
+                this.currentMethod.bodyRange?.end ?? new vscode.Position(ctx.RPAREN().symbol.line - 1, ctx.RPAREN().symbol.charPositionInLine)
+            ),
+            reassignments: []
         });
 
         this.visitChildren(ctx);
@@ -506,6 +580,21 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         );
     }
 
+    private getParameterDeclarationRange(ctx: ParamContext): vscode.Range {
+        const token = ctx.ID().symbol;
+
+        const startLine = token.line - 1;
+        const startChar = token.charPositionInLine;
+
+        const endLine = token.line - 1;
+        const endChar = token.charPositionInLine + token.text!.length;
+
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
     private getMethodBodyRange(ctx: MethodDeclContext): vscode.Range {
         const startLine = ctx.block().start!.line - 1;
         const startChar = ctx.block().start!.charPositionInLine;
@@ -596,5 +685,36 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             new vscode.Position(blockEndLine, blockEndChar),
             new vscode.Position(nextStatementStartLine, nextStatementStartChar)
         );
+    }
+
+    private parseType(value: string): string {
+        let fieldType = 'any';
+
+        if (/^".*"$/.test(value)) {
+            fieldType = 'string';
+        }
+
+        if (/^\d+\.\d+$/.test(value)) {
+            fieldType = 'float';
+        }
+
+        if (/^\d+$/.test(value)) {
+            fieldType = 'int';
+        }
+
+        if (value === 'true' || value === 'false') {
+            fieldType = 'bool';
+        }
+
+        if (/^[A-Za-z_]\w*\(\)/.test(value) || /^[A-Za-z_]\w*\s*\(/.test(value)) {
+            if (!/^[A-Za-z_]\w*\.[A-Za-z_]\w*\s*\(/.test(value)) {
+                const match = value.match(/^([A-Za-z_]\w*)\s*\(/);
+                if (match) {
+                    return match[1];
+                }
+            }
+        }
+
+        return fieldType;
     }
 }

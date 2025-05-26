@@ -9,20 +9,21 @@ export class TransformClass implements IClass {
     public extends?: IClass[] = [ObjectClassInstance];
 
     public instanceFields: IField[] = [
-        { label: 'Position', type: 'Vector3', description: 'Position of the transform.' },
-        { label: 'LocalPosition', type: 'Vector3', description: 'Local rotation of the transform. Same as Position if there is no parent.' },
-        { label: 'Rotation', type: 'Vector3', description: 'Rotation of the transform.' },
-        { label: 'LocalRotation', type: 'Vector3', description: 'Local rotation of the transform. Same as Rotation if there is no parent.' },
-        { label: 'Scale', type: 'Vector3', description: 'Scale of the transform.' },
-        { label: 'Forward', type: 'Vector3', description: 'Forward vector of the transform.' },
-        { label: 'Up', type: 'Vector3', description: 'Up vector of the transform.' },
-        { label: 'Right', type: 'Vector3', description: 'Right vector of the transform.' },
-        { label: 'QuaternionRotation', type: 'Quaternion', description: 'Quaternion rotation of the transform.' },
-        { label: 'QuaternionLocalRotation', type: 'Quaternion', description: 'Local quaternion rotation of the transform.' }
+        { parent: this, label: 'Position', type: 'Vector3', description: 'Position of the transform.' },
+        { parent: this, label: 'LocalPosition', type: 'Vector3', description: 'Local rotation of the transform. Same as Position if there is no parent.' },
+        { parent: this, label: 'Rotation', type: 'Vector3', description: 'Rotation of the transform.' },
+        { parent: this, label: 'LocalRotation', type: 'Vector3', description: 'Local rotation of the transform. Same as Rotation if there is no parent.' },
+        { parent: this, label: 'Scale', type: 'Vector3', description: 'Scale of the transform.' },
+        { parent: this, label: 'Forward', type: 'Vector3', description: 'Forward vector of the transform.' },
+        { parent: this, label: 'Up', type: 'Vector3', description: 'Up vector of the transform.' },
+        { parent: this, label: 'Right', type: 'Vector3', description: 'Right vector of the transform.' },
+        { parent: this, label: 'QuaternionRotation', type: 'Quaternion', description: 'Quaternion rotation of the transform.' },
+        { parent: this, label: 'QuaternionLocalRotation', type: 'Quaternion', description: 'Local quaternion rotation of the transform.' }
     ];
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'GetTransform',
             returnType: 'Transform',
             description: 'Gets the child transform with the given name.',
@@ -31,12 +32,14 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetTransforms',
             returnType: 'List(Transform)',
             description: 'Returns a list of direct child transforms.',
             parameters: []
         },
         {
+            parent: this,
             label: 'PlayAnimation',
             returnType: 'null',
             description: 'Plays the animation by name. If fade is provided, it will fade the animation by this timestep.',
@@ -46,6 +49,7 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetAnimationLength',
             returnType: 'float',
             description: 'Gets the length of the specified animation.',
@@ -54,18 +58,21 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'PlaySound',
             returnType: 'null',
             description: 'Plays the sound attached to this transform.',
             parameters: []
         },
         {
+            parent: this,
             label: 'StopSound',
             returnType: 'null',
             description: 'Stops the sound attached to this transform.',
             parameters: []
         },
         {
+            parent: this,
             label: 'ToggleParticle',
             returnType: 'null',
             description: 'Enables or disables the particle system attached to this transform.',
@@ -74,6 +81,7 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Rotate',
             returnType: 'null',
             description: 'Applies a rotation to the transform using the provided Euler angles.',
@@ -82,6 +90,7 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'InverseTransformPoint',
             returnType: 'Vector3',
             description: 'Transforms a position from world space to local space.',
@@ -90,6 +99,7 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'InverseTransformDirection',
             returnType: 'Vector3',
             description: 'Transforms a direction from world space to local space.',
@@ -98,6 +108,7 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'TransformPoint',
             returnType: 'Vector3',
             description: 'Transforms a position from local space to world space.',
@@ -106,6 +117,7 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'TransformDirection',
             returnType: 'Vector3',
             description: 'Transforms a direction from local space to world space.',
@@ -114,6 +126,7 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'RotateAround',
             returnType: 'null',
             description: 'Rotates the transform around a point, given axis and angle.',
@@ -124,6 +137,7 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'LookAt',
             returnType: 'null',
             description: 'Rotates the transform such that it is facing the specified point.',
@@ -132,6 +146,7 @@ export class TransformClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetRenderersEnabled',
             returnType: 'null',
             description: 'Toggles the renderers attached to the transform and its children.',

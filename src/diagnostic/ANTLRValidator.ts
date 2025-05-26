@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { ACLManager } from "../antlr4ts/ACLManager";
-import { IValidator } from "./DiagnosticManager";
+import {ACLManager} from "../antlr4ts/ACLManager";
+import {IValidator} from "./DiagnosticManager";
 
 
 export class ANTLRValidator implements IValidator {

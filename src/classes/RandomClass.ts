@@ -7,6 +7,7 @@ export class RandomClass implements IClass {
 
     public constructors: IConstructor[] = [
         {
+            parent: this,
             description: "Create an instance of Random with a seed value",
             parameters: [
                 { name: "seed", type: "int", description: "Seed value to initialize the random generator" }
@@ -18,6 +19,7 @@ export class RandomClass implements IClass {
     
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'RandomInt',
             returnType: 'int',
             description: 'Returns random integer between min and max (exclusive).',
@@ -27,6 +29,7 @@ export class RandomClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'RandomFloat',
             returnType: 'float',
             description: 'Returns random float between min and max.',
@@ -36,24 +39,28 @@ export class RandomClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'RandomBool',
             returnType: 'bool',
             description: 'Returns random boolean.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomDirection',
             returnType: 'Vector3',
             description: 'Returns random normalized Vector3.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomSign',
             returnType: 'int',
             description: 'Returns either -1 or 1.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomVector3',
             returnType: 'Vector3',
             description: 'Returns a random Vector3 between min and max.',
@@ -63,6 +70,7 @@ export class RandomClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'PerlinNoise',
             returnType: 'float',
             description: 'Returns a point sampled from generated 2D Perlin noise.',
@@ -77,6 +85,7 @@ export class RandomClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'RandomInt',
             returnType: 'int',
             description: 'Returns random integer between min and max (exclusive).',
@@ -86,6 +95,7 @@ export class RandomClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'RandomFloat',
             returnType: 'float',
             description: 'Returns random float between min and max.',
@@ -95,24 +105,28 @@ export class RandomClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'RandomBool',
             returnType: 'bool',
             description: 'Returns random boolean.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomDirection',
             returnType: 'Vector3',
             description: 'Returns random normalized Vector3.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomSign',
             returnType: 'int',
             description: 'Returns either -1 or 1.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomVector3',
             returnType: 'Vector3',
             description: 'Returns a random Vector3 between min and max.',
@@ -122,6 +136,7 @@ export class RandomClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'PerlinNoise',
             returnType: 'float',
             description: 'Returns a point sampled from generated 2D Perlin noise.',

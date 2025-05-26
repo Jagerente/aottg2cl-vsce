@@ -16,40 +16,46 @@ export class BaseMainClass implements IClass {
 
     public extends?: IClass[] = [];
 
-    constructor(initReturnType: string) {
-        this.extends = [new BaseInstantiatableClass(initReturnType)];
+    constructor() {
+        this.extends = [new BaseInstantiatableClass()];
         this.instanceMethods = [
             {
+                parent: this,
                 label: 'OnGameStart',
                 returnType: 'void',
                 description: 'Called upon game start.',
                 parameters: []
             },
             {
+                parent: this,
                 label: 'OnTick',
                 returnType: 'void',
                 description: 'Called every fixed update frame (0.02 seconds).',
                 parameters: []
             },
             {
+                parent: this,
                 label: 'OnFrame',
                 returnType: 'void',
                 description: 'Called every update frame.',
                 parameters: []
             },
             {
+                parent: this,
                 label: 'OnLateFrame',
                 returnType: 'void',
                 description: 'Called after every update frame.',
                 parameters: []
             },
             {
+                parent: this,
                 label: 'OnSecond',
                 returnType: 'void',
                 description: 'Called every second.',
                 parameters: []
             },
             {
+                parent: this,
                 label: 'OnChatInput',
                 returnType: 'void',
                 description: 'Called upon chat input from the player.',
@@ -58,6 +64,7 @@ export class BaseMainClass implements IClass {
                 ]
             },
             {
+                parent: this,
                 label: 'OnPlayerSpawn',
                 returnType: 'void',
                 description: 'Called upon any player spawning. Return false to skip printing to chat.',
@@ -67,6 +74,7 @@ export class BaseMainClass implements IClass {
                 ]
             },
             {
+                parent: this,
                 label: 'OnCharacterSpawn',
                 returnType: 'void',
                 description: 'Called upon any character spawning.',
@@ -75,6 +83,7 @@ export class BaseMainClass implements IClass {
                 ]
             },
             {
+                parent: this,
                 label: 'OnCharacterDie',
                 returnType: 'void',
                 description: 'Called upon a character dying. Killer may be null.',
@@ -85,6 +94,7 @@ export class BaseMainClass implements IClass {
                 ]
             },
             {
+                parent: this,
                 label: 'OnCharacterDamaged',
                 returnType: 'void',
                 description: 'Called upon a character being damaged. Killer may be null.',
@@ -96,6 +106,7 @@ export class BaseMainClass implements IClass {
                 ]
             },
             {
+                parent: this,
                 label: 'OnPlayerJoin',
                 returnType: 'void',
                 description: 'Called upon a player joining the room.',
@@ -104,6 +115,7 @@ export class BaseMainClass implements IClass {
                 ]
             },
             {
+                parent: this,
                 label: 'OnPlayerLeave',
                 returnType: 'void',
                 description: 'Called upon a player leaving the room.',
@@ -112,6 +124,7 @@ export class BaseMainClass implements IClass {
                 ]
             },
             {
+                parent: this,
                 label: 'OnNetworkMessage',
                 returnType: 'void',
                 description: 'Called upon receiving a network message.',
@@ -121,6 +134,7 @@ export class BaseMainClass implements IClass {
                 ]
             },
             {
+                parent: this,
                 label: 'OnButtonClick',
                 returnType: 'void',
                 description: 'Called upon a UI button being pressed.',

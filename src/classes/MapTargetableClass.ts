@@ -6,9 +6,9 @@ export class MapTargetableClass implements IClass {
     public description = 'MapTargetable object returned from MapObject.AddTarget method. Acts as a targetable collider for AI, like titans.';
 
     public instanceFields: IField[] = [
-        { label: 'Team', type: 'string', description: 'Team the map targetable belongs to.' },
-        { label: 'Enabled', type: 'bool', description: 'Whether the map targetable is enabled or not.' },
-        { label: 'Position', type: 'Vector3', description: 'World position of the map targetable.', readonly: true }
+        { parent: this, label: 'Team', type: 'string', description: 'Team the map targetable belongs to.' },
+        { parent: this, label: 'Enabled', type: 'bool', description: 'Whether the map targetable is enabled or not.' },
+        { parent: this, label: 'Position', type: 'Vector3', description: 'World position of the map targetable.', readonly: true }
     ];
 
     public instanceMethods: IMethod[] = [];

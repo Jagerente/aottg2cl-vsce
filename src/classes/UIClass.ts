@@ -13,6 +13,7 @@ export class UIClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'SetLabel',
             returnType: 'null',
             description: 'Sets the label at a certain location. Valid types: "TopCenter", "TopLeft", "TopRight", "MiddleCenter", "MiddleLeft", "MiddleRight", "BottomLeft", "BottomRight".',
@@ -22,6 +23,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetLabelForTime',
             returnType: 'null',
             description: 'Sets the label for a certain time, after which it will be cleared.',
@@ -32,6 +34,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetLabelAll',
             returnType: 'null',
             description: 'Sets the label for all players. Master client only.',
@@ -41,6 +44,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetLabelForTimeAll',
             returnType: 'null',
             description: 'Sets the label for all players for a certain time. Master client only.',
@@ -51,6 +55,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'CreatePopup',
             returnType: 'null',
             description: 'Creates a new popup, hidden until shown.',
@@ -62,6 +67,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'IsPopupActive',
             returnType: 'bool',
             description: 'Whether popup is active.',
@@ -70,12 +76,14 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetPopups',
             returnType: 'List(string)',
             description: 'Returns all registered custom popups.',
             parameters: []
         },
         {
+            parent: this,
             label: 'ShowPopup',
             returnType: 'null',
             description: 'Shows the popup with the given name.',
@@ -84,6 +92,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'HidePopup',
             returnType: 'null',
             description: 'Hides the popup with the given name.',
@@ -92,6 +101,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ClearPopup',
             returnType: 'null',
             description: 'Clears all elements in the popup with the given name.',
@@ -100,6 +110,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'AddPopupLabel',
             returnType: 'null',
             description: 'Adds a text row to the popup with label as content.',
@@ -109,6 +120,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'AddPopupButton',
             returnType: 'null',
             description: 'Adds a button row to the popup.',
@@ -119,6 +131,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'AddPopupButtons',
             returnType: 'null',
             description: 'Adds a list of buttons in a row to the popup.',
@@ -129,6 +142,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'AddPopupBottomButton',
             returnType: 'null',
             description: 'Adds a button to the bottom bar of the popup.',
@@ -139,6 +153,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'WrapStyleTag',
             returnType: 'string',
             description: 'Returns a wrapped string given style and args.',
@@ -149,6 +164,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetLocale',
             returnType: 'string',
             description: 'Gets translated locale from the current Language.json file.',
@@ -159,18 +175,21 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetLanguage',
             returnType: 'string',
             description: 'Returns the current language (ie "English").',
             parameters: []
         },
         {
+            parent: this,
             label: 'ShowChangeCharacterMenu',
             returnType: 'null',
             description: 'Shows the change character menu if the main character is Human.',
             parameters: []
         },
         {
+            parent: this,
             label: 'SetScoreboardHeader',
             returnType: 'null',
             description: 'Sets the display of the scoreboard header.',
@@ -179,6 +198,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetScoreboardProperty',
             returnType: 'null',
             description: 'Sets which Player custom property to display on the scoreboard.',
@@ -187,6 +207,7 @@ export class UIClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetThemeColor',
             returnType: 'Color',
             description: 'Gets the color of the specified item. See theme JSON for reference.',

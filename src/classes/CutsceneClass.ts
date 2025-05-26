@@ -13,6 +13,7 @@ export class CutsceneClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Start',
             returnType: 'null',
             description: 'Starts cutscene with name. If full is true, will enter cinematic mode. Otherwise will only show dialogue while still allowing gameplay.',
@@ -22,6 +23,7 @@ export class CutsceneClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ShowDialogue',
             returnType: 'null',
             description: 'Show dialogue screen with given icon, title, and content. Available icons are the same as profile icon names.',
@@ -32,6 +34,7 @@ export class CutsceneClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ShowDialogueForTime',
             returnType: 'null',
             description: 'Show dialogue screen and automatically hide after time seconds.',
@@ -43,6 +46,7 @@ export class CutsceneClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'HideDialogue',
             returnType: 'null',
             description: 'Hides the dialogue screen.',

@@ -11,10 +11,10 @@ export class DuplicatesValidator {
 
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         const diagnostics: vscode.Diagnostic[] = [];
-        const classesMap = this.documentTreeProvider.getAllAvailableClasses();
+        const classes = this.documentTreeProvider.getAllAvailableClasses(document);
 
         const classNames = new Map<string, IClass[]>();
-        classesMap.forEach((classDef) => {
+        classes.forEach((classDef) => {
             if (!classNames.has(classDef.name)) {
                 classNames.set(classDef.name, []);
             }
@@ -37,7 +37,7 @@ export class DuplicatesValidator {
             }
         });
 
-        classesMap.forEach((classDef) => {
+        classes.forEach((classDef) => {
             const methodSignatures = new Map<string, IMethod[]>();
             const fieldNames = new Map<string, IField[]>();
 

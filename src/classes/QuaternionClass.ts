@@ -10,6 +10,7 @@ export class QuaternionClass implements IClass {
 
     public constructors: IConstructor[] = [
         {
+            parent: this,
             description: "Initialize a Quaternion with four float values for X, Y, Z, and W",
             parameters: [
                 { name: "x", type: "float", description: "X-component of the quaternion" },
@@ -21,21 +22,22 @@ export class QuaternionClass implements IClass {
     ];
 
     public instanceFields: IField[] = [
-        { label: 'X', type: 'float', description: 'X value of the quaternion.' },
-        { label: 'Y', type: 'float', description: 'Y value of the quaternion.' },
-        { label: 'Z', type: 'float', description: 'Z value of the quaternion.' },
-        { label: 'W', type: 'float', description: 'W value of the quaternion.' },
-        { label: 'Euler', type: 'Vector3', description: 'Returns the Euler angles of the quaternion as a Vector3.' }
+        { parent: this, label: 'X', type: 'float', description: 'X value of the quaternion.' },
+        { parent: this, label: 'Y', type: 'float', description: 'Y value of the quaternion.' },
+        { parent: this, label: 'Z', type: 'float', description: 'Z value of the quaternion.' },
+        { parent: this, label: 'W', type: 'float', description: 'W value of the quaternion.' },
+        { parent: this, label: 'Euler', type: 'Vector3', description: 'Returns the Euler angles of the quaternion as a Vector3.' }
     ];
 
     public instanceMethods: IMethod[] = [];
 
     public staticFields: IField[] = [
-        { label: 'Identity', type: 'Quaternion', description: 'Returns the identity quaternion (0,0,0,0).' }
+        { parent: this, label: 'Identity', type: 'Quaternion', description: 'Returns the identity quaternion (0,0,0,0).' }
     ];
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Lerp',
             returnType: 'Quaternion',
             description: 'Returns a Quaternion lerped between a and b using scale t. T must be between 0 and 1.',
@@ -46,6 +48,7 @@ export class QuaternionClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'LerpUnclamped',
             returnType: 'Quaternion',
             description: 'Returns a Quaternion lerped between a and b using scale t. T can be outside 0 and 1.',
@@ -56,6 +59,7 @@ export class QuaternionClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Slerp',
             returnType: 'Quaternion',
             description: 'Returns a Quaternion spherical lerped between a and b using scale t. T must be between 0 and 1.',
@@ -66,6 +70,7 @@ export class QuaternionClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SlerpUnclamped',
             returnType: 'Quaternion',
             description: 'Returns a Quaternion spherical lerped between a and b using scale t. T can be outside 0 and 1.',
@@ -76,6 +81,7 @@ export class QuaternionClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FromEuler',
             returnType: 'Quaternion',
             description: 'Returns the Quaternion rotation from the given Euler angles.',
@@ -84,6 +90,7 @@ export class QuaternionClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'LookRotation',
             returnType: 'Quaternion',
             description: 'Returns the Quaternion rotation with the specified forward and (optional) up Vector.',
@@ -93,6 +100,7 @@ export class QuaternionClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FromToRotation',
             returnType: 'Quaternion',
             description: 'Returns the Quaternion rotation with the specified forward and (optional) up Vector.',
@@ -102,6 +110,7 @@ export class QuaternionClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Inverse',
             returnType: 'Quaternion',
             description: 'Returns the inverse of the given Quaternion.',
@@ -110,6 +119,7 @@ export class QuaternionClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'RotateTowards',
             returnType: 'Quaternion',
             description: 'Returns the inverse of the given Quaternion.',

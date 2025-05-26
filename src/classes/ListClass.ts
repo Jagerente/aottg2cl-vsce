@@ -1,3 +1,4 @@
+import { BaseInstantiatableClass } from './BaseInstantiatableClass';
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
 import { ObjectClassInstance } from './ObjectClass';
 
@@ -6,20 +7,22 @@ export class ListClass implements IClass {
     public name = 'List';
     public description = 'Lists allow you to keep an ordered array of objects.';
 
-    public extends?: IClass[] = [ObjectClassInstance];
+    public extends?: IClass[] = [ObjectClassInstance, new BaseInstantiatableClass()];
 
     public instanceFields: IField[] = [
-        { label: 'Count', type: 'int', description: 'Number of items in the list.' }
+        { parent: this, label: 'Count', type: 'int', description: 'Number of items in the list.' }
     ];
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Clear',
             returnType: 'null',
             description: 'Clears the list.',
             parameters: []
         },
         {
+            parent: this,
             label: 'Get',
             returnType: 'Object',
             description: 'Returns the item at the given index.',
@@ -28,6 +31,7 @@ export class ListClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Set',
             returnType: 'null',
             description: 'Sets the item at the given index.',
@@ -37,6 +41,7 @@ export class ListClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Add',
             returnType: 'null',
             description: 'Adds an item to the end of the list.',
@@ -45,6 +50,7 @@ export class ListClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'InsertAt',
             returnType: 'null',
             description: 'Inserts an item at the given index.',
@@ -54,6 +60,7 @@ export class ListClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'RemoveAt',
             returnType: 'null',
             description: 'Removes the item at the given index.',
@@ -62,6 +69,7 @@ export class ListClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Remove',
             returnType: 'null',
             description: 'Removes the item from the list.',
@@ -70,6 +78,7 @@ export class ListClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Contains',
             returnType: 'bool',
             description: 'Returns true if the item is contained in the list.',
@@ -78,12 +87,14 @@ export class ListClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Sort',
             returnType: 'null',
             description: 'Sorts the items in the list in place if the items are comparable (int, float, string).',
             parameters: []
         },
         {
+            parent: this,
             label: 'Randomize',
             returnType: 'null',
             description: 'Randomizes the list order.',

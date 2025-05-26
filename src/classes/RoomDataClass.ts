@@ -13,6 +13,7 @@ export class RoomDataClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'SetProperty',
             returnType: 'null',
             description: 'Sets the property with given name to the object value. Valid value types are float, string, bool, and int.',
@@ -22,6 +23,7 @@ export class RoomDataClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetProperty',
             returnType: 'object',
             description: 'Gets the property with given name. If the property does not exist, returns the defaultValue.',
@@ -31,6 +33,7 @@ export class RoomDataClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Clear',
             returnType: 'null',
             description: 'Clears all room data.',

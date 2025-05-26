@@ -13,6 +13,7 @@ export class JsonClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'LoadFromString',
             returnType: 'object',
             description: 'Deserializes the object from a JSON string.',
@@ -21,6 +22,7 @@ export class JsonClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SaveToString',
             returnType: 'string',
             description: 'Serializes the object to a JSON string.',

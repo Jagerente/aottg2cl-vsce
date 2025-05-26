@@ -10,14 +10,15 @@ export class MathClass implements IClass {
     public instanceMethods: IMethod[] = [];
     
     public staticFields: IField[] = [
-        { label: 'PI', type: 'float', description: 'Mathf.PI' },
-        { label: 'Infinity', type: 'float', description: 'Mathf.Infinity' },
-        { label: 'Rad2DegConstant', type: 'float', description: 'Mathf.Rad2Deg' },
-        { label: 'Deg2RadConstant', type: 'float', description: 'Mathf.Deg2Rad' }
+        { parent: this, label: 'PI', type: 'float', description: 'Mathf.PI' },
+        { parent: this, label: 'Infinity', type: 'float', description: 'Mathf.Infinity' },
+        { parent: this, label: 'Rad2DegConstant', type: 'float', description: 'Mathf.Rad2Deg' },
+        { parent: this, label: 'Deg2RadConstant', type: 'float', description: 'Mathf.Deg2Rad' }
     ];
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Clamp',
             returnType: 'int/float',
             description: 'Clamps the value between min and max.',
@@ -28,6 +29,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Max',
             returnType: 'int/float',
             description: 'Maximum of a and b.',
@@ -37,6 +39,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Min',
             returnType: 'int/float',
             description: 'Minimum of a and b.',
@@ -46,6 +49,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Pow',
             returnType: 'float',
             description: 'a to the power of b.',
@@ -55,6 +59,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Abs',
             returnType: 'int/float',
             description: 'Absolute value of a.',
@@ -63,6 +68,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Sqrt',
             returnType: 'float',
             description: 'Square root of a.',
@@ -71,6 +77,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Mod',
             returnType: 'int',
             description: 'Modulo of a % b.',
@@ -80,6 +87,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Ceil',
             returnType: 'int',
             description: 'Rounds to higher int.',
@@ -88,6 +96,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Floor',
             returnType: 'int',
             description: 'Rounds to lower int.',
@@ -96,6 +105,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Round',
             returnType: 'int',
             description: 'Rounds to nearest int.',
@@ -104,6 +114,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Sin',
             returnType: 'float',
             description: 'Sin of a, in degrees.',
@@ -112,6 +123,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Cos',
             returnType: 'float',
             description: 'Cosine of a.',
@@ -120,6 +132,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Tan',
             returnType: 'float',
             description: 'Tan of a.',
@@ -128,6 +141,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Asin',
             returnType: 'float',
             description: 'Arcsin of a, in degrees.',
@@ -136,6 +150,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Acos',
             returnType: 'float',
             description: 'Arccos of a.',
@@ -144,6 +159,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Atan',
             returnType: 'float',
             description: 'Arctan of a.',
@@ -152,6 +168,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Deg2Rad',
             returnType: 'float',
             description: 'Converts a degrees to radians.',
@@ -160,6 +177,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Rad2Deg',
             returnType: 'float',
             description: 'Converts a radians to degrees.',
@@ -168,6 +186,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Lerp',
             returnType: 'float',
             description: 'Linearly interpolates between a and b by t where t is limited from 0 to 1.',
@@ -178,6 +197,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'LerpUnclamped',
             returnType: 'float',
             description: 'Linearly interpolates between a and b by t with no limit to t.',
@@ -188,6 +208,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Sign',
             returnType: 'float',
             description: 'Returns a value of 1 when a is 0 or greater. Returns a value of -1 when a is negative.',
@@ -196,6 +217,7 @@ export class MathClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Atan2',
             returnType: 'float',
             description: 'Atan2 of a and b.',

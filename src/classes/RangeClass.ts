@@ -10,6 +10,7 @@ export class RangeClass implements IClass {
 
     public constructors: IConstructor[] = [
         {
+            parent: this,
             description: "Create a sequence of integers with Start, End (exclusive), and Step values.",
             parameters: [
                 { name: "start", type: "int", description: "The starting value of the range." },

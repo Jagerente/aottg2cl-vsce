@@ -10,29 +10,30 @@ export class GameClass implements IClass {
     public instanceMethods: IMethod[] = [];
 
     public staticFields: IField[] = [
-        { label: 'IsEnding', type: 'bool', description: 'Indicates if the game is currently ending.', readonly: true },
-        { label: 'EndTimeLeft', type: 'float', description: 'Time left before game restarts.', readonly: true },
-        { label: 'Titans', type: 'List(Titan)', description: 'List of titans currently alive.', readonly: true },
-        { label: 'Shifters', type: 'List(Shifter)', description: 'List of shifters currently alive.', readonly: true },
-        { label: 'Humans', type: 'List(Human)', description: 'List of humans currently alive.', readonly: true },
-        { label: 'AITitans', type: 'List(Titan)', description: 'List of AI titans currently alive.', readonly: true },
-        { label: 'AIShifters', type: 'List(Shifter)', description: 'List of AI shifters currently alive.', readonly: true },
-        { label: 'AIHumans', type: 'List(Human)', description: 'List of AI humans currently alive.', readonly: true },
-        { label: 'PlayerTitans', type: 'List(Titan)', description: 'List of player titans currently alive.', readonly: true },
-        { label: 'PlayerShifters', type: 'List(Shifter)', description: 'List of player shifters currently alive.', readonly: true },
-        { label: 'PlayerHumans', type: 'List(Human)', description: 'List of player humans currently alive.', readonly: true },
-        { label: 'Loadouts', type: 'List(string)', description: 'List of allowed player loadouts.', readonly: true },
-        { label: 'DefaultShowKillScore', type: 'bool', description: 'If false, kill scores will not automatically show upon player dealing character damage.' },
-        { label: 'DefaultShowKillFeed', type: 'bool', description: 'If false, kill feeds will not automatically show upon player kills.' },
-        { label: 'DefaultAddKillScore', type: 'bool', description: 'If false, kills will not automatically modify kills/damage/deaths stats.' },
-        { label: 'ShowScoreboardStatus', type: 'bool', description: 'Whether to show player alive/dead status in the scoreboard.' },
-        { label: 'ShowScoreboardLoadout', type: 'bool', description: 'Whether to show player character/loadout in the scoreboard.' },
-        { label: 'ForcedCharacterType', type: 'string', description: 'The forced character for the local player for the next spawn.' },
-        { label: 'ForcedLoadout', type: 'string', description: 'The forced loadout for the local player for the next spawn.' }
+        { parent: this, label: 'IsEnding', type: 'bool', description: 'Indicates if the game is currently ending.', readonly: true },
+        { parent: this, label: 'EndTimeLeft', type: 'float', description: 'Time left before game restarts.', readonly: true },
+        { parent: this, label: 'Titans', type: 'List(Titan)', description: 'List of titans currently alive.', readonly: true },
+        { parent: this, label: 'Shifters', type: 'List(Shifter)', description: 'List of shifters currently alive.', readonly: true },
+        { parent: this, label: 'Humans', type: 'List(Human)', description: 'List of humans currently alive.', readonly: true },
+        { parent: this, label: 'AITitans', type: 'List(Titan)', description: 'List of AI titans currently alive.', readonly: true },
+        { parent: this, label: 'AIShifters', type: 'List(Shifter)', description: 'List of AI shifters currently alive.', readonly: true },
+        { parent: this, label: 'AIHumans', type: 'List(Human)', description: 'List of AI humans currently alive.', readonly: true },
+        { parent: this, label: 'PlayerTitans', type: 'List(Titan)', description: 'List of player titans currently alive.', readonly: true },
+        { parent: this, label: 'PlayerShifters', type: 'List(Shifter)', description: 'List of player shifters currently alive.', readonly: true },
+        { parent: this, label: 'PlayerHumans', type: 'List(Human)', description: 'List of player humans currently alive.', readonly: true },
+        { parent: this, label: 'Loadouts', type: 'List(string)', description: 'List of allowed player loadouts.', readonly: true },
+        { parent: this, label: 'DefaultShowKillScore', type: 'bool', description: 'If false, kill scores will not automatically show upon player dealing character damage.' },
+        { parent: this, label: 'DefaultShowKillFeed', type: 'bool', description: 'If false, kill feeds will not automatically show upon player kills.' },
+        { parent: this, label: 'DefaultAddKillScore', type: 'bool', description: 'If false, kills will not automatically modify kills/damage/deaths stats.' },
+        { parent: this, label: 'ShowScoreboardStatus', type: 'bool', description: 'Whether to show player alive/dead status in the scoreboard.' },
+        { parent: this, label: 'ShowScoreboardLoadout', type: 'bool', description: 'Whether to show player character/loadout in the scoreboard.' },
+        { parent: this, label: 'ForcedCharacterType', type: 'string', description: 'The forced character for the local player for the next spawn.' },
+        { parent: this, label: 'ForcedLoadout', type: 'string', description: 'The forced loadout for the local player for the next spawn.' }
     ];
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Debug',
             returnType: 'void',
             description: 'Prints a message to the debug console (accessible using F11).',
@@ -41,6 +42,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Print',
             returnType: 'void',
             description: 'Prints a message to the chat window.',
@@ -49,6 +51,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'PrintAll',
             returnType: 'void',
             description: 'Prints a message to all players\' chat windows.',
@@ -57,6 +60,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'End',
             returnType: 'void',
             description: 'Ends the game and restarts after the given delay. Master client only.',
@@ -65,6 +69,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnTitan',
             returnType: 'Titan',
             description: 'Spawns a titan of a specific type. Master client only. Valid types: "Default", "Dummy", "Normal", "Abnormal", "Punk", "Crawler".',
@@ -73,6 +78,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnTitanAt',
             returnType: 'Titan',
             description: 'Spawns a titan at a specific position. Master client only.',
@@ -83,6 +89,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnTitans',
             returnType: 'List(Titan)',
             description: 'Spawns the specified amount of titans. Master client only.',
@@ -92,6 +99,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnTitansAt',
             returnType: 'List(Titan)',
             description: 'Spawns the specified amount of titans at a position. Master client only.',
@@ -103,6 +111,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnTitansAsync',
             returnType: 'void',
             description: 'Spawns titans over time. No titan list is returned.',
@@ -112,6 +121,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnTitansAtAsync',
             returnType: 'void',
             description: 'Spawn a number of titans at a given position over time. Master client only.',
@@ -123,6 +133,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnShifter',
             returnType: 'Shifter',
             description: 'Spawns a shifter. Master client only. Valid types: "Annie".',
@@ -131,6 +142,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnShifterAt',
             returnType: 'Shifter',
             description: 'Spawn a shifter at a specific position. Master client only.',
@@ -141,6 +153,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnPlayer',
             returnType: 'void',
             description: 'Spawns the given player. If force is true, respawns the player regardless of whether they are dead. Master client only.',
@@ -150,6 +163,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnPlayerAt',
             returnType: 'void',
             description: 'Spawns the given player at a specific position. Master client only.',
@@ -161,6 +175,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnPlayerAll',
             returnType: 'void',
             description: 'Spawns all players. Master client only.',
@@ -169,6 +184,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnPlayerAtAll',
             returnType: 'void',
             description: 'Spawns all players at a specific position. Master client only.',
@@ -179,6 +195,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetGeneralSetting',
             returnType: 'bool | int | float | string',
             description: 'Retrieves the value of the given general tab setting.',
@@ -187,6 +204,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetTitanSetting',
             returnType: 'bool | int | float | string',
             description: 'Retrieves the value of the given titan tab setting.',
@@ -195,6 +213,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetMiscSetting',
             returnType: 'bool | int | float | string',
             description: 'Retrieves the value of the given misc tab setting.',
@@ -203,6 +222,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnProjectile',
             returnType: 'void',
             description: 'Spawns a projectile at a given position with specific parameters.',
@@ -218,6 +238,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnProjectileWithOwner',
             returnType: 'void',
             description: 'Spawns a projectile from the given character as its owner.',
@@ -233,6 +254,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SpawnEffect',
             returnType: 'void',
             description: 'Spawns an effect at a given position with specific parameters.',
@@ -245,6 +267,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetPlaylist',
             returnType: 'void',
             description: 'Sets the music playlist.',
@@ -253,6 +276,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetSong',
             returnType: 'void',
             description: 'Sets the music song to play.',
@@ -261,6 +285,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FindCharacterByViewID',
             returnType: 'Character',
             description: 'Returns a character by its network view ID.',
@@ -269,6 +294,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ShowKillScore',
             returnType: 'void',
             description: 'Locally shows a kill score popup for the player.',
@@ -277,6 +303,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ShowKillFeed',
             returnType: 'void',
             description: 'Locally shows a kill feed for the player.',
@@ -288,6 +315,7 @@ export class GameClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ShowKillFeedAll',
             returnType: 'void',
             description: 'Shows a kill feed for all players.',

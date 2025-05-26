@@ -10,19 +10,20 @@ export class CameraClass implements IClass {
     public instanceMethods: IMethod[] = [];
 
     public staticFields: IField[] = [
-        { label: 'IsManual', type: 'bool', description: 'Indicates if the camera is in manual mode.', readonly: true },
-        { label: 'Position', type: 'Vector3', description: 'Current camera position.', readonly: true },
-        { label: 'Rotation', type: 'Vector3', description: 'Current camera rotation.', readonly: true },
-        { label: 'Velocity', type: 'Vector3', description: 'Current camera velocity if set using SetVelocity().', readonly: true },
-        { label: 'FOV', type: 'float', description: 'Current camera field of view if set using SetFOV().', readonly: true },
-        { label: 'FollowDistance', type: 'float', description: 'Current camera follow distance from target character.', readonly: false },
-        { label: 'Forward', type: 'Vector3', description: 'The forward direction of the camera.', readonly: false },
-        { label: 'Right', type: 'Vector3', description: 'The right direction of the camera.', readonly: false },
-        { label: 'Up', type: 'Vector3', description: 'The up direction of the camera.', readonly: false }
+        { parent: this, label: 'IsManual', type: 'bool', description: 'Indicates if the camera is in manual mode.', readonly: true },
+        { parent: this, label: 'Position', type: 'Vector3', description: 'Current camera position.', readonly: true },
+        { parent: this, label: 'Rotation', type: 'Vector3', description: 'Current camera rotation.', readonly: true },
+        { parent: this, label: 'Velocity', type: 'Vector3', description: 'Current camera velocity if set using SetVelocity().', readonly: true },
+        { parent: this, label: 'FOV', type: 'float', description: 'Current camera field of view if set using SetFOV().', readonly: true },
+        { parent: this, label: 'FollowDistance', type: 'float', description: 'Current camera follow distance from target character.', readonly: false },
+        { parent: this, label: 'Forward', type: 'Vector3', description: 'The forward direction of the camera.', readonly: false },
+        { parent: this, label: 'Right', type: 'Vector3', description: 'The right direction of the camera.', readonly: false },
+        { parent: this, label: 'Up', type: 'Vector3', description: 'The up direction of the camera.', readonly: false }
     ];
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'SetManual',
             returnType: 'null',
             description: 'Sets the camera manual mode. If true, camera will only be controlled by custom logic. If false, camera will follow the spawned or spectated player and read input.',
@@ -31,6 +32,7 @@ export class CameraClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetPosition',
             returnType: 'null',
             description: 'Sets camera position.',
@@ -39,6 +41,7 @@ export class CameraClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetRotation',
             returnType: 'null',
             description: 'Sets camera rotation.',
@@ -47,6 +50,7 @@ export class CameraClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetVelocity',
             returnType: 'null',
             description: 'Sets camera velocity.',
@@ -55,6 +59,7 @@ export class CameraClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'LookAt',
             returnType: 'null',
             description: 'Sets the camera forward direction such that it is looking at a world position.',
@@ -63,6 +68,7 @@ export class CameraClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetFOV',
             returnType: 'null',
             description: 'Sets the camera field of view. Use 0 to use the default field of view.',
@@ -71,6 +77,7 @@ export class CameraClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SetCameraMode',
             returnType: 'null',
             description: 'Forces the player to use a certain camera mode, taking priority over their camera setting. Accepted values are TPS, Original, FPS.',
@@ -79,12 +86,14 @@ export class CameraClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ResetDistance',
             returnType: 'null',
             description: 'Resets the follow distance to player\'s settings.',
             parameters: []
         },
         {
+            parent: this,
             label: 'ResetCameraMode',
             returnType: 'null',
             description: 'Resets the camera mode to player\'s settings.',

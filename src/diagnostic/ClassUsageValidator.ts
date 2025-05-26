@@ -1,122 +1,184 @@
 import * as vscode from 'vscode';
-import { ClassKinds, FindConstructorInClassHierarchy, FindFieldInClassHierarchy, FindMethodInClassHierarchy, IChainNode, IClass, IField, IMethod } from '../classes/IClass';
-import { IValidator } from './DiagnosticManager';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
+import {
+    ClassKinds,
+    FindConstructorInClassHierarchy,
+    FindFieldInClassHierarchy,
+    FindMethodInClassHierarchy,
+    IChainNode,
+    IClass,
+} from '../classes/IClass';
+import {IValidator} from './DiagnosticManager';
+import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
 
 export class ClassUsageValidator implements IValidator {
-    private documentTreeProvider: DocumentTreeProvider;
-
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.documentTreeProvider = documentTreeProvider;
+    constructor(
+        private documentTreeProvider: DocumentTreeProvider,
+    ) {
     }
 
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         const diagnostics: vscode.Diagnostic[] = [];
+        const availableClasses = this.documentTreeProvider.getAllAvailableClasses(document);
+        const chains = this.documentTreeProvider.getChains(document);
 
-        const availableClasses = this.documentTreeProvider.getAllAvailableClasses();
-        this.documentTreeProvider.getChains().forEach(chain => {
+        for (const chain of chains) {
             const firstLink = chain[0];
-            let currentClass: IClass | undefined = undefined;
+            const position = new vscode.Position(firstLink.startLine, firstLink.startColumn);
+
+            let currentClass: IClass | undefined;
             let isStatic = false;
             let selfCast = false;
 
             if (firstLink.text === 'self') {
-                currentClass = this.documentTreeProvider.getCurrentClass(new vscode.Position(firstLink.startLine, firstLink.startColumn));
+                currentClass = this.documentTreeProvider.getCurrentClass(document, position);
                 if (!currentClass) {
-                    diagnostics.push(this.createDiagnostic(firstLink, `'self' reference found but no class is associated in the current context. Report this to the developer.`));
-                    return;
+                    diagnostics.push(
+                        this.createDiagnostic(
+                            firstLink,
+                            `'self' reference found but no class is associated in the current context. Report this to the developer.`
+                        )
+                    );
+                    continue;
                 }
-
                 selfCast = true;
+                isStatic = isStatic || currentClass.name === 'Main' || currentClass.kind === ClassKinds.EXTENSION;
             } else if (firstLink.isMethodCall) {
                 const className = firstLink.text.split('(')[0];
-                currentClass = availableClasses.find((cls) => cls.name === className);
-
-                if (currentClass) {
-                    switch (currentClass.kind) {
-                        case ClassKinds.CUTSCENE:
-                            diagnostics.push(this.createDiagnostic(firstLink, `Cutscenes are not recommended for instantiation.`, vscode.DiagnosticSeverity.Warning));
-                            return;
-                        case ClassKinds.EXTENSION:
-                            diagnostics.push(this.createDiagnostic(firstLink, `Extensions are not recommended for instantiation.`, vscode.DiagnosticSeverity.Warning));
-                            return;
-                    }
-
-                    const constructorMatch = FindConstructorInClassHierarchy(currentClass, firstLink.methodArguments!.length);
-                    if (!constructorMatch) {
-                        diagnostics.push(this.createDiagnostic(firstLink, `Constructor for class ${className} with ${firstLink.methodArguments!.length} arguments not found.`));
-                        return;
-                    }
-                } else {
-                    diagnostics.push(this.createDiagnostic(firstLink, `Class definition for '${className}' not found.`));
-                    return;
+                currentClass = availableClasses.find(c => c.name === className);
+                if (!currentClass) {
+                    diagnostics.push(
+                        this.createDiagnostic(firstLink, `Class definition for '${className}' not found.`)
+                    );
+                    continue;
                 }
+                const ctor = FindConstructorInClassHierarchy(
+                    currentClass,
+                    firstLink.methodArguments!.length
+                );
+                if (!ctor) {
+                    diagnostics.push(
+                        this.createDiagnostic(
+                            firstLink,
+                            `Constructor for class ${className} with ${firstLink.methodArguments!.length} arguments not found.`
+                        )
+                    );
+                    continue;
+                }
+
             } else {
                 const className = firstLink.text;
-                currentClass = availableClasses.find((cls) => cls.name === className);
+                currentClass = availableClasses.find(c => c.name === className);
                 if (currentClass) {
                     isStatic = true;
                 }
             }
 
             if (!currentClass) {
-                // diagnostics.push(this.createDiagnostic(firstLink, `Class definition for '${firstLink.text}' not found.`));
-                return;
+                const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
+                if (currentMethod) {
+                    const param = currentMethod.parameters.find(p => p.name === firstLink.text);
+                    if (param) {
+                        if (param.type === 'any') {
+                            continue;
+                        }
+                        currentClass = availableClasses.find(c => c.name === param.type);
+                    }
+
+                    if (!currentClass && currentMethod.localVariables) {
+                        const local = currentMethod.localVariables
+                            .find(v => v.name === firstLink.text && v.scopeRange?.contains(position));
+                        if (local) {
+                            if (local.type === 'any') {
+                                continue;
+                            }
+                            currentClass = availableClasses.find(c => c.name === local.type);
+                        }
+                    }
+                }
+                if (!currentClass) {
+                    diagnostics.push(
+                        this.createDiagnostic(firstLink, `Class definition for '${firstLink.text}' not found.`)
+                    );
+                    continue;
+                }
             }
 
+            let broken = false;
             for (let i = 1; i < chain.length; i++) {
-                const currentLink = chain[i];
+                const link = chain[i];
+                let returnType: string;
 
-                let returnType = '';
-                if (currentLink.isMethodCall) {
-                    const methodName = currentLink.text.split('(')[0];
-                    let method: IMethod | null = null;
-
-                    if (selfCast) {
-                        method = FindMethodInClassHierarchy(currentClass, methodName, currentLink.methodArguments!.length, true, true);
-                    } else {
-                        method = FindMethodInClassHierarchy(currentClass, methodName, currentLink.methodArguments!.length, !isStatic, isStatic);
-                    }
-
+                if (link.isMethodCall) {
+                    const methodName = link.text.split('(')[0];
+                    const method = FindMethodInClassHierarchy(
+                        currentClass,
+                        methodName,
+                        link.methodArguments!.length,
+                        !isStatic,
+                        isStatic
+                    );
                     if (!method) {
-                        diagnostics.push(this.createDiagnostic(currentLink, `${selfCast ? 'Self' : (isStatic ? 'Static' : 'Instance')} method '${methodName}' with ${currentLink.methodArguments!.length} arguments not found in class '${currentClass?.name}'.`));
+                        let msg = `${isStatic ? 'Static' : 'Instance'} method '${methodName}' with ${link.methodArguments!.length} arguments not found in class '${currentClass.name}'.`;
+                        let severity = vscode.DiagnosticSeverity.Error;
+                        if (['Object', 'Character'].includes(currentClass.name)) {
+                            msg += `\nType '${currentClass.name}' is a base class; resolution may be imprecise.`;
+                            severity = vscode.DiagnosticSeverity.Warning;
+                        }
+                        diagnostics.push(this.createDiagnostic(link, msg, severity));
+                        broken = true;
                         break;
                     }
-
                     returnType = method.returnType;
+
                 } else {
-                    let field: IField | null = null;
-
-                    if (selfCast) {
-                        field = FindFieldInClassHierarchy(currentClass, currentLink.text, true, true, true, true);
-                    } else {
-                        field = FindFieldInClassHierarchy(currentClass, currentLink.text, !isStatic, isStatic, true, true);
-                    }
-
+                    const field = FindFieldInClassHierarchy(
+                        currentClass,
+                        link.text,
+                        !isStatic,
+                        isStatic,
+                        true,
+                        true
+                    );
                     if (!field) {
-                        diagnostics.push(this.createDiagnostic(currentLink, `${isStatic ? 'Static' : 'Instance'} field '${currentLink.text}' not found in class '${currentClass?.name}'.`));
+                        let msg = `${isStatic ? 'Static' : 'Instance'} field '${link.text}' not found in class '${currentClass.name}'.`;
+                        let severity = vscode.DiagnosticSeverity.Error;
+                        if (['Object', 'Character'].includes(currentClass.name)) {
+                            msg += `\nType '${currentClass.name}' is a base class; resolution may be imprecise.`;
+                            severity = vscode.DiagnosticSeverity.Warning;
+                        }
+                        diagnostics.push(this.createDiagnostic(link, msg, severity));
+                        broken = true;
                         break;
                     }
-
                     returnType = field.type;
                 }
-                currentClass = availableClasses.find((cls) => cls.name === returnType);
-                if (!currentClass) {
-                    // diagnostics.push(this.createDiagnostic(firstLink, `Class definition for '${firstLink.text}' not found.`));
-                    return;
+
+                const nextClassName = returnType.split('(')[0];
+                const nextClass = availableClasses.find(c => c.name === nextClassName);
+                if (!nextClass) {
+                    broken = true;
+                    break;
                 }
+
+                currentClass = nextClass;
+
                 isStatic = false;
                 selfCast = false;
             }
-        });
+
+            if (broken) {
+                continue;
+            }
+        }
 
         return diagnostics;
     }
 
+
     private createDiagnostic(link: IChainNode, message: string, severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error): vscode.Diagnostic {
         const range = new vscode.Range(
-            new vscode.Position(link.startLine - 1, link.startColumn),
-            new vscode.Position(link.startLine - 1, link.startColumn + link.text.length)
+            new vscode.Position(link.startLine, link.startColumn),
+            new vscode.Position(link.startLine, link.startColumn + link.text.length)
         );
         return new vscode.Diagnostic(
             range,

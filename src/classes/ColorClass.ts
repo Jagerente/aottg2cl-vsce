@@ -10,10 +10,12 @@ export class ColorClass implements IClass {
     
     public constructors: IConstructor[] = [
         {
+            parent: this,
             description: "Create a default 255,255,255,255 color",
             parameters: []
         },
         {
+            parent: this,
             description: "Create a color with specified RGB values and default alpha (255)",
             parameters: [
                 { name: "r", type: "int", description: "Red value (0-255)" },
@@ -22,6 +24,7 @@ export class ColorClass implements IClass {
             ]
         },
         {
+            parent: this,
             description: "Create a color with specified RGBA values",
             parameters: [
                 { name: "r", type: "int", description: "Red value (0-255)" },
@@ -31,6 +34,7 @@ export class ColorClass implements IClass {
             ]
         },
         {
+            parent: this,
             description: "Create a color from a hexadecimal string",
             parameters: [
                 { name: "hex", type: "string", description: "Hexadecimal color value (e.g. '#FF0000')" }
@@ -39,20 +43,22 @@ export class ColorClass implements IClass {
     ];
 
     public instanceFields: IField[] = [
-        { label: 'R', type: 'int', description: 'Red' },
-        { label: 'G', type: 'int', description: 'Green' },
-        { label: 'B', type: 'int', description: 'Blue' },
-        { label: 'A', type: 'int', description: 'Alpha' }
+        { parent: this, label: 'R', type: 'int', description: 'Red' },
+        { parent: this, label: 'G', type: 'int', description: 'Green' },
+        { parent: this, label: 'B', type: 'int', description: 'Blue' },
+        { parent: this, label: 'A', type: 'int', description: 'Alpha' }
     ];
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'ToHexString',
             returnType: 'string',
             description: 'Converts the color to a hex string.',
             parameters: []
         },
         {
+            parent: this,
             label: 'Gradient',
             returnType: 'Color',
             description: 'Returns a gradient color between a and b using the fade value.',

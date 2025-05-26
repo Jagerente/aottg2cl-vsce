@@ -9,34 +9,35 @@ export class CharacterClass implements IClass {
     public extends?: IClass[] = [ObjectClassInstance];
 
     public instanceFields: IField[] = [
-        { label: 'Player', type: 'Player', description: 'The player who owns this character.', readonly: true },
-        { label: 'IsMine', type: 'bool', description: 'Character belongs to my player.', readonly: true },
-        { label: 'IsMainCharacter', type: 'bool', description: 'Character belongs to my player and is the main character.', readonly: true },
-        { label: 'IsAI', type: 'bool', description: 'If the character is AI.', readonly: true },
-        { label: 'ViewID', type: 'int', description: 'The network view ID of the character. This is synced with the room.', readonly: true },
-        { label: 'Transform', type: 'Transform', description: 'The Unity transform of the character.', readonly: true },
-        { label: 'Position', type: 'Vector3', description: 'Position of the character.' },
-        { label: 'Rotation', type: 'Vector3', description: 'Rotation of the character.' },
-        { label: 'QuaternionRotation', type: 'Quaternion', description: 'Quaternion rotation of the character.' },
-        { label: 'Velocity', type: 'Vector3', description: 'Velocity of the character.' },
-        { label: 'Forward', type: 'Vector3', description: 'Forward direction of the character.' },
-        { label: 'Right', type: 'Vector3', description: 'Right direction of the character.' },
-        { label: 'Up', type: 'Vector3', description: 'Up direction of the character.' },
-        { label: 'HasTargetDirection', type: 'bool', description: 'If the character has a target direction it is turning towards.', readonly: true },
-        { label: 'TargetDirection', type: 'Vector3', description: 'The character\'s target direction.', readonly: true },
-        { label: 'Team', type: 'string', description: 'Team the character belongs to ("None", "Blue", "Red", "Titan", "Human"). This can be set to any string, so any combination of teams is allowed.' },
-        { label: 'Name', type: 'string', description: 'The display name of the character. If modified, it will affect world name (if human) and feed name. All changes are local, and can be modified by non-owners.' },
-        { label: 'Guild', type: 'string', description: 'The guild name of the character. Same restrictions as Name.' },
-        { label: 'Health', type: 'float', description: 'Character\'s current health. Cannot be set higher than MaxHealth.' },
-        { label: 'MaxHealth', type: 'float', description: 'Character\'s maximum health.' },
-        { label: 'CustomDamageEnabled', type: 'bool', description: 'Is custom damage dealing enabled.' },
-        { label: 'CustomDamage', type: 'int', description: 'Amount of custom damage to deal per attack.' },
-        { label: 'CurrentAnimation', type: 'string', description: 'The character\'s current playing animation.', readonly: true },
-        { label: 'Grounded', type: 'bool', description: 'Read whether the character is currently grounded - updated every fixed update.' }
+        { parent: this, label: 'Player', type: 'Player', description: 'The player who owns this character.', readonly: true },
+        { parent: this, label: 'IsMine', type: 'bool', description: 'Character belongs to my player.', readonly: true },
+        { parent: this, label: 'IsMainCharacter', type: 'bool', description: 'Character belongs to my player and is the main character.', readonly: true },
+        { parent: this, label: 'IsAI', type: 'bool', description: 'If the character is AI.', readonly: true },
+        { parent: this, label: 'ViewID', type: 'int', description: 'The network view ID of the character. This is synced with the room.', readonly: true },
+        { parent: this, label: 'Transform', type: 'Transform', description: 'The Unity transform of the character.', readonly: true },
+        { parent: this, label: 'Position', type: 'Vector3', description: 'Position of the character.' },
+        { parent: this, label: 'Rotation', type: 'Vector3', description: 'Rotation of the character.' },
+        { parent: this, label: 'QuaternionRotation', type: 'Quaternion', description: 'Quaternion rotation of the character.' },
+        { parent: this, label: 'Velocity', type: 'Vector3', description: 'Velocity of the character.' },
+        { parent: this, label: 'Forward', type: 'Vector3', description: 'Forward direction of the character.' },
+        { parent: this, label: 'Right', type: 'Vector3', description: 'Right direction of the character.' },
+        { parent: this, label: 'Up', type: 'Vector3', description: 'Up direction of the character.' },
+        { parent: this, label: 'HasTargetDirection', type: 'bool', description: 'If the character has a target direction it is turning towards.', readonly: true },
+        { parent: this, label: 'TargetDirection', type: 'Vector3', description: 'The character\'s target direction.', readonly: true },
+        { parent: this, label: 'Team', type: 'string', description: 'Team the character belongs to ("None", "Blue", "Red", "Titan", "Human"). This can be set to any string, so any combination of teams is allowed.' },
+        { parent: this, label: 'Name', type: 'string', description: 'The display name of the character. If modified, it will affect world name (if human) and feed name. All changes are local, and can be modified by non-owners.' },
+        { parent: this, label: 'Guild', type: 'string', description: 'The guild name of the character. Same restrictions as Name.' },
+        { parent: this, label: 'Health', type: 'float', description: 'Character\'s current health. Cannot be set higher than MaxHealth.' },
+        { parent: this, label: 'MaxHealth', type: 'float', description: 'Character\'s maximum health.' },
+        { parent: this, label: 'CustomDamageEnabled', type: 'bool', description: 'Is custom damage dealing enabled.' },
+        { parent: this, label: 'CustomDamage', type: 'int', description: 'Amount of custom damage to deal per attack.' },
+        { parent: this, label: 'CurrentAnimation', type: 'string', description: 'The character\'s current playing animation.', readonly: true },
+        { parent: this, label: 'Grounded', type: 'bool', description: 'Read whether the character is currently grounded - updated every fixed update.' }
     ];
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'GetKilled',
             returnType: 'null',
             description: 'Kills the character. Callable by non-owners.',
@@ -45,6 +46,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetDamaged',
             returnType: 'null',
             description: 'Damages the character and kills it if health reaches 0. Callable by non-owners.',
@@ -54,6 +56,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Emote',
             returnType: 'null',
             description: 'Causes the character to perform an emote.',
@@ -62,6 +65,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'PlayAnimation',
             returnType: 'null',
             description: 'Causes the character to play an animation.',
@@ -71,6 +75,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ForceAnimation',
             returnType: 'null',
             description: 'Will put character into Emote state to play the entire animation',
@@ -80,6 +85,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetAnimationLength',
             returnType: 'float',
             description: 'Gets the length of the animation.',
@@ -88,6 +94,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'PlaySound',
             returnType: 'null',
             description: 'Plays a sound if present in the character.',
@@ -96,6 +103,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'StopSound',
             returnType: 'null',
             description: 'Stops the sound.',
@@ -104,6 +112,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'LookAt',
             returnType: 'null',
             description: 'Rotates the character to look at a world position.',
@@ -112,6 +121,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'AddForce',
             returnType: 'null',
             description: 'Adds force to the character.',
@@ -121,6 +131,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Reveal',
             returnType: 'null',
             description: 'Adds a white outline visible through walls for a duration.',
@@ -129,6 +140,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'AddOutline',
             returnType: 'null',
             description: 'Adds an outline effect to the character.',
@@ -138,6 +150,7 @@ export class CharacterClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'RemoveOutline',
             returnType: 'null',
             description: 'Removes the outline effect from the character.',

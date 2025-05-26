@@ -9,11 +9,12 @@ export class NetworkViewClass implements IClass {
     public extends?: IClass[] = [ObjectClassInstance];
     
     public instanceFields: IField[] = [
-        { label: 'Owner', type: 'Player', description: 'The network view\'s owner.' }
+        { parent: this, label: 'Owner', type: 'Player', description: 'The network view\'s owner.' }
     ];
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Transfer',
             returnType: 'null',
             description: 'Transfer ownership of this NetworkView to another player. Owner only.',
@@ -22,6 +23,7 @@ export class NetworkViewClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SendMessage',
             returnType: 'null',
             description: 'Send a message to a target player. This will be received in any of the attached components through the OnNetworkMessage callback.',
@@ -31,6 +33,7 @@ export class NetworkViewClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SendMessageAll',
             returnType: 'null',
             description: 'Send a message to all players including myself.',
@@ -39,6 +42,7 @@ export class NetworkViewClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SendMessageOthers',
             returnType: 'null',
             description: 'Send a message to players excluding myself.',
@@ -47,6 +51,7 @@ export class NetworkViewClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SendStream',
             returnType: 'null',
             description: 'Send an object to the network sync stream. This represents sending data from the object owner to all non-owner observers, and should only be called in the SendNetworkStream callback in the attached component. It only works with some object types: primitives and Vector3.',
@@ -55,6 +60,7 @@ export class NetworkViewClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ReceiveStream',
             returnType: 'Object',
             description: 'Receive an object through the network sync stream. This represents receiving data from the object owner as a non-owner observer, and should only be called in the OnNetworkStream callback.',

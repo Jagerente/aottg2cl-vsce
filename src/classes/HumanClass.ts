@@ -9,69 +9,75 @@ export class HumanClass implements IClass {
     public extends?: IClass[] = [CharacterClassInstance];
 
     public instanceFields: IField[] = [
-        { label: 'Weapon', type: 'string', description: 'Human\'s current weapon ("Blade", "AHSS", "ThunderSpear", "APG").', readonly: true },
-        { label: 'CurrentGas', type: 'float', description: 'Current gas. Cannot be set higher than max gas.' },
-        { label: 'MaxGas', type: 'float', description: 'Max gas.' },
-        { label: 'CurrentBlade', type: 'int', description: 'Current number of blades left. Cannot be set higher than max blades.' },
-        { label: 'MaxBlade', type: 'int', description: 'Max number of blades.' },
-        { label: 'CurrentBladeDurability', type: 'float', description: 'Current blade durability. Cannot be set higher than max durability.' },
-        { label: 'MaxBladeDurability', type: 'float', description: 'Maximum blade durability.' },
-        { label: 'CurrentAmmoRound', type: 'int', description: 'Current ammo in current round.' },
-        { label: 'MaxAmmoRound', type: 'int', description: 'Max ammo per round.' },
-        { label: 'CurrentAmmoLeft', type: 'int', description: 'Current ammo left.' },
-        { label: 'MaxAmmoTotal', type: 'int', description: 'Maximum total ammo.' },
-        { label: 'Acceleration', type: 'int', description: 'Acceleration stat.' },
-        { label: 'Speed', type: 'int', description: 'Run speed stat.' },
-        { label: 'HorseSpeed', type: 'float', description: 'Horse run speed.' },
-        { label: 'IsCarried', type: 'bool', description: 'Is the human carried by other player.', readonly: true },
-        { label: 'IsMounted', type: 'bool', description: 'Is the human mounted to an object (does not count horses).', readonly: true },
-        { label: 'MountedMapObject', type: 'MapObject', description: 'Returns the current mounted map object.', readonly: true },
-        { label: 'MountedTransform', type: 'Transform', description: 'Returns the current mounted transform.', readonly: true },
-        { label: 'CurrentSpecial', type: 'string', description: 'Returns the current special.', readonly: true },
-        { label: 'AutoRefillGas', type: 'bool', description: 'If the human has the input setting AutoRefillGas enabled. Character owner only.', readonly: true },
-        { label: 'State', type: 'string', description: 'Animation state of the human. Valid states are: Idle, Attack, GroundDodge, AirDodge, Reload, Refill, Die, Grab, EmoteAction, SpecialAttack, SpecialAction, Slide, Run, Land, MountingHorse, Stun, WallSlide.', readonly: true },
-        { label: 'CanDodge', type: 'bool', description: 'Disables/Enables dodging.' },
-        { label: 'LeftHookEnabled', type: 'bool', description: 'Disables/Enables the left hook.' },
-        { label: 'RightHookEnabled', type: 'bool', description: 'Disables/Enables the right hook.' },
-        { label: 'IsInvincible', type: 'bool', description: 'Disables/Enables whether human is invincible.' },
-        { label: 'InvincibleTimeLeft', type: 'float', description: 'Amount of time before IsInvincible is set to false.' },
-        { label: 'SpecialCooldown', type: 'float', description: 'Maximum cooldown on special ability.' },
-        { label: 'ShifterLiveTime', type: 'float', description: 'If shifter special is equipped, how much live time for transforming.' },
-        { label: 'SpecialCooldownRatio', type: 'float', description: 'Ratio of CurrentCooldown / SpecialCooldown. 1.0 means ability is ready.', readonly: true }
+        { parent: this, label: 'Weapon', type: 'string', description: 'Human\'s current weapon ("Blade", "AHSS", "ThunderSpear", "APG").', readonly: true },
+        { parent: this, label: 'CurrentGas', type: 'float', description: 'Current gas. Cannot be set higher than max gas.' },
+        { parent: this, label: 'MaxGas', type: 'float', description: 'Max gas.' },
+        { parent: this, label: 'CurrentBlade', type: 'int', description: 'Current number of blades left. Cannot be set higher than max blades.' },
+        { parent: this, label: 'MaxBlade', type: 'int', description: 'Max number of blades.' },
+        { parent: this, label: 'CurrentBladeDurability', type: 'float', description: 'Current blade durability. Cannot be set higher than max durability.' },
+        { parent: this, label: 'MaxBladeDurability', type: 'float', description: 'Maximum blade durability.' },
+        { parent: this, label: 'CurrentAmmoRound', type: 'int', description: 'Current ammo in current round.' },
+        { parent: this, label: 'MaxAmmoRound', type: 'int', description: 'Max ammo per round.' },
+        { parent: this, label: 'CurrentAmmoLeft', type: 'int', description: 'Current ammo left.' },
+        { parent: this, label: 'MaxAmmoTotal', type: 'int', description: 'Maximum total ammo.' },
+        { parent: this, label: 'Acceleration', type: 'int', description: 'Acceleration stat.' },
+        { parent: this, label: 'Speed', type: 'int', description: 'Run speed stat.' },
+        { parent: this, label: 'HorseSpeed', type: 'float', description: 'Horse run speed.' },
+        { parent: this, label: 'IsCarried', type: 'bool', description: 'Is the human carried by other player.', readonly: true },
+        { parent: this, label: 'IsMounted', type: 'bool', description: 'Is the human mounted to an object (does not count horses).', readonly: true },
+        { parent: this, label: 'MountedMapObject', type: 'MapObject', description: 'Returns the current mounted map object.', readonly: true },
+        { parent: this, label: 'MountedTransform', type: 'Transform', description: 'Returns the current mounted transform.', readonly: true },
+        { parent: this, label: 'CurrentSpecial', type: 'string', description: 'Returns the current special.', readonly: true },
+        { parent: this, label: 'AutoRefillGas', type: 'bool', description: 'If the human has the input setting AutoRefillGas enabled. Character owner only.', readonly: true },
+        { parent: this, label: 'State', type: 'string', description: 'Animation state of the human. Valid states are: Idle, Attack, GroundDodge, AirDodge, Reload, Refill, Die, Grab, EmoteAction, SpecialAttack, SpecialAction, Slide, Run, Land, MountingHorse, Stun, WallSlide.', readonly: true },
+        { parent: this, label: 'CanDodge', type: 'bool', description: 'Disables/Enables dodging.' },
+        { parent: this, label: 'LeftHookEnabled', type: 'bool', description: 'Disables/Enables the left hook.' },
+        { parent: this, label: 'RightHookEnabled', type: 'bool', description: 'Disables/Enables the right hook.' },
+        { parent: this, label: 'IsInvincible', type: 'bool', description: 'Disables/Enables whether human is invincible.' },
+        { parent: this, label: 'InvincibleTimeLeft', type: 'float', description: 'Amount of time before IsInvincible is set to false.' },
+        { parent: this, label: 'SpecialCooldown', type: 'float', description: 'Maximum cooldown on special ability.' },
+        { parent: this, label: 'ShifterLiveTime', type: 'float', description: 'If shifter special is equipped, how much live time for transforming.' },
+        { parent: this, label: 'SpecialCooldownRatio', type: 'float', description: 'Ratio of CurrentCooldown / SpecialCooldown. 1.0 means ability is ready.', readonly: true }
     ];
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Refill',
             returnType: 'bool',
             description: 'Causes the human to enter refill animation and refreshes all gas/ammo at the end. Returns true if the human actually needed refill.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RefillImmediate',
             returnType: 'null',
             description: 'Immediately refreshes all gas/ammo without animation.',
             parameters: []
         },
         {
+            parent: this,
             label: 'ClearHooks',
             returnType: 'null',
             description: 'Causes the human to disable both hooks if any are active.',
             parameters: []
         },
         {
+            parent: this,
             label: 'ClearLeftHook',
             returnType: 'null',
             description: 'Causes the human to disable the left hook if it is active.',
             parameters: []
         },
         {
+            parent: this,
             label: 'ClearRightHook',
             returnType: 'null',
             description: 'Causes the human to disable the right hook if it is active.',
             parameters: []
         },
         {
+            parent: this,
             label: 'MountMapObject',
             returnType: 'null',
             description: 'Mounts the human to the given MapObject.',
@@ -82,6 +88,7 @@ export class HumanClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'MountTransform',
             returnType: 'null',
             description: 'Mounts the human to the given Transform.',
@@ -92,12 +99,14 @@ export class HumanClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Unmount',
             returnType: 'null',
             description: 'Unmounts the human from an object.',
             parameters: []
         },
         {
+            parent: this,
             label: 'SetSpecial',
             returnType: 'null',
             description: 'Sets the human special.',
@@ -106,12 +115,14 @@ export class HumanClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ActivateSpecial',
             returnType: 'null',
             description: 'Triggers the special to activate..',
             parameters: []
         },
         {
+            parent: this,
             label: 'SetWeapon',
             returnType: 'null',
             description: 'Sets the human weapon.',
@@ -120,6 +131,7 @@ export class HumanClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'DisablePerks',
             returnType: 'null',
             description: 'Disables all perks.',

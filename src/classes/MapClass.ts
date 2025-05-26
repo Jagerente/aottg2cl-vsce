@@ -13,6 +13,7 @@ export class MapClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'FindMapObjectByName',
             returnType: 'MapObject',
             description: 'Returns the first map object matching the given name.',
@@ -21,6 +22,7 @@ export class MapClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FindMapObjectsByName',
             returnType: 'List(MapObject)',
             description: 'Returns a list of map objects matching the given name.',
@@ -29,6 +31,7 @@ export class MapClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FindMapObjectByID',
             returnType: 'MapObject',
             description: 'Returns the map object matching the given ID.',
@@ -37,6 +40,7 @@ export class MapClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FindMapObjectByTag',
             returnType: 'MapObject',
             description: 'Returns the first map object that has a tag component matching the given name.',
@@ -45,6 +49,7 @@ export class MapClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FindMapObjectsByTag',
             returnType: 'List(MapObject)',
             description: 'Returns a list of map objects matching the given tag.',
@@ -53,6 +58,7 @@ export class MapClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FindMapObjectsByComponent',
             returnType: 'List(MapObject)',
             description: 'Returns a list of map objects which have the corresponding CL component attached.',
@@ -61,6 +67,7 @@ export class MapClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'CreateMapObjectRaw',
             returnType: 'MapObject',
             description: 'Creates a map object given the raw data string, which corresponds to a map file CSV row.',
@@ -69,6 +76,7 @@ export class MapClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'DestroyMapObject',
             returnType: 'null',
             description: 'Destroys the given map object, and its children if includeChildren is true.',
@@ -78,6 +86,7 @@ export class MapClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'CopyMapObject',
             returnType: 'MapObject',
             description: 'Creates a copy of the given map object, and its children if includeChildren is true.',
@@ -87,24 +96,28 @@ export class MapClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'UpdateNavMesh',
             returnType: 'null',
             description: 'Updates the Navmesh (host only). This operation may take a while depending on the map size.',
             parameters: []
         },
         {
+            parent: this,
             label: 'UpdateNavMeshAsync',
             returnType: 'null',
             description: 'Updates the Navmesh (host only) asynchronously and should not hang.',
             parameters: []
         },
         {
+            parent: this,
             label: 'FindAllMapObjects',
             returnType: 'List(MapObject)',
             description: 'Returns all map objects in the game.',
             parameters: []
         },
         {
+            parent: this,
             label: 'DestroyMapTargetable',
             returnType: 'null',
             description: 'Destroys the given map targetable.',

@@ -13,6 +13,7 @@ export class PersistentDataClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'SetProperty',
             returnType: 'null',
             description: 'Sets the property with given name to the object value. Valid value types are float, string, bool, and int.',
@@ -22,6 +23,7 @@ export class PersistentDataClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetProperty',
             returnType: 'object',
             description: 'Gets the property with given name. If the property does not exist, returns the defaultValue.',
@@ -31,12 +33,14 @@ export class PersistentDataClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Clear',
             returnType: 'null',
             description: 'Clears current persistent data.',
             parameters: []
         },
         {
+            parent: this,
             label: 'SaveToFile',
             returnType: 'null',
             description: 'Saves current persistent data to the given file name. If encrypted is true, will also encrypt the file instead of using plaintext.',
@@ -46,6 +50,7 @@ export class PersistentDataClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'LoadFromFile',
             returnType: 'null',
             description: 'Loads persistent data from the given file name. If encrypted is true, will treat the file as having been saved as encrypted.',
@@ -55,6 +60,7 @@ export class PersistentDataClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'IsValidFileName',
             returnType: 'bool',
             description: 'Determines whether or not the given fileName is valid for use when saving/loading a file.',
@@ -63,6 +69,7 @@ export class PersistentDataClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FileExists',
             returnType: 'bool',
             description: 'Determines whether the file already exists. Throws an error if given an invalid file name.',

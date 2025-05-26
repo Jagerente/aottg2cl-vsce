@@ -15,11 +15,13 @@ export class BaseComponentsClass implements IClass {
 
     public instanceFields: IField[] = [
         {
+            parent: this,
             label: 'MapObject',
             type: 'MapObject',
             description: 'The MapObject the component is attached to.',
         },
         {
+            parent: this,
             label: 'NetworkView',
             type: 'NetworkView',
             description: 'The NetworkView attached to the MapObject, if Networked is enabled.',
@@ -28,6 +30,7 @@ export class BaseComponentsClass implements IClass {
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'OnCollisionEnter',
             returnType: 'void',
             description: 'Called upon another object first colliding with the attached MapObject.',
@@ -36,6 +39,7 @@ export class BaseComponentsClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'OnCollisionStay',
             returnType: 'void',
             description: 'Called every frame while another object is colliding with the attached MapObject.',
@@ -44,6 +48,7 @@ export class BaseComponentsClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'OnCollisionExit',
             returnType: 'void',
             description: 'Called upon another object exiting collision with the attached MapObject.',
@@ -52,6 +57,7 @@ export class BaseComponentsClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'OnGetHit',
             returnType: 'void',
             description: 'Called upon getting hit by a hitbox, such as a blade or titan attack. Only called if the MapObject has a collider of layer "Hitboxes" attached.',
@@ -63,6 +69,7 @@ export class BaseComponentsClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'OnGetHooked',
             returnType: 'void',
             description: 'Called upon getting hit by a hook. Only runs for your player character.',
@@ -74,9 +81,9 @@ export class BaseComponentsClass implements IClass {
         }
     ];
 
-    constructor(initReturnType: string) {
+    constructor() {
         this.extends = [
-            new BaseMainClass(initReturnType),
+            new BaseMainClass(),
             BaseNetworkClassInstance
         ];
     }

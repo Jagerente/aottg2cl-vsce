@@ -10,11 +10,12 @@ export class StringClass implements IClass {
     public instanceMethods: IMethod[] = [];
     
     public staticFields: IField[] = [
-        { label: 'Newline', type: 'string', description: 'Returns the newline character.' },
+        { parent: this, label: 'Newline', type: 'string', description: 'Returns the newline character.' },
     ];
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'FormatFloat',
             returnType: 'string',
             description: 'Format the float to a specific number of decimal places.',
@@ -24,6 +25,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'FormatFromList',
             returnType: 'string',
             description: 'Equivalent to C# string.format(string, List<string>).',
@@ -33,6 +35,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Split',
             returnType: 'List(string)',
             description: 'Split the string into a list. Can pass in either a string to split on or a list of strings to split on, the last optional param can remove all empty entries.',
@@ -43,6 +46,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Join',
             returnType: 'string',
             description: 'Join the list into a string.',
@@ -52,6 +56,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Substring',
             returnType: 'string',
             description: 'Get a substring from the given startIndex.',
@@ -61,6 +66,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SubstringWithLength',
             returnType: 'string',
             description: 'Get a substring from the given startIndex with the specified length.',
@@ -71,6 +77,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Length',
             returnType: 'int',
             description: 'Get the length of the string.',
@@ -79,6 +86,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Replace',
             returnType: 'string',
             description: 'Replace all matches in the string with the replacement.',
@@ -89,6 +97,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Contains',
             returnType: 'bool',
             description: 'Check if the string contains the match.',
@@ -98,6 +107,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'StartsWith',
             returnType: 'bool',
             description: 'Check if the string starts with the match.',
@@ -107,6 +117,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'EndsWith',
             returnType: 'bool',
             description: 'Check if the string ends with the match.',
@@ -116,6 +127,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Trim',
             returnType: 'string',
             description: 'Trim all whitespace from the start and end of the string.',
@@ -124,6 +136,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Insert',
             returnType: 'string',
             description: 'Insert a string at a given index.',
@@ -134,6 +147,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'Capitalize',
             returnType: 'string',
             description: 'Capitalizes the first letter of the string.',
@@ -142,6 +156,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ToUpper',
             returnType: 'string',
             description: 'Converts the string to upper case.',
@@ -150,6 +165,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ToLower',
             returnType: 'string',
             description: 'Converts the string to lower case.',
@@ -158,6 +174,7 @@ export class StringClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'IndexOf',
             returnType: 'int',
             description: 'Returns the index of the given string.',

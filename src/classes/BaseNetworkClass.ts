@@ -13,6 +13,7 @@ export class BaseNetworkClass implements IClass {
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'OnNetworkTransfer',
             returnType: 'void',
             description: 'Called upon the NetworkView changing ownership.',
@@ -22,18 +23,21 @@ export class BaseNetworkClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SendNetworkStream',
             returnType: 'void',
             description: 'Called every frame for the owner. You can send a series of data using self.NetworkView.SendStream.',
             parameters: []
         },
         {
+            parent: this,
             label: 'OnNetworkStream',
             returnType: 'void',
             description: 'Called every frame for non-owner observers. You can receive data using self.NetworkView.ReceiveStream.',
             parameters: []
         },
         {
+            parent: this,
             label: 'OnNetworkMessage',
             returnType: 'void',
             description: 'Called upon receiving a self.NetworkView.SendMessage call.',

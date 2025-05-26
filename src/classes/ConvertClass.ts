@@ -13,6 +13,7 @@ export class ConvertClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'ToFloat',
             returnType: 'float',
             description: 'Convert the value to floating type.',
@@ -21,6 +22,7 @@ export class ConvertClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ToInt',
             returnType: 'int',
             description: 'Convert the value to integer type.',
@@ -29,6 +31,7 @@ export class ConvertClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ToBool',
             returnType: 'bool',
             description: 'Convert the value to boolean type.',
@@ -37,6 +40,7 @@ export class ConvertClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'ToString',
             returnType: 'string',
             description: 'Convert the value to string type.',
@@ -45,6 +49,7 @@ export class ConvertClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'IsFloat',
             returnType: 'bool',
             description: 'Returns true if the object is a float.',
@@ -53,6 +58,7 @@ export class ConvertClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'IsInt',
             returnType: 'bool',
             description: 'Returns true if the object is an int.',
@@ -61,6 +67,7 @@ export class ConvertClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'IsBool',
             returnType: 'bool',
             description: 'Returns true if the object is a bool.',
@@ -69,6 +76,7 @@ export class ConvertClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'IsString',
             returnType: 'bool',
             description: 'Returns true if the object is a string.',
@@ -77,6 +85,7 @@ export class ConvertClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'IsObject',
             returnType: 'bool',
             description: 'Returns true if the object is an Object. You can use value.Type for further type checking.',

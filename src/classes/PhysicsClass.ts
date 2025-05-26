@@ -13,6 +13,7 @@ export class PhysicsClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'LineCast',
             returnType: 'LineCastHitResult',
             description: 'Performs a linecast between start and end vectors, colliding with the given category (e.g., "Characters"). Returns the object if found, otherwise null.',
@@ -23,6 +24,7 @@ export class PhysicsClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SphereCast',
             returnType: 'object',
             description: 'Performs a spherecast between start and end vectors with the given radius and category to collide with (e.g., "Characters"). Returns the object if found, otherwise null.',

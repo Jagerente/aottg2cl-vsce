@@ -10,15 +10,16 @@ export class NetworkClass implements IClass {
     public instanceMethods: IMethod[] = [];
     
     public staticFields: IField[] = [
-        { label: 'IsMasterClient', type: 'bool', description: 'Indicates if the current player is the master client.' },
-        { label: 'Players', type: 'List(Player)', description: 'List of all players in the room.' },
-        { label: 'MasterClient', type: 'Player', description: 'The current master client.' },
-        { label: 'MyPlayer', type: 'Player', description: 'The player object representing yourself.' },
-        { label: 'NetworkTime', type: 'float', description: 'The current photon network time. This will probably be different from the Game time.' }
+        { parent: this, label: 'IsMasterClient', type: 'bool', description: 'Indicates if the current player is the master client.' },
+        { parent: this, label: 'Players', type: 'List(Player)', description: 'List of all players in the room.' },
+        { parent: this, label: 'MasterClient', type: 'Player', description: 'The current master client.' },
+        { parent: this, label: 'MyPlayer', type: 'Player', description: 'The player object representing yourself.' },
+        { parent: this, label: 'NetworkTime', type: 'float', description: 'The current photon network time. This will probably be different from the Game time.' }
     ];
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'SendMessage',
             returnType: 'null',
             description: 'Send a network message to the target player. This will be received in the OnNetworkMessage callback in Main.',
@@ -28,6 +29,7 @@ export class NetworkClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SendMessageAll',
             returnType: 'null',
             description: 'Send a network message to all players including yourself.',
@@ -36,6 +38,7 @@ export class NetworkClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'SendMessageOthers',
             returnType: 'null',
             description: 'Send a network message to all players excluding yourself.',
@@ -44,6 +47,7 @@ export class NetworkClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'GetTimestampDifference',
             returnType: 'float',
             description: 'Compute the wrapped timestamp difference from photon events. Used to determine delay.',
@@ -53,6 +57,7 @@ export class NetworkClass implements IClass {
             ]
         },
         {
+            parent: this,
             label: 'KickPlayer',
             returnType: 'null',
             description: 'Kick the player via ID or Player object from the room, only callable by the host.',
