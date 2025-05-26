@@ -15,90 +15,90 @@ export class InputClass implements IClass {
         {
             parent: this,
             label: 'GetKeyName',
-            returnType: 'string',
+            returnType: {name: 'string', typeArguments: []},
             description: 'Gets the key name the player assigned to the key setting. Example: GetKeyName("General/Forward") will return the keybind at that setting. Note that key names are PascalCase, for example "Special attack" should be referenced as "SpecialAttack".',
             parameters: [
-                { name: 'key', type: 'string', description: 'The key setting to check.' }
+                { name: 'key', type: {name: 'string', typeArguments: []}, description: 'The key setting to check.' }
             ]
         },
         {
             parent: this,
             label: 'GetKeyHold',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Whether or not the key is being held down. Example: GetKey("Human/HookLeft").',
             parameters: [
-                { name: 'key', type: 'string', description: 'The key setting to check.' }
+                { name: 'key', type: {name: 'string', typeArguments: []}, description: 'The key setting to check.' }
             ]
         },
         {
             parent: this,
             label: 'GetKeyDown',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Whether or not the key is first pressed this frame.',
             parameters: [
-                { name: 'key', type: 'string', description: 'The key setting to check.' }
+                { name: 'key', type: {name: 'string', typeArguments: []}, description: 'The key setting to check.' }
             ]
         },
         {
             parent: this,
             label: 'GetKeyUp',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Whether or not the key is first released this frame.',
             parameters: [
-                { name: 'key', type: 'string', description: 'The key setting to check.' }
+                { name: 'key', type: {name: 'string', typeArguments: []}, description: 'The key setting to check.' }
             ]
         },
         {
             parent: this,
             label: 'GetMouseAim',
-            returnType: 'Vector3',
+            returnType: {name: 'Vector3', typeArguments: []},
             description: 'Gets a Vector3 that represents the point the mouse pointer is aiming at. Note that this is not a direction but a world-space position of the closest object the mouse is aiming at.',
             parameters: []
         },
         {
             parent: this,
             label: 'GetMouseSpeed',
-            returnType: 'Vector3',
+            returnType: {name: 'Vector3', typeArguments: []},
             description: 'Gets the user mouse speed.',
             parameters: []
         },
         {
             parent: this,
             label: 'GetMousePosition',
-            returnType: 'Vector3',
+            returnType: {name: 'Vector3', typeArguments: []},
             description: 'Gets the user mouse position.',
             parameters: []
         },
         {
             parent: this,
             label: 'GetScreenDimensions',
-            returnType: 'Vector3',
+            returnType: {name: 'Vector3', typeArguments: []},
             description: 'Gets the user screen dimensions.',
             parameters: []
         },
         {
             parent: this,
             label: 'SetKeyDefaultEnabled',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Enables or disables the default behavior for the specified keybind. If set to false, the keybind will not trigger the normal in-game action.',
             parameters: [
-                { name: 'key', type: 'string', description: 'The key setting to modify.' },
-                { name: 'enable', type: 'bool', description: 'Enable or disable default input.' }
+                { name: 'key', type: {name: 'string', typeArguments: []}, description: 'The key setting to modify.' },
+                { name: 'enable', type: { name: 'bool', typeArguments: [] }, description: 'Enable or disable default input.' }
             ]
         },
         {
             parent: this,
             label: 'SetKeyHold',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Simulates holding down the specified keybind. If set to true, the game will act as if the player is holding down the key.',
             parameters: [
-                { name: 'key', type: 'string', description: 'The key setting to modify.' }
+                { name: 'key', type: {name: 'string', typeArguments: []}, description: 'The key setting to modify.' }
             ]
         },
         {
             parent: this,
             label: 'CursorAimDirection',
-            returnType: 'Vector3',
+            returnType: {name: 'Vector3', typeArguments: []},
             description: 'Gets the direction ray of the cursor.',
             parameters: []
         }        

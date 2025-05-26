@@ -15,19 +15,19 @@ export class JsonClass implements IClass {
         {
             parent: this,
             label: 'LoadFromString',
-            returnType: 'object',
+            returnType: {name: 'Object', typeArguments: []},
             description: 'Deserializes the object from a JSON string.',
             parameters: [
-                { name: 'value', type: 'string', description: 'The JSON string to deserialize.' }
+                { name: 'value', type: {name: 'string', typeArguments: []}, description: 'The JSON string to deserialize.' }
             ]
         },
         {
             parent: this,
             label: 'SaveToString',
-            returnType: 'string',
+            returnType: {name: 'string', typeArguments: []},
             description: 'Serializes the object to a JSON string.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The object to serialize.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The object to serialize.' }
             ]
         }
     ];

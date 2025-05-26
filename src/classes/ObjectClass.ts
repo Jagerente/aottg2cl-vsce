@@ -11,13 +11,13 @@ export class ObjectClass implements IClass {
         {
             parent: this,
             label: 'Type',
-            type: 'string',
+            type: {name: 'string', typeArguments: []},
             description: 'The type of the object (such as "Human").',
         },
         {
             parent: this,
             label: 'IsCharacter',
-            type: 'bool',
+            type: { name: 'bool', typeArguments: [] },
             description: 'Whether or not the object is a Character type or any of its inheritors.',
         },
     ];

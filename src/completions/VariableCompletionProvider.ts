@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as markdown from '../utils/MarkdownHelper';
-import {CodeContextUtils} from '../utils/CodeContextUtils';
+import { CodeContextUtils } from '../utils/CodeContextUtils';
 import {
     ClassKinds,
     FindFieldInClassHierarchy,
@@ -13,7 +13,7 @@ import {
     IVariable
 } from '../classes/IClass';
 
-import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
+import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
 
 export class VariableCompletionProvider implements vscode.CompletionItemProvider, vscode.HoverProvider, vscode.SignatureHelpProvider {
     private documentTreeProvider: DocumentTreeProvider;
@@ -57,17 +57,17 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                 currentMethod
             );
 
-            if (!resolvedType || resolvedType === 'unknown') {
+            if (!resolvedType) {
                 return [];
             }
 
-            const classDef = CodeContextUtils.findClassByName(document, this.documentTreeProvider, resolvedType);
+            const classDef = this.documentTreeProvider.findClassByReference(document, resolvedType);
             if (!classDef) {
                 return [];
             }
 
             const includePrivates = classDef.name === currentClassDef?.name;
-            const staticContext = callChainArray[0] !== 'self' && callChainArray.length === 1 && CodeContextUtils.findClassByName(document, this.documentTreeProvider, callChainArray[0]) !== undefined;
+            const staticContext = callChainArray[0] !== 'self' && callChainArray.length === 1 && this.documentTreeProvider.findClassByName(document, callChainArray[0]) !== undefined;
 
             let completions = this.getFieldsAndMethodsCompletions(
                 classDef,
@@ -108,7 +108,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                 }
 
                 const item = new vscode.CompletionItem(field.label, vscode.CompletionItemKind.Field);
-                item.detail = `${field.type}`;
+                item.detail = `${CodeContextUtils.typeRefToString(field.type)}`;
                 item.documentation = new vscode.MarkdownString(field.description);
                 if (wordRange) {
                     item.range = wordRange;
@@ -118,7 +118,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
 
             classDef.instanceMethods.forEach(method => {
                 const item = new vscode.CompletionItem(method.label, vscode.CompletionItemKind.Method);
-                item.detail = `${this.constructMethodSignature(method)}: ${method.returnType}`;
+                item.detail = `${this.constructMethodSignature(method)}: ${CodeContextUtils.typeRefToString(method.returnType)}`;
                 item.documentation = new vscode.MarkdownString(method.description);
                 if (wordRange) {
                     item.range = wordRange;
@@ -145,7 +145,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                 }
 
                 const item = new vscode.CompletionItem(field.label, vscode.CompletionItemKind.Field);
-                item.detail = `${field.type}`;
+                item.detail = `${CodeContextUtils.typeRefToString(field.type)}`;
                 item.documentation = new vscode.MarkdownString(field.description);
                 if (wordRange) {
                     item.range = wordRange;
@@ -155,7 +155,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
 
             classDef.staticMethods.forEach(method => {
                 const item = new vscode.CompletionItem(method.label, vscode.CompletionItemKind.Function);
-                item.detail = `${this.constructMethodSignature(method)}: ${method.returnType}`;
+                item.detail = `${this.constructMethodSignature(method)}: ${CodeContextUtils.typeRefToString(method.returnType)}`;
                 item.documentation = new vscode.MarkdownString(method.description);
                 if (wordRange) {
                     item.range = wordRange;
@@ -188,6 +188,10 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         const items: vscode.CompletionItem[] = [];
 
         this.documentTreeProvider.getAllAvailableClasses(document).forEach(classDef => {
+            if (classDef.hidden) {
+                return;
+            }
+
             if (classDef.constructors && classDef.constructors.length > 0) {
                 classDef.constructors.forEach(constructor => {
                     const item = new vscode.CompletionItem(classDef.name, vscode.CompletionItemKind.Constructor);
@@ -221,28 +225,42 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             }
         });
 
-        currentMethod?.parameters.forEach((details) => {
-            const item = new vscode.CompletionItem(details.name, vscode.CompletionItemKind.Variable);
-            item.detail = `(parameter) ${details.type}`;
-            item.documentation = new vscode.MarkdownString(details.description);
-            if (wordRange) {
-                item.range = wordRange;
-            }
-            items.push(item);
-        });
+        if (currentMethod) {
+            const seenNames = new Set<string>();
 
-        currentMethod?.localVariables?.forEach((details) => {
-            if (!details.declarationRange?.contains(position)) {
-                return;
+            for (const details of this.documentTreeProvider.iterateAvailableLocalVariables(
+                currentMethod!,
+                true,
+                position
+            )) {
+                if (seenNames.has(details.name)) {
+                    continue;
+                }
+                seenNames.add(details.name);
+
+                const item = new vscode.CompletionItem(details.name, vscode.CompletionItemKind.Variable);
+                item.detail = `(local variable) ${CodeContextUtils.typeRefToString(details.type)}`;
+                if (wordRange) {
+                    item.range = wordRange;
+                }
+                items.push(item);
             }
 
-            const item = new vscode.CompletionItem(details.name, vscode.CompletionItemKind.Variable);
-            item.detail = `(local variable) ${details.type}`;
-            if (wordRange) {
-                item.range = wordRange;
+            for (const param of currentMethod!.parameters) {
+                if (seenNames.has(param.name)) {
+                    continue;
+                }
+                seenNames.add(param.name);
+
+                const item = new vscode.CompletionItem(param.name, vscode.CompletionItemKind.Variable);
+                item.detail = `(parameter) ${CodeContextUtils.typeRefToString(param.type)}`;
+                item.documentation = new vscode.MarkdownString(param.description);
+                if (wordRange) {
+                    item.range = wordRange;
+                }
+                items.push(item);
             }
-            items.push(item);
-        });
+        }
 
         this.documentTreeProvider.getAllAvailableClasses(document).forEach(classDef => {
             if (classDef.kind !== ClassKinds.EXTENSION) {
@@ -314,16 +332,8 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         }
 
         const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
-        if (currentMethod) {
-            for (let i = 0; i < currentMethod.parameters.length; i++) {
-                const param = currentMethod.parameters[i];
-                if (param.name === word) {
-                    return new vscode.Hover(markdown.createParameterMarkdown(param), wordRange);
-                }
-            }
-        }
 
-        if (currentMethod && callChainArray.length > 0) {
+        if (currentMethod && callChainArray.length > 1) {
             const resolvedType = CodeContextUtils.resolveChainFinalPart(document, position, this.documentTreeProvider, callChainArray, currentClass, currentMethod);
 
             if (resolvedType) {
@@ -349,13 +359,14 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         }
 
         if (currentMethod) {
-            const local = currentMethod.localVariables?.find(v => v.name === word);
+            const local = this.documentTreeProvider.findAvailableLocalVariableByName(currentMethod, word, true, position);;
             if (local) {
                 return new vscode.Hover(
                     markdown.createVariableMarkdown(local),
                     wordRange
                 );
             }
+
             const param = currentMethod.parameters?.find(p => p.name === word);
             if (param) {
                 return new vscode.Hover(
@@ -365,7 +376,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             }
         }
 
-        const classDef = CodeContextUtils.findClassByName(document, this.documentTreeProvider, word);
+        const classDef = this.documentTreeProvider.findClassByName(document, word);
         if (classDef) {
             return new vscode.Hover(markdown.createClassMarkdown(classDef), wordRange);
         }
@@ -408,8 +419,8 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         const argumentText = lineText.substring(openParenIndex + 1, position.character);
         const providedArgumentsCount = this.countArguments(argumentText);
 
-        if (identifierChain.length === 1 && CodeContextUtils.findClassByName(document, this.documentTreeProvider, identifierChain[0])) {
-            const classDef = CodeContextUtils.findClassByName(document, this.documentTreeProvider, identifierChain[0]);
+        let classDef = this.documentTreeProvider.findClassByName(document, identifierChain[0]);
+        if (identifierChain.length === 1 && classDef) {
             if (classDef && classDef.constructors && classDef.constructors.length > 0) {
                 const signatureHelp = new vscode.SignatureHelp();
 
@@ -441,7 +452,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             return undefined;
         }
 
-        const classDef = CodeContextUtils.findClassByName(document, this.documentTreeProvider, resolvedType);
+        classDef = this.documentTreeProvider.findClassByReference(document, resolvedType);
         if (!classDef) {
             return undefined;
         }
@@ -544,7 +555,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         const params = method.parameters.map((param) => {
             const optionalFlag = param.isOptional ? '?' : '';
             const variadicFlag = param.isVariadic ? '...' : '';
-            return `${variadicFlag}${param.name}${optionalFlag}: ${param.type}`;
+            return `${variadicFlag}${param.name}${optionalFlag}: ${CodeContextUtils.typeRefToString(param.type)}`;
         });
         const paramsString = params.join(', ');
         return `(${paramsString})`;

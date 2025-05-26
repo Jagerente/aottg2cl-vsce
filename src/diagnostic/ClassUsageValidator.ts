@@ -5,10 +5,11 @@ import {
     FindFieldInClassHierarchy,
     FindMethodInClassHierarchy,
     IChainNode,
-    IClass,
+    IClass, TypeReference,
 } from '../classes/IClass';
 import {IValidator} from './DiagnosticManager';
 import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
+import {Settings} from "../config/settings";
 
 export class ClassUsageValidator implements IValidator {
     constructor(
@@ -17,8 +18,11 @@ export class ClassUsageValidator implements IValidator {
     }
 
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
+        if (!Settings.showClassUsageDiagnostics) {
+            return [];
+        }
+
         const diagnostics: vscode.Diagnostic[] = [];
-        const availableClasses = this.documentTreeProvider.getAllAvailableClasses(document);
         const chains = this.documentTreeProvider.getChains(document);
 
         for (const chain of chains) {
@@ -44,7 +48,7 @@ export class ClassUsageValidator implements IValidator {
                 isStatic = isStatic || currentClass.name === 'Main' || currentClass.kind === ClassKinds.EXTENSION;
             } else if (firstLink.isMethodCall) {
                 const className = firstLink.text.split('(')[0];
-                currentClass = availableClasses.find(c => c.name === className);
+                currentClass = this.documentTreeProvider.findClassByName(document, className);
                 if (!currentClass) {
                     diagnostics.push(
                         this.createDiagnostic(firstLink, `Class definition for '${className}' not found.`)
@@ -67,7 +71,7 @@ export class ClassUsageValidator implements IValidator {
 
             } else {
                 const className = firstLink.text;
-                currentClass = availableClasses.find(c => c.name === className);
+                currentClass = this.documentTreeProvider.findClassByName(document, className);
                 if (currentClass) {
                     isStatic = true;
                 }
@@ -76,25 +80,28 @@ export class ClassUsageValidator implements IValidator {
             if (!currentClass) {
                 const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
                 if (currentMethod) {
-                    const param = currentMethod.parameters.find(p => p.name === firstLink.text);
-                    if (param) {
-                        if (param.type === 'any') {
-                            continue;
-                        }
-                        currentClass = availableClasses.find(c => c.name === param.type);
+                    const local = this.documentTreeProvider.findAvailableLocalVariableByName(currentMethod, firstLink.text, true, position);
+                    let foundType: TypeReference | undefined;
+                    if (local) {
+                        foundType = local.type;
                     }
 
-                    if (!currentClass && currentMethod.localVariables) {
-                        const local = currentMethod.localVariables
-                            .find(v => v.name === firstLink.text && v.scopeRange?.contains(position));
-                        if (local) {
-                            if (local.type === 'any') {
-                                continue;
-                            }
-                            currentClass = availableClasses.find(c => c.name === local.type);
+                    if (!foundType && currentMethod.parameters) {
+                        const param = currentMethod.parameters.find(p => p.name === firstLink.text);
+                        if (param) {
+                            foundType = param.type;
                         }
                     }
+
+                    if (foundType) {
+                        if (foundType.name === 'any') {
+                            continue;
+                        }
+
+                        currentClass = this.documentTreeProvider.findClassByReference(document, foundType);
+                    }
                 }
+
                 if (!currentClass) {
                     diagnostics.push(
                         this.createDiagnostic(firstLink, `Class definition for '${firstLink.text}' not found.`)
@@ -104,9 +111,31 @@ export class ClassUsageValidator implements IValidator {
             }
 
             let broken = false;
+            let currentReturnType: TypeReference | undefined;
             for (let i = 1; i < chain.length; i++) {
                 const link = chain[i];
-                let returnType: string;
+                if (!currentClass) {
+
+                    if (currentReturnType) {
+                        if (currentReturnType.name === 'any' || currentReturnType.name.includes('|')) {
+                            broken = true;
+                            continue;
+                        }
+
+                        currentClass = this.documentTreeProvider.findClassByReference(document, currentReturnType);
+                    }
+
+                    if (!currentClass) {
+                        diagnostics.push(
+                            this.createDiagnostic(
+                                chain[i - 1],
+                                `Unexpected error. Report this to the developer.`
+                            )
+                        );
+                        broken = true;
+                        break;
+                    }
+                }
 
                 if (link.isMethodCall) {
                     const methodName = link.text.split('(')[0];
@@ -118,18 +147,19 @@ export class ClassUsageValidator implements IValidator {
                         isStatic
                     );
                     if (!method) {
-                        let msg = `${isStatic ? 'Static' : 'Instance'} method '${methodName}' with ${link.methodArguments!.length} arguments not found in class '${currentClass.name}'.`;
+                        let msg = `${isStatic ? 'Static' : 'Instance'} method '${methodName}' with ${link.methodArguments!.length} does not exist on type '${currentClass.name}'.`;
                         let severity = vscode.DiagnosticSeverity.Error;
-                        if (['Object', 'Character'].includes(currentClass.name)) {
+                        if (['Object', 'Character', 'Component'].includes(currentClass.name)) {
                             msg += `\nType '${currentClass.name}' is a base class; resolution may be imprecise.`;
                             severity = vscode.DiagnosticSeverity.Warning;
                         }
-                        diagnostics.push(this.createDiagnostic(link, msg, severity));
+                        if (severity === vscode.DiagnosticSeverity.Error || Settings.showUnresolvedMemberWarnings) {
+                            diagnostics.push(this.createDiagnostic(link, msg, severity));
+                        }
                         broken = true;
                         break;
                     }
-                    returnType = method.returnType;
-
+                    currentReturnType = method.returnType;
                 } else {
                     const field = FindFieldInClassHierarchy(
                         currentClass,
@@ -140,27 +170,21 @@ export class ClassUsageValidator implements IValidator {
                         true
                     );
                     if (!field) {
-                        let msg = `${isStatic ? 'Static' : 'Instance'} field '${link.text}' not found in class '${currentClass.name}'.`;
+                        let msg = `${isStatic ? 'Static' : 'Instance'} field '${link.text}' does not exist on type '${currentClass.name}'.`;
                         let severity = vscode.DiagnosticSeverity.Error;
-                        if (['Object', 'Character'].includes(currentClass.name)) {
+                        if (['Object', 'Character', 'Component'].includes(currentClass.name)) {
                             msg += `\nType '${currentClass.name}' is a base class; resolution may be imprecise.`;
                             severity = vscode.DiagnosticSeverity.Warning;
                         }
-                        diagnostics.push(this.createDiagnostic(link, msg, severity));
+                        if (severity === vscode.DiagnosticSeverity.Error || Settings.showUnresolvedMemberWarnings) {
+                            diagnostics.push(this.createDiagnostic(link, msg, severity));
+                        }
                         broken = true;
                         break;
                     }
-                    returnType = field.type;
+                    currentReturnType = field.type;
                 }
-
-                const nextClassName = returnType.split('(')[0];
-                const nextClass = availableClasses.find(c => c.name === nextClassName);
-                if (!nextClass) {
-                    broken = true;
-                    break;
-                }
-
-                currentClass = nextClass;
+                currentClass = undefined;
 
                 isStatic = false;
                 selfCast = false;
@@ -173,7 +197,6 @@ export class ClassUsageValidator implements IValidator {
 
         return diagnostics;
     }
-
 
     private createDiagnostic(link: IChainNode, message: string, severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error): vscode.Diagnostic {
         const range = new vscode.Range(

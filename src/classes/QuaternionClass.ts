@@ -13,120 +13,120 @@ export class QuaternionClass implements IClass {
             parent: this,
             description: "Initialize a Quaternion with four float values for X, Y, Z, and W",
             parameters: [
-                { name: "x", type: "float", description: "X-component of the quaternion" },
-                { name: "y", type: "float", description: "Y-component of the quaternion" },
-                { name: "z", type: "float", description: "Z-component of the quaternion" },
-                { name: "w", type: "float", description: "W-component of the quaternion" }
+                { name: "x", type: {name: 'float', typeArguments: []}, description: "X-component of the quaternion" },
+                { name: "y", type: {name: 'float', typeArguments: []}, description: "Y-component of the quaternion" },
+                { name: "z", type: {name: 'float', typeArguments: []}, description: "Z-component of the quaternion" },
+                { name: "w", type: {name: 'float', typeArguments: []}, description: "W-component of the quaternion" }
             ]
         }
     ];
 
     public instanceFields: IField[] = [
-        { parent: this, label: 'X', type: 'float', description: 'X value of the quaternion.' },
-        { parent: this, label: 'Y', type: 'float', description: 'Y value of the quaternion.' },
-        { parent: this, label: 'Z', type: 'float', description: 'Z value of the quaternion.' },
-        { parent: this, label: 'W', type: 'float', description: 'W value of the quaternion.' },
-        { parent: this, label: 'Euler', type: 'Vector3', description: 'Returns the Euler angles of the quaternion as a Vector3.' }
+        { parent: this, label: 'X', type: {name: 'float', typeArguments: []}, description: 'X value of the quaternion.' },
+        { parent: this, label: 'Y', type: {name: 'float', typeArguments: []}, description: 'Y value of the quaternion.' },
+        { parent: this, label: 'Z', type: {name: 'float', typeArguments: []}, description: 'Z value of the quaternion.' },
+        { parent: this, label: 'W', type: {name: 'float', typeArguments: []}, description: 'W value of the quaternion.' },
+        { parent: this, label: 'Euler', type: { name: 'Vector3', typeArguments: [] }, description: 'Returns the Euler angles of the quaternion as a Vector3.' }
     ];
 
     public instanceMethods: IMethod[] = [];
 
     public staticFields: IField[] = [
-        { parent: this, label: 'Identity', type: 'Quaternion', description: 'Returns the identity quaternion (0,0,0,0).' }
+        { parent: this, label: 'Identity', type: {name: 'Quaternion', typeArguments: []}, description: 'Returns the identity quaternion (0,0,0,0).' }
     ];
 
     public staticMethods: IMethod[] = [
         {
             parent: this,
             label: 'Lerp',
-            returnType: 'Quaternion',
+            returnType: {name: 'Quaternion', typeArguments: []},
             description: 'Returns a Quaternion lerped between a and b using scale t. T must be between 0 and 1.',
             parameters: [
-                { name: 'a', type: 'Quaternion', description: 'Starting quaternion.' },
-                { name: 'b', type: 'Quaternion', description: 'Ending quaternion.' },
-                { name: 't', type: 'float', description: 'Interpolation factor (0-1).' }
+                { name: 'a', type: {name: 'Quaternion', typeArguments: []}, description: 'Starting quaternion.' },
+                { name: 'b', type: {name: 'Quaternion', typeArguments: []}, description: 'Ending quaternion.' },
+                { name: 't', type: {name: 'float', typeArguments: []}, description: 'Interpolation factor (0-1).' }
             ]
         },
         {
             parent: this,
             label: 'LerpUnclamped',
-            returnType: 'Quaternion',
+            returnType: {name: 'Quaternion', typeArguments: []},
             description: 'Returns a Quaternion lerped between a and b using scale t. T can be outside 0 and 1.',
             parameters: [
-                { name: 'a', type: 'Quaternion', description: 'Starting quaternion.' },
-                { name: 'b', type: 'Quaternion', description: 'Ending quaternion.' },
-                { name: 't', type: 'float', description: 'Interpolation factor (can be outside 0-1).' }
+                { name: 'a', type: {name: 'Quaternion', typeArguments: []}, description: 'Starting quaternion.' },
+                { name: 'b', type: {name: 'Quaternion', typeArguments: []}, description: 'Ending quaternion.' },
+                { name: 't', type: {name: 'float', typeArguments: []}, description: 'Interpolation factor (can be outside 0-1).' }
             ]
         },
         {
             parent: this,
             label: 'Slerp',
-            returnType: 'Quaternion',
+            returnType: {name: 'Quaternion', typeArguments: []},
             description: 'Returns a Quaternion spherical lerped between a and b using scale t. T must be between 0 and 1.',
             parameters: [
-                { name: 'a', type: 'Quaternion', description: 'Starting quaternion.' },
-                { name: 'b', type: 'Quaternion', description: 'Ending quaternion.' },
-                { name: 't', type: 'float', description: 'Interpolation factor (0-1).' }
+                { name: 'a', type: {name: 'Quaternion', typeArguments: []}, description: 'Starting quaternion.' },
+                { name: 'b', type: {name: 'Quaternion', typeArguments: []}, description: 'Ending quaternion.' },
+                { name: 't', type: {name: 'float', typeArguments: []}, description: 'Interpolation factor (0-1).' }
             ]
         },
         {
             parent: this,
             label: 'SlerpUnclamped',
-            returnType: 'Quaternion',
+            returnType: {name: 'Quaternion', typeArguments: []},
             description: 'Returns a Quaternion spherical lerped between a and b using scale t. T can be outside 0 and 1.',
             parameters: [
-                { name: 'a', type: 'Quaternion', description: 'Starting quaternion.' },
-                { name: 'b', type: 'Quaternion', description: 'Ending quaternion.' },
-                { name: 't', type: 'float', description: 'Interpolation factor (can be outside 0-1).' }
+                { name: 'a', type: {name: 'Quaternion', typeArguments: []}, description: 'Starting quaternion.' },
+                { name: 'b', type: {name: 'Quaternion', typeArguments: []}, description: 'Ending quaternion.' },
+                { name: 't', type: {name: 'float', typeArguments: []}, description: 'Interpolation factor (can be outside 0-1).' }
             ]
         },
         {
             parent: this,
             label: 'FromEuler',
-            returnType: 'Quaternion',
+            returnType: {name: 'Quaternion', typeArguments: []},
             description: 'Returns the Quaternion rotation from the given Euler angles.',
             parameters: [
-                { name: 'v', type: 'Vector3', description: 'Euler angles as a Vector3.' }
+                { name: 'v', type: { name: 'Vector3', typeArguments: [] }, description: 'Euler angles as a Vector3.' }
             ]
         },
         {
             parent: this,
             label: 'LookRotation',
-            returnType: 'Quaternion',
+            returnType: {name: 'Quaternion', typeArguments: []},
             description: 'Returns the Quaternion rotation with the specified forward and (optional) up Vector.',
             parameters: [
-                { name: 'forward', type: 'Vector3', description: 'Forward vector.' },
-                { name: 'up', type: 'Vector3', description: 'Forward vector.', isOptional: true }
+                { name: 'forward', type: { name: 'Vector3', typeArguments: [] }, description: 'Forward vector.' },
+                { name: 'up', type: { name: 'Vector3', typeArguments: [] }, description: 'Forward vector.', isOptional: true }
             ]
         },
         {
             parent: this,
             label: 'FromToRotation',
-            returnType: 'Quaternion',
+            returnType: {name: 'Quaternion', typeArguments: []},
             description: 'Returns the Quaternion rotation with the specified forward and (optional) up Vector.',
             parameters: [
-                { name: 'from', type: 'Vector3', description: 'From vector.' },
-                { name: 'to', type: 'Vector3', description: 'To vector.', isOptional: true }
+                { name: 'from', type: { name: 'Vector3', typeArguments: [] }, description: 'From vector.' },
+                { name: 'to', type: { name: 'Vector3', typeArguments: [] }, description: 'To vector.', isOptional: true }
             ]
         },
         {
             parent: this,
             label: 'Inverse',
-            returnType: 'Quaternion',
+            returnType: {name: 'Quaternion', typeArguments: []},
             description: 'Returns the inverse of the given Quaternion.',
             parameters: [
-                { name: 'a', type: 'Quaternion', description: 'Quaternion to inverse.' }
+                { name: 'a', type: {name: 'Quaternion', typeArguments: []}, description: 'Quaternion to inverse.' }
             ]
         },
         {
             parent: this,
             label: 'RotateTowards',
-            returnType: 'Quaternion',
+            returnType: {name: 'Quaternion', typeArguments: []},
             description: 'Returns the inverse of the given Quaternion.',
             parameters: [
-                { name: 'from', type: 'Quaternion', description: 'From Quaternion.' },
-                { name: 'to', type: 'Quaternion', description: 'To Quaternion.' },
-                { name: 'maxDegrees', type: 'float', description: 'Maximum degrees.' }
+                { name: 'from', type: {name: 'Quaternion', typeArguments: []}, description: 'From Quaternion.' },
+                { name: 'to', type: {name: 'Quaternion', typeArguments: []}, description: 'To Quaternion.' },
+                { name: 'maxDegrees', type: {name: 'float', typeArguments: []}, description: 'Maximum degrees.' }
             ]
         }
     ];

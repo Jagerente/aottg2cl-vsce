@@ -49,7 +49,23 @@
         "command": "extension.buildScript",
         "title": "Build Final ACL Script"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "AoTTG 2 Custom Logic Language",
+      "properties": {
+        "aottg2cl.showClassUsageDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show diagnostics for class usage."
+        },
+        "aottg2cl.showUnresolvedMemberWarnings": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show warnings for unresolved methods and fields."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

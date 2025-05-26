@@ -9,60 +9,60 @@ export class NetworkViewClass implements IClass {
     public extends?: IClass[] = [ObjectClassInstance];
     
     public instanceFields: IField[] = [
-        { parent: this, label: 'Owner', type: 'Player', description: 'The network view\'s owner.' }
+        { parent: this, label: 'Owner', type: {name: 'Player', typeArguments: []}, description: 'The network view\'s owner.' }
     ];
 
     public instanceMethods: IMethod[] = [
         {
             parent: this,
             label: 'Transfer',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Transfer ownership of this NetworkView to another player. Owner only.',
             parameters: [
-                { name: 'target', type: 'Player', description: 'The player to transfer ownership to.' }
+                { name: 'target', type: {name: 'Player', typeArguments: []}, description: 'The player to transfer ownership to.' }
             ]
         },
         {
             parent: this,
             label: 'SendMessage',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Send a message to a target player. This will be received in any of the attached components through the OnNetworkMessage callback.',
             parameters: [
-                { name: 'target', type: 'Player', description: 'The target player to send the message to.' },
-                { name: 'message', type: 'string', description: 'The message to send.' }
+                { name: 'target', type: {name: 'Player', typeArguments: []}, description: 'The target player to send the message to.' },
+                { name: 'message', type: {name: 'string', typeArguments: []}, description: 'The message to send.' }
             ]
         },
         {
             parent: this,
             label: 'SendMessageAll',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Send a message to all players including myself.',
             parameters: [
-                { name: 'message', type: 'string', description: 'The message to send to all players.' }
+                { name: 'message', type: {name: 'string', typeArguments: []}, description: 'The message to send to all players.' }
             ]
         },
         {
             parent: this,
             label: 'SendMessageOthers',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Send a message to players excluding myself.',
             parameters: [
-                { name: 'message', type: 'string', description: 'The message to send to other players.' }
+                { name: 'message', type: {name: 'string', typeArguments: []}, description: 'The message to send to other players.' }
             ]
         },
         {
             parent: this,
             label: 'SendStream',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Send an object to the network sync stream. This represents sending data from the object owner to all non-owner observers, and should only be called in the SendNetworkStream callback in the attached component. It only works with some object types: primitives and Vector3.',
             parameters: [
-                { name: 'item', type: 'Object', description: 'The object to send through the network stream.' }
+                { name: 'item', type: {name: 'Object', typeArguments: []}, description: 'The object to send through the network stream.' }
             ]
         },
         {
             parent: this,
             label: 'ReceiveStream',
-            returnType: 'Object',
+            returnType: {name: 'Object', typeArguments: []},
             description: 'Receive an object through the network sync stream. This represents receiving data from the object owner as a non-owner observer, and should only be called in the OnNetworkStream callback.',
             parameters: []
         }

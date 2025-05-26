@@ -1,4 +1,4 @@
-import {DocumentTreeProvider} from './DocumentTreeProvider';
+import { DocumentTreeProvider } from './DocumentTreeProvider';
 import * as vscode from 'vscode';
 import {
     IClass,
@@ -8,7 +8,8 @@ import {
     IVariable,
     IParameter,
     FindFieldInClassHierarchy,
-    FindMethodInClassHierarchy
+    FindMethodInClassHierarchy,
+    TypeReference
 } from '../classes/IClass';
 
 export class CodeContextUtils {
@@ -20,23 +21,6 @@ export class CodeContextUtils {
     public static isDeclaringCoroutine(document: vscode.TextDocument, position: vscode.Position): boolean {
         const line = document.lineAt(position).text;
         return line.trim().startsWith('coroutine');
-    }
-
-    public static findContextStartLine(
-        document: vscode.TextDocument,
-        position: vscode.Position
-    ): number | null {
-        const text = document.getText();
-        const lines = text.split(/\r?\n/);
-
-        for (let lineIndex = position.line; lineIndex >= 0; lineIndex--) {
-            const line = lines[lineIndex].trim();
-            if (/^\s*(function|coroutine)\s+\w+\s*\(.*?\)\s*(\{)?\s*$/.test(line)) {
-                return lineIndex;
-            }
-        }
-
-        return null;
     }
 
     public static parseCallChain(input: string): string {
@@ -194,76 +178,71 @@ export class CodeContextUtils {
     }
 
     public static resolveChainType(
-        document: vscode.TextDocument,
+        document: vscode.TextDocument | string,
         position: vscode.Position,
         documentTreeProvider: DocumentTreeProvider,
         identifierChain: string[],
         currentClassDef?: IClass,
         currentMethod?: IMethod | IConstructor
-    ): string | undefined {
+    ): TypeReference | undefined {
         if (identifierChain.length === 0) {
             return undefined;
         }
-
-        const currentClassName = currentClassDef?.name;
-        let currentTypeName: string | undefined;
-
+        let currentTypeRef: TypeReference | undefined;
         for (let i = 0; i < identifierChain.length; i++) {
-            const identifier = identifierChain[i];
-
+            const id = identifierChain[i];
             if (i === 0) {
-                if (identifier === 'self') {
-                    if (!currentClassName) {
+                if (id === 'self') {
+                    if (!currentClassDef) {
                         return undefined;
                     }
-                    currentTypeName = currentClassName;
-                    continue;
+                    currentTypeRef = { name: currentClassDef.name, typeArguments: [] };
                 } else {
-                    const variable = currentMethod?.parameters.find(v => v.name === identifier)
-                        ?? currentMethod?.localVariables?.find(v => {
-                            return v.name === identifier && v.scopeRange?.contains(position);
-                        })
-                        ?? undefined;
-                    if (variable) {
-                        currentTypeName = variable.type;
+                    const param = currentMethod?.parameters.find(p => p.name === id);
+                    let local: IVariable | undefined = undefined;
+                    if (!param && currentMethod) {
+                        local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, id, true, position);
+                    }
+
+                    if (param) {
+                        currentTypeRef = param.type;
+                    } else if (local) {
+                        currentTypeRef = local.type;
                     } else {
-                        if (this.findClassByName(document, documentTreeProvider, identifier.split('(')[0])) {
-                            currentTypeName = identifier.split('(')[0];
-                        } else {
+                        const tr = CodeContextUtils.parseTypeReference(id);
+                        const cls = documentTreeProvider.findClassByName(document, id);
+                        if (!cls) {
                             return undefined;
                         }
+                        currentTypeRef = tr;
                     }
                 }
             } else {
-                if (!currentTypeName) {
+                if (!currentTypeRef) {
                     return undefined;
                 }
-
-                const classDef = this.findClassByName(document, documentTreeProvider, currentTypeName);
-                if (!classDef) {
+                const raw = this.typeRefToString(currentTypeRef);
+                const cls = documentTreeProvider.findClassByName(document, raw);
+                if (!cls) {
                     return undefined;
                 }
-
-                const field = FindFieldInClassHierarchy(classDef, identifier, true, true, true, true);
+                const field = FindFieldInClassHierarchy(cls, id, true, true, true, true);
                 if (field) {
-                    currentTypeName = field.type;
+                    currentTypeRef = field.type;
                     continue;
                 }
-
-                if (/^\s*\w+\s*\(.*\)\s*$/.test(identifier)) {
-                    const name = identifier.split('(')[0].trim();
-                    const method = FindMethodInClassHierarchy(classDef, name, -1, true, true);
+                const callMatch = id.match(/^(\w+)\s*\(/);
+                if (callMatch) {
+                    const method = FindMethodInClassHierarchy(cls, callMatch[1], -1, true, true);
                     if (method) {
-                        currentTypeName = method.returnType;
+                        currentTypeRef = method.returnType;
                         continue;
                     }
                 }
-
                 return undefined;
             }
         }
-
-        return currentTypeName;
+        return currentTypeRef;
     }
 
     public static resolveChainFinalPart(
@@ -277,78 +256,220 @@ export class CodeContextUtils {
         if (identifierChain.length === 0) {
             return undefined;
         }
-
-        const currentClassName = currentClassDef?.name;
-        let currentTypeName: string | undefined;
+        let currentTypeRef: TypeReference | undefined;
         let currentPart: IClass | IMethod | IField | IVariable | IParameter | undefined;
-
         for (let i = 0; i < identifierChain.length; i++) {
-            const identifier = identifierChain[i];
-
+            const id = identifierChain[i];
             if (i === 0) {
-                if (identifier === 'self') {
-                    if (!currentClassName) {
+                if (id === 'self') {
+                    if (!currentClassDef) {
                         return undefined;
                     }
-                    currentTypeName = currentClassName;
+                    currentTypeRef = { name: currentClassDef.name, typeArguments: [] };
                     currentPart = currentClassDef;
-                    continue;
                 } else {
-                    const variable = currentMethod?.parameters.find(v => v.name === identifier)
-                        ?? currentMethod?.localVariables?.find(v => {
-                            return v.name === identifier && v.scopeRange?.contains(position);
-                        })
-                        ?? undefined;
-                    if (variable) {
-                        currentTypeName = variable.type;
-                        currentPart = variable;
+                    let local: IVariable | undefined;
+                    let param: IParameter | undefined;
+                    if (currentMethod) {
+                        local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, id, true, position);
+                        if (!local) {
+                            param = currentMethod?.parameters.find(p => p.name === id);
+                        }
+                    }
+
+                    if (param) {
+                        currentTypeRef = param.type;
+                        currentPart = param;
+                    } else if (local) {
+                        currentTypeRef = local.type;
+                        currentPart = local;
                     } else {
-                        const classDef = this.findClassByName(document, documentTreeProvider, identifier.split('(')[0]);
-                        if (classDef) {
-                            currentTypeName = identifier.split('(')[0];
-                            currentPart = classDef;
-                        } else {
+                        const tr = CodeContextUtils.parseTypeReference(id);
+                        const cls = documentTreeProvider.findClassByName(document, id);
+                        if (!cls) {
                             return undefined;
                         }
+                        currentTypeRef = tr;
+                        currentPart = cls;
                     }
                 }
             } else {
-                if (!currentTypeName) {
+                if (!currentTypeRef) {
                     return undefined;
                 }
 
-                const classDef = this.findClassByName(document, documentTreeProvider, currentTypeName);
-                if (!classDef) {
+                let cls: IClass | undefined;
+                if (currentPart && 'kind' in currentPart && 'name' in currentPart) {
+                    cls = currentPart;
+                } else {
+                    cls = documentTreeProvider.findClassByReference(document, currentTypeRef);
+                }
+
+                if (!cls) {
                     return undefined;
                 }
 
-                const field = FindFieldInClassHierarchy(classDef, identifier, true, true, true, true);
+                const field = FindFieldInClassHierarchy(cls, id, true, true, true, true);
                 if (field) {
-                    currentTypeName = field.type.split('(')[0].trim();
+                    currentTypeRef = field.type;
                     currentPart = field;
                     continue;
                 }
+                
+                let methodName = id;
+                const callMatch = methodName.match(/^(\w+)\s*\(/);
+                if (callMatch) {
+                    methodName = callMatch[1];
+                }
 
-                const name = identifier.split('(')[0].trim();
-                const method = FindMethodInClassHierarchy(classDef, name, -1, true, true);
+                const method = FindMethodInClassHierarchy(cls, methodName, -1, true, true);
                 if (method) {
-                    currentTypeName = method.returnType;
+                    currentTypeRef = method.returnType;
                     currentPart = method;
                     continue;
                 }
-
+                
                 return undefined;
             }
         }
-
         return currentPart;
     }
 
-    public static findClassByName(
-        document: vscode.TextDocument,
-        documentTreeProvider: DocumentTreeProvider,
-        className: string
-    ): IClass | undefined {
-        return documentTreeProvider.getAllAvailableClasses(document).find((cls) => cls.name === className.split('(')[0]);
+    public static parseTypeReference(typeStr: string): TypeReference {
+        const s = typeStr.trim();
+        // Generic Foo<Bar,Baz>
+        const lt = s.indexOf('<');
+        if (lt >= 0 && s.endsWith('>')) {
+            const name = s.substring(0, lt).trim();
+            const inner = s.substring(lt + 1, s.length - 1);
+            const args: TypeReference[] = [];
+            let depth = 0, start = 0;
+            for (let i = 0; i < inner.length; i++) {
+                const c = inner[i];
+                if (c === '<') {
+                    depth++;
+                } else if (c === '>') {
+                    depth--;
+                } else if (c === ',' && depth === 0) {
+                    args.push(this.parseTypeReference(inner.substring(start, i).trim()));
+                    start = i + 1;
+                }
+            }
+            args.push(this.parseTypeReference(inner.substring(start).trim()));
+            return { name, typeArguments: args };
+        }
+        // String literal
+        if (/^".*"$/.test(s)) {
+            return { name: 'string', typeArguments: [] };
+        }
+        // Float
+        if (/^\d+\.\d+$/.test(s)) {
+            return { name: 'float', typeArguments: [] };
+        }
+        // Int
+        if (/^\d+$/.test(s)) {
+            return { name: 'int', typeArguments: [] };
+        }
+        // Bool
+        if (s === 'true' || s === 'false') {
+            return { name: 'bool', typeArguments: [] };
+        }
+
+        if (s === 'List' || s === 'List()') {
+            return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+        }
+
+        if (s === 'Dict' || s === 'Dict()') {
+            return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+        }
+
+        // Simple call: Foo(...) but not a field access Foo.Bar(...)
+        const callMatch = s.match(/^([A-Za-z_]\w*)\s*\(/);
+        if (callMatch && !/^[A-Za-z_]\w*\.[A-Za-z_]\w*/.test(s)) {
+            let name = callMatch[1];
+            if (name === 'List') {
+                return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+            }
+
+            if (name === 'Dict') {
+                return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+            }
+
+            return { name: name, typeArguments: [] };
+        }
+
+        return { name: s, typeArguments: [] };
+    }
+
+    public static parseTypeReferenceFallback(typeStr: string, fallback: string): TypeReference {
+        const s = typeStr.trim();
+        // Generic Foo<Bar,Baz>
+        const lt = s.indexOf('<');
+        if (lt >= 0 && s.endsWith('>')) {
+            const name = s.substring(0, lt).trim();
+            const inner = s.substring(lt + 1, s.length - 1);
+            const args: TypeReference[] = [];
+            let depth = 0, start = 0;
+            for (let i = 0; i < inner.length; i++) {
+                const c = inner[i];
+                if (c === '<') {
+                    depth++;
+                } else if (c === '>') {
+                    depth--;
+                } else if (c === ',' && depth === 0) {
+                    args.push(this.parseTypeReference(inner.substring(start, i).trim()));
+                    start = i + 1;
+                }
+            }
+            args.push(this.parseTypeReference(inner.substring(start).trim()));
+            return { name, typeArguments: args };
+        }
+        // String literal
+        if (/^".*"$/.test(s)) {
+            return { name: 'string', typeArguments: [] };
+        }
+        // Float
+        if (/^\d+\.\d+$/.test(s)) {
+            return { name: 'float', typeArguments: [] };
+        }
+        // Int
+        if (/^\d+$/.test(s)) {
+            return { name: 'int', typeArguments: [] };
+        }
+        // Bool
+        if (s === 'true' || s === 'false') {
+            return { name: 'bool', typeArguments: [] };
+        }
+
+        if (s === 'List' || s === 'List()') {
+            return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+        }
+
+        if (s === 'Dict' || s === 'Dict()') {
+            return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+        }
+
+        // Simple call: Foo(...) but not a field access Foo.Bar(...)
+        const callMatch = s.match(/^([A-Za-z_]\w*)\s*\(/);
+        if (callMatch && !/^[A-Za-z_]\w*\.[A-Za-z_]\w*/.test(s)) {
+            let name = callMatch[1];
+            if (name === 'List') {
+                return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+            }
+
+            if (name === 'Dict') {
+                return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+            }
+
+            return { name: name, typeArguments: [] };
+        }
+        return { name: fallback, typeArguments: [] };
+    }
+
+    public static typeRefToString(tr: TypeReference): string {
+        if (tr.typeArguments.length === 0) {
+            return tr.name;
+        }
+        return `${tr.name}<${tr.typeArguments.map(a => this.typeRefToString(a)).join(',')}>`;
     }
 }

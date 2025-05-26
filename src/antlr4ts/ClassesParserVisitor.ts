@@ -25,12 +25,13 @@ import {
     FindMethodInClassParentsHierarchy,
     IChainNode,
     ILoopNode,
-    IConditionNode
+    IConditionNode, TypeReference
 } from '../classes/IClass';
 import {BaseMainClass} from '../classes/BaseMainClass';
 import {BaseComponentsClass} from '../classes/BaseComponentsClass';
 import {BaseInstantiatableClass} from '../classes/BaseInstantiatableClass';
 import {AbstractParseTreeVisitor} from 'antlr4ts/tree/AbstractParseTreeVisitor';
+import {CodeContextUtils} from "../utils/CodeContextUtils";
 
 export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     public classes: IClass[] = [];
@@ -94,66 +95,51 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
     public visitMethodDecl = (ctx: MethodDeclContext): void => {
         const methodName = ctx.ID().text;
-
-        const declarationRange: vscode.Range = this.getMethodDeclarationRange(ctx);
+        const declarationRange = this.getMethodDeclarationRange(ctx);
         const bodyRange = this.getMethodBodyRange(ctx);
 
         if (this.currentClass) {
-            let methodKind: MethodKinds = MethodKinds.FUNCTION;
-            if (ctx.COROUTINE()) {
-                methodKind = MethodKinds.COROUTINE;
-            }
-
+            let methodKind: MethodKinds = ctx.COROUTINE() ? MethodKinds.COROUTINE : MethodKinds.FUNCTION;
             const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
-            let description = '';
-            let returnType = 'void';
 
-            let parameters: IParameter[] = [];
+            let description = '';
+            let returnType: TypeReference = {name: 'void', typeArguments: []};
+            const parameters: IParameter[] = [];
+
             if (ctx.paramList()) {
-                let i = 0;
-                for (let paramCtx of ctx.paramList()?.param() || []) {
+                for (const paramCtx of ctx.paramList()!.param()) {
                     const paramName = paramCtx.ID().text;
-                    const paramDeclatationRange = this.getParameterDeclarationRange(paramCtx);
-                    let paramType = 'any';
+                    const paramDeclarationRange = this.getParameterDeclarationRange(paramCtx);
+                    let paramType: TypeReference = {name: 'any', typeArguments: []};
                     let paramDescription = '';
 
-                    if (paramCtx.annotation() && paramCtx.annotation().length > 0) {
-                        for (let annotationCtx of paramCtx.annotation()) {
-                            let annotationText = '';
-                            if (annotationCtx.ANNOTATION_COMMENT()) {
-                                annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
-                            } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
-                                annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
-                            }
-                            const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
-                            const typeMatch = cleanedText.match(/@type\s+(\S+)/);
-                            if (typeMatch) {
-                                paramType = typeMatch[1];
+                    if (paramCtx.annotation()?.length) {
+                        for (const annotationCtx of paramCtx.annotation()!) {
+                            const raw = (annotationCtx.ANNOTATION_COMMENT()?.text ?? annotationCtx.ANNOTATION_BLOCK_COMMENT()?.text)!
+                                .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                            const m = raw.match(/@type\s+(.+)/);
+                            if (m) {
+                                paramType = CodeContextUtils.parseTypeReference(m[1]);
                                 break;
                             }
                         }
-                    } else if (ctx.annotation() && ctx.annotation().length > 0) {
-                        for (let annotationCtx of ctx.annotation()) {
-                            let annotationText = '';
-                            if (annotationCtx.ANNOTATION_COMMENT()) {
-                                annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
-                            } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
-                                annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
-                            }
-                            const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
-                            const paramMatch = cleanedText.match(new RegExp(`@param\\s+${paramName}\\s+(\\S+)`));
-                            if (paramMatch) {
-                                paramType = paramMatch[1];
+                    } else if (ctx.annotation()?.length) {
+                        for (const annotationCtx of ctx.annotation()!) {
+                            const raw = (annotationCtx.ANNOTATION_COMMENT()?.text ?? annotationCtx.ANNOTATION_BLOCK_COMMENT()?.text)!
+                                .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                            const m = raw.match(new RegExp(`@param\\s+${paramName}\\s+(.+)`));
+                            if (m) {
+                                paramType = CodeContextUtils.parseTypeReference(m[1]);
                                 break;
                             }
                         }
                     } else {
-                        const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, ctx.paramList()!.param.length, true, true);
+                        const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, ctx.paramList()!.param().length, true, true);
                         if (parentMethod) {
-                            const param = parentMethod.parameters[parameters.length];
-                            if (param) {
-                                paramType = param.type;
-                                paramDescription = param.description;
+                            const inherited = parentMethod.parameters[parameters.length];
+                            if (inherited) {
+                                paramType = inherited.type as TypeReference;
+                                paramDescription = inherited.description;
                             }
                         }
                     }
@@ -162,34 +148,27 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                         name: paramName,
                         type: paramType,
                         description: paramDescription,
-                        declarationRange: paramDeclatationRange,
+                        declarationRange: paramDeclarationRange,
                         reassignments: []
                     });
                 }
             }
 
-            const annotations = ctx.annotation();
-            if (annotations && annotations.length > 0) {
-                for (let annotationCtx of annotations) {
-                    let annotationText = '';
-                    if (annotationCtx.ANNOTATION_COMMENT()) {
-                        annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
-                    } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
-                        annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
-                    }
-                    const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
-                    const returnMatch = cleanedText.match(/@return\s+(\S+)/);
-                    if (returnMatch) {
-                        returnType = returnMatch[1];
+            if (ctx.annotation()?.length) {
+                for (const annotationCtx of ctx.annotation()!) {
+                    const raw = (annotationCtx.ANNOTATION_COMMENT()?.text ?? annotationCtx.ANNOTATION_BLOCK_COMMENT()?.text)!
+                        .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                    const m = raw.match(/@return\s+(.+)/);
+                    if (m) {
+                        returnType = CodeContextUtils.parseTypeReference(m[1]);
                         break;
                     }
                 }
-
             } else {
                 const parentMethod = FindMethodInClassParentsHierarchy(this.currentClass, methodName, parameters.length, true, true);
                 if (parentMethod) {
                     description = parentMethod.description;
-                    returnType = parentMethod.returnType;
+                    returnType = parentMethod.returnType as TypeReference;
                 }
             }
 
@@ -197,30 +176,27 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 parent: this.currentClass,
                 label: methodName,
                 kind: methodKind,
-                returnType: returnType,
-                description: description,
-                parameters: parameters,
-                declarationRange: declarationRange,
-                bodyRange: bodyRange,
+                returnType,
+                description,
+                parameters,
+                declarationRange,
+                bodyRange,
                 localVariables: []
             };
             this.currentMethod = method;
 
             if (methodName === 'Init' && (this.currentClass.kind === ClassKinds.CLASS || this.currentClass.kind === ClassKinds.COMPONENT)) {
                 this.currentClass.constructors = this.currentClass.constructors || [];
-                method.returnType = this.currentClass.name;
+                method.returnType = {name: this.currentClass.name, typeArguments: []};
                 this.currentClass.constructors.push(method);
+            } else if (isStatic) {
+                this.currentClass.staticMethods.push(method);
             } else {
-                if (isStatic) {
-                    this.currentClass.staticMethods.push(method);
-                } else {
-                    this.currentClass.instanceMethods.push(method);
-                }
+                this.currentClass.instanceMethods.push(method);
             }
         }
 
         this.visitChildren(ctx);
-
         this.currentMethod = null;
     };
 
@@ -228,55 +204,45 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         if (this.currentMethod) {
             const name = ctx.ID()?.text;
             if (name) {
-                const value = ctx.expression()?.text.trim() ?? '';
-                const start = ctx.start;
-                const startPos = new vscode.Position(start.line - 1, start.charPositionInLine);
-                const endPos = new vscode.Position(start.line - 1, start.charPositionInLine + name.length);
-                const declRange = new vscode.Range(
-                    startPos,
-                    endPos
-                );
+                const valueText = ctx.expression()?.text.trim() ?? '';
+                const startToken = ctx.start;
+                const startPos = new vscode.Position(startToken.line - 1, startToken.charPositionInLine);
+                const endPos = startPos.translate(0, name.length);
+                const declRange = new vscode.Range(startPos, endPos);
+
                 const param = this.currentMethod.parameters.find(p => p.name === name);
                 if (param) {
-                    param.reassignments?.push({range: declRange, value: value});
+                    param.reassignments?.push({range: declRange, value: valueText});
                 } else {
                     let local = this.currentMethod.localVariables?.find(v => v.name === name);
                     if (!local) {
-                        let varType = 'any';
+                        let varType: TypeReference = {name: 'any', typeArguments: []};
                         const annotations = ctx.annotation();
-                        if (annotations && annotations.length > 0) {
-                            for (let annotationCtx of annotations) {
-                                let annotationText = '';
-                                if (annotationCtx.ANNOTATION_COMMENT()) {
-                                    annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
-                                } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
-                                    annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
-                                }
-                                const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
-                                const typeMatch = cleanedText.match(/@type\s+(\S+)/);
-                                if (typeMatch) {
-                                    varType = typeMatch[1];
+                        if (annotations?.length) {
+                            for (const ann of annotations) {
+                                const raw = (ann.ANNOTATION_COMMENT()?.text ?? ann.ANNOTATION_BLOCK_COMMENT()?.text)!
+                                    .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                                const m = raw.match(/@type\s+(.+)/);
+                                if (m) {
+                                    varType = CodeContextUtils.parseTypeReference(m[1]);
                                     break;
                                 }
                             }
                         } else {
-                            varType = this.parseType(value);
+                            varType = CodeContextUtils.parseTypeReferenceFallback(valueText, 'any');
                         }
 
                         local = {
-                            name: name,
-                            value: value,
+                            name,
+                            value: valueText,
                             type: varType,
                             declarationRange: declRange,
-                            scopeRange: new vscode.Range(
-                                startPos,
-                                this.currentMethod.bodyRange?.end ?? endPos
-                            ),
+                            scopeRange: new vscode.Range(startPos, this.currentMethod.bodyRange?.end ?? endPos),
                             reassignments: []
                         };
                         this.currentMethod.localVariables?.push(local);
                     } else {
-                        local.reassignments?.push({range: declRange, value: value});
+                        local.reassignments?.push({range: declRange, value: valueText});
                     }
                 }
             }
@@ -291,43 +257,34 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 return;
             }
 
-            let fieldType = 'any';
+            const valueText = ctx.expression()?.text.trim() ?? '';
+            let fieldType: TypeReference = {name: 'any', typeArguments: []};
             const annotations = ctx.annotation();
-            if (annotations && annotations.length > 0) {
-                for (let annotationCtx of annotations) {
-                    let annotationText = '';
-                    if (annotationCtx.ANNOTATION_COMMENT()) {
-                        annotationText = annotationCtx.ANNOTATION_COMMENT()!.text;
-                    } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
-                        annotationText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
-                    }
-                    const cleanedText = annotationText.replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
-                    const typeMatch = cleanedText.match(/@type\s+(\S+)/);
-                    if (typeMatch) {
-                        fieldType = typeMatch[1];
+            if (annotations?.length) {
+                for (const ann of annotations) {
+                    const raw = (ann.ANNOTATION_COMMENT()?.text ?? ann.ANNOTATION_BLOCK_COMMENT()?.text)!
+                        .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                    const m = raw.match(/@type\s+(.+)/);
+                    if (m) {
+                        fieldType = CodeContextUtils.parseTypeReference(m[1]);
                         break;
                     }
                 }
             } else {
-                const value = ctx.expression()!.text.trim();
-
-                fieldType = this.parseType(value);
+                fieldType = CodeContextUtils.parseTypeReferenceFallback(valueText, 'any');
             }
-            const description = '';
 
             const declarationRange = this.getFieldDeclarationRange(ctx);
-
             const field: IField = {
                 parent: this.currentClass,
                 label: fieldName,
                 type: fieldType,
-                description: description,
+                description: '',
                 private: ctx.PRIVATE() !== undefined,
-                declarationRange: declarationRange,
+                declarationRange
             };
 
-            const isStatic = this.currentClass.kind === ClassKinds.EXTENSION;
-            if (isStatic) {
+            if (this.currentClass.kind === ClassKinds.EXTENSION) {
                 this.currentClass.staticFields.push(field);
             } else {
                 this.currentClass.instanceFields.push(field);
@@ -439,8 +396,9 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     };
 
     public visitForLoop = (ctx: ForLoopContext): void => {
-        let conditionRange: vscode.Range = this.getForConditionRange(ctx);
-        let bodyRange: vscode.Range = this.getForBodyRange(ctx);
+        const conditionRange = this.getForConditionRange(ctx);
+        const bodyRange = this.getForBodyRange(ctx);
+
         this.loopNodes.push({
             conditionsRange: conditionRange,
             bodyRange: bodyRange,
@@ -449,24 +407,29 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         const name = ctx.ID().text;
         const exprText = ctx.expression().text.trim();
 
-        const start = ctx.ID().symbol;
-        const startPos = new vscode.Position(start.line - 1, start.charPositionInLine);
-        const endPos = new vscode.Position(start.line - 1, start.charPositionInLine + name.length);
-        const declRange = new vscode.Range(
-            startPos,
-            endPos
-        );
-        this.currentMethod?.localVariables?.push({
-            name,
-            value: exprText,
-            type: exprText.startsWith('Range(') ? 'int' : 'any',
-            declarationRange: declRange,
-            scopeRange: new vscode.Range(
-                new vscode.Position(ctx.LPAREN().symbol.line - 1, ctx.LPAREN().symbol.charPositionInLine,),
-                this.currentMethod.bodyRange?.end ?? new vscode.Position(ctx.RPAREN().symbol.line - 1, ctx.RPAREN().symbol.charPositionInLine)
-            ),
-            reassignments: []
-        });
+        const idToken = ctx.ID().symbol;
+        const startPos = new vscode.Position(idToken.line - 1, idToken.charPositionInLine);
+        const endPos = startPos.translate(0, name.length);
+        const declRange = new vscode.Range(startPos, endPos);
+
+        const typeRef = CodeContextUtils.parseTypeReferenceFallback(exprText, 'any');
+
+        if (this.currentMethod) {
+            this.currentMethod.localVariables = this.currentMethod.localVariables || [];
+            this.currentMethod.localVariables.push({
+                name: name,
+                value: exprText,
+                type: typeRef,
+                declarationRange: declRange,
+                scopeRange: new vscode.Range(
+                    new vscode.Position(ctx.LPAREN().symbol.line - 1, ctx.LPAREN().symbol.charPositionInLine),
+                    this.currentMethod.bodyRange?.end
+                    ?? new vscode.Position(ctx.RPAREN().symbol.line - 1, ctx.RPAREN().symbol.charPositionInLine)
+                ),
+                reassignments: [],
+                inLoop: true
+            });
+        }
 
         this.visitChildren(ctx);
     };
@@ -685,36 +648,5 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             new vscode.Position(blockEndLine, blockEndChar),
             new vscode.Position(nextStatementStartLine, nextStatementStartChar)
         );
-    }
-
-    private parseType(value: string): string {
-        let fieldType = 'any';
-
-        if (/^".*"$/.test(value)) {
-            fieldType = 'string';
-        }
-
-        if (/^\d+\.\d+$/.test(value)) {
-            fieldType = 'float';
-        }
-
-        if (/^\d+$/.test(value)) {
-            fieldType = 'int';
-        }
-
-        if (value === 'true' || value === 'false') {
-            fieldType = 'bool';
-        }
-
-        if (/^[A-Za-z_]\w*\(\)/.test(value) || /^[A-Za-z_]\w*\s*\(/.test(value)) {
-            if (!/^[A-Za-z_]\w*\.[A-Za-z_]\w*\s*\(/.test(value)) {
-                const match = value.match(/^([A-Za-z_]\w*)\s*\(/);
-                if (match) {
-                    return match[1];
-                }
-            }
-        }
-
-        return fieldType;
     }
 }

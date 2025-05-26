@@ -1,3 +1,4 @@
+import { IVariable } from './../classes/IClass';
 import * as vscode from 'vscode';
 import {
     IChainNode,
@@ -6,9 +7,10 @@ import {
     IField,
     ILoopNode,
     IMethod,
-    IConditionNode
+    IConditionNode, IGenericClass, TypeReference
 } from "../classes/IClass";
-import {ACLManager} from '../antlr4ts/ACLManager';
+import { ACLManager } from '../antlr4ts/ACLManager';
+import { CodeContextUtils } from "./CodeContextUtils";
 
 type ParsedDocumentData = {
     userDefinedClasses: IClass[];
@@ -20,11 +22,13 @@ type ParsedDocumentData = {
 };
 
 export class DocumentTreeProvider {
-    private aclManager: ACLManager;
-    private readonly globalClasses: Map<string, IClass>;
     private parsedDocuments = new Map<string, ParsedDocumentData>();
 
-    constructor(aclManager: ACLManager, globalClasses: Map<string, IClass>) {
+    constructor(
+        private aclManager: ACLManager,
+        private readonly globalClasses: Map<string, IClass>,
+        private readonly genericClasses = new Map<string, IGenericClass>()
+    ) {
         this.globalClasses = globalClasses;
         this.aclManager = aclManager;
     }
@@ -53,13 +57,61 @@ export class DocumentTreeProvider {
             loopNodes,
             conditionNodes
         });
+
+        for (const classDef of userDefinedClasses) {
+            for (const methodDef of classDef.instanceMethods) {
+                if (!methodDef.localVariables) {
+                    continue;
+                }
+
+                for (let i = 0; i < methodDef.localVariables.length; i++) {
+                    const localVariable = methodDef.localVariables[i];
+                    const varType = localVariable.type.name;
+                    if (varType !== 'any') {
+                        continue;
+                    }
+
+                    const varValue = localVariable.value;
+
+                    const callChainString = CodeContextUtils.parseCallChain(varValue);
+                    const callChainArray = CodeContextUtils.splitCallChain(callChainString);
+                    if (!classDef.sourceUri || !localVariable.declarationRange) {
+                        continue;
+                    }
+
+                    let parsedType = CodeContextUtils.resolveChainType(
+                        classDef.sourceUri.toString(),
+                        localVariable.declarationRange.start,
+                        this,
+                        callChainArray,
+                        classDef,
+                        methodDef
+                    );
+                    if (!parsedType)
+                    {
+                        continue;
+                    }
+
+                    if (localVariable.inLoop && parsedType.typeArguments.length === 1)
+                    {
+                        parsedType = parsedType.typeArguments[0];
+                    }
+
+                    localVariable.type = parsedType;
+                }
+            }
+        }
     }
 
     public clearDocument(document: vscode.TextDocument): void {
         this.parsedDocuments.delete(document.uri.toString());
     }
 
-    private getParsedData(document: vscode.TextDocument): ParsedDocumentData | undefined {
+    private getParsedData(document: vscode.TextDocument | string): ParsedDocumentData | undefined {
+        if (typeof document === 'string') {
+            return this.parsedDocuments.get(document);
+        }
+
         return this.parsedDocuments.get(document.uri.toString());
     }
 
@@ -82,6 +134,34 @@ export class DocumentTreeProvider {
             }
         }
         return undefined;
+    }
+
+    public findClassByName(
+        document: vscode.TextDocument | string,
+        rawName: string
+    ): IClass | undefined {
+        const typeRef = CodeContextUtils.parseTypeReference(rawName);
+        return this.findClassByReference(document, typeRef);
+    }
+
+    public findClassByReference(
+        document: vscode.TextDocument | string,
+        typeRef: TypeReference
+    ): IClass | undefined {
+        if (typeRef.typeArguments.length > 0) {
+            const generic = this.genericClasses.get(typeRef.name);
+            if (!generic) {
+                return undefined;
+            }
+            const inst = generic.instantiate(typeRef.typeArguments);
+
+            this.getParsedData(document)?.allAvailableClasses.push(inst);
+            return inst;
+        }
+
+        const all = this.getParsedData(document)?.allAvailableClasses
+            ?? Array.from(this.globalClasses.values());
+        return all.find(c => c.name === typeRef.name);
     }
 
     public getCurrentDeclaringMethod(document: vscode.TextDocument, position: vscode.Position): IMethod | IConstructor | undefined {
@@ -205,5 +285,52 @@ export class DocumentTreeProvider {
             }
         }
         return false;
+    }
+
+    public findAvailableLocalVariableByName(
+        method: IMethod | IConstructor,
+        name: string,
+        reverse: boolean = false,
+        posInScopeRange?: vscode.Position,
+        posInDeclarationRange?: vscode.Position
+    ): IVariable | undefined {
+        const vars = reverse
+            ? (method.localVariables ?? []).slice().reverse()
+            : (method.localVariables ?? []);
+
+        return vars.find(v => {
+            const matchesName = v.name === name;
+
+            const noFilters = posInScopeRange === undefined && posInDeclarationRange === undefined;
+
+            const inScope = posInScopeRange !== undefined && v.scopeRange?.contains(posInScopeRange);
+            const inDeclaration = posInDeclarationRange !== undefined && v.declarationRange?.contains(posInDeclarationRange);
+
+            return matchesName && (noFilters || inScope || inDeclaration);
+        });
+    }
+
+    public *iterateAvailableLocalVariables(
+        method: IMethod | IConstructor,
+        reverse: boolean = false,
+        posInScopeRange?: vscode.Position,
+        posInDeclarationRange?: vscode.Position
+    ): IterableIterator<IVariable> {
+        const vars = method.localVariables ?? [];
+        const list = reverse ? [...vars].reverse() : vars;
+
+        const noFilters = posInScopeRange === undefined
+            && posInDeclarationRange === undefined;
+
+        for (const v of list) {
+            const inScope = posInScopeRange !== undefined
+                && v.scopeRange?.contains(posInScopeRange);
+            const inDeclaration = posInDeclarationRange !== undefined
+                && v.declarationRange?.contains(posInDeclarationRange);
+
+            if (noFilters || inScope || inDeclaration) {
+                yield v;
+            }
+        }
     }
 }

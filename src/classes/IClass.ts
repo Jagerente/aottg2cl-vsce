@@ -37,18 +37,24 @@ export interface IReassignment {
     value: string;
 }
 
+export interface TypeReference {
+    name: string;
+    typeArguments: TypeReference[];
+}
+
 export interface IVariable {
     name: string;
     value: string;
-    type: string;
+    type: TypeReference;
     declarationRange?: vscode.Range;
     scopeRange?: vscode.Range;
     reassignments?: IReassignment[];
+    inLoop?: boolean;
 }
 
 export interface IParameter {
     name: string;
-    type: string;
+    type: TypeReference;
     description: string;
     declarationRange?: vscode.Range;
     isOptional?: boolean;
@@ -70,7 +76,7 @@ export interface IMethod {
     parent: IClass;
     label: string;
     kind?: MethodKinds;
-    returnType: string;
+    returnType: TypeReference;
     description: string;
     parameters: IParameter[];
     declarationRange?: vscode.Range;
@@ -82,7 +88,7 @@ export interface IMethod {
 export interface IField {
     parent: IClass;
     label: string;
-    type: string;
+    type: TypeReference;
     description: string;
     readonly?: boolean;
     private?: boolean
@@ -103,6 +109,12 @@ export interface IClass {
     declarationRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
+    hidden?: boolean;
+}
+
+export interface IGenericClass extends IClass {
+    typeParameters: string[];
+    instantiate(typeArgs: TypeReference[]): IClass;
 }
 
 export function FindFieldInClassHierarchy(

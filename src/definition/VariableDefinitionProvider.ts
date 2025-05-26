@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
-import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
-import {CodeContextUtils} from '../utils/CodeContextUtils';
+import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
+import { CodeContextUtils } from '../utils/CodeContextUtils';
+import { IParameter, IVariable } from '../classes/IClass';
 
 export class VariableDefinitionProvider implements vscode.DefinitionProvider {
     private documentTreeProvider: DocumentTreeProvider;
@@ -14,7 +15,9 @@ export class VariableDefinitionProvider implements vscode.DefinitionProvider {
         position: vscode.Position,
         token: vscode.CancellationToken
     ): vscode.Definition | null {
-        const wordRange = document.getWordRangeAtPosition(position);
+        const wordPattern = /[A-Za-z_]\w*/;
+
+        const wordRange = document.getWordRangeAtPosition(position,  wordPattern);
         if (!wordRange) {
             return null;
         }
@@ -26,7 +29,7 @@ export class VariableDefinitionProvider implements vscode.DefinitionProvider {
         const callChainArray = CodeContextUtils.splitCallChain(callChainString);
         const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
 
-        if (callChainArray.length > 0) {
+        if (callChainArray.length > 1) {
             callChainArray[callChainArray.length - 1] = word;
             const currentClass = this.documentTreeProvider.getCurrentClass(document, position);
             const resolved = CodeContextUtils.resolveChainFinalPart(document, position, this.documentTreeProvider, callChainArray, currentClass, currentMethod);
@@ -36,22 +39,14 @@ export class VariableDefinitionProvider implements vscode.DefinitionProvider {
             }
         }
 
+        let variable: IVariable | IParameter | undefined;
         if (currentMethod) {
-            const parameter = currentMethod.parameters.find(p => p.name === word);
-            if (parameter && parameter.declarationRange) {
-                const targetUri = currentMethod.sourceUri || document.uri;
-                return new vscode.Location(targetUri, parameter.declarationRange);
-            }
+            variable = this.documentTreeProvider.findAvailableLocalVariableByName(currentMethod, word, true, position, position) ?? currentMethod.parameters.find(v => v.name === word);
         }
 
-        const variable = currentMethod?.parameters.find(v => v.name === word)
-            ?? currentMethod?.localVariables?.find(v => {
-                return v.name === word && v.scopeRange?.contains(position);
-            })
-            ?? undefined;
-
         if (variable?.declarationRange) {
-            return new vscode.Location(document.uri, variable.declarationRange);
+            const targetUri = currentMethod!.sourceUri || document.uri;
+            return new vscode.Location(targetUri, variable.declarationRange);
         }
 
         const allClasses = this.documentTreeProvider.getAllAvailableClasses(document);

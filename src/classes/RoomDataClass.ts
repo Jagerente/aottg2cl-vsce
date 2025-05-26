@@ -15,27 +15,27 @@ export class RoomDataClass implements IClass {
         {
             parent: this,
             label: 'SetProperty',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Sets the property with given name to the object value. Valid value types are float, string, bool, and int.',
             parameters: [
-                { name: 'name', type: 'string', description: 'The name of the property.' },
-                { name: 'value', type: 'object', description: 'The value to set. Can be float, string, bool, or int.' }
+                { name: 'name', type: {name: 'string', typeArguments: []}, description: 'The name of the property.' },
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to set. Can be float, string, bool, or int.' }
             ]
         },
         {
             parent: this,
             label: 'GetProperty',
-            returnType: 'object',
+            returnType: {name: 'Object', typeArguments: []},
             description: 'Gets the property with given name. If the property does not exist, returns the defaultValue.',
             parameters: [
-                { name: 'name', type: 'string', description: 'The name of the property.' },
-                { name: 'defaultValue', type: 'object', description: 'The default value to return if the property does not exist.' }
+                { name: 'name', type: {name: 'string', typeArguments: []}, description: 'The name of the property.' },
+                { name: 'defaultValue', type: {name: 'Object', typeArguments: []}, description: 'The default value to return if the property does not exist.' }
             ]
         },
         {
             parent: this,
             label: 'Clear',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Clears all room data.',
             parameters: []
         }
