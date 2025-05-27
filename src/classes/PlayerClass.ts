@@ -13,43 +13,46 @@ export class PlayerClass implements IClass {
     public staticMethods: IMethod[] = [];
 
     public instanceFields: IField[] = [
-        { label: 'Character', type: 'Character', description: "Player's current character, if alive." },
-        { label: 'Connected', type: 'float', description: 'Player is still connected to the room.' },
-        { label: 'ID', type: 'int', description: 'Player unique ID.' },
-        { label: 'Name', type: 'string', description: 'Player name.' },
-        { label: 'Guild', type: 'string', description: 'Player guild.' },
-        { label: 'Team', type: 'string', description: 'Player\'s chosen team ("None", "Blue", "Red", "Titan", "Human").' },
-        { label: 'Status', type: 'string', description: 'Player\'s spawn status ("Alive", "Dead", "Spectating").' },
-        { label: 'CharacterType', type: 'string', description: 'Player\'s chosen character ("Human", "Titan", "Shifter").' },
-        { label: 'Loadout', type: 'string', description: 'Player\'s chosen loadout ("Blades", "AHSS", "APG", "ThunderSpear").' },
-        { label: 'Kills', type: 'int', description: 'Player kills.' },
-        { label: 'Deaths', type: 'int', description: 'Player deaths.' },
-        { label: 'HighestDamage', type: 'int', description: 'Player highest damage.' },
-        { label: 'TotalDamage', type: 'int', description: 'Player total damage.' },
-        { label: 'SpawnPoint', type: 'Vector3', description: "Player\'s respawn point. Can be null." },
-        { label: 'Ping', type: 'int', description: "The player's connection ping." },
-        { label: 'SpectateID', type: 'int', description: "The player's spectating ID. If not spectating anyone, returns -1." }
+        { parent: this, label: 'Character', type: {name: 'Character', typeArguments: []}, description: "Player's current character, if alive." },
+        { parent: this, label: 'Connected', type: {name: 'float', typeArguments: []}, description: 'Player is still connected to the room.' },
+        { parent: this, label: 'ID', type: {name: 'int', typeArguments: []}, description: 'Player unique ID.' },
+        { parent: this, label: 'Name', type: {name: 'string', typeArguments: []}, description: 'Player name.' },
+        { parent: this, label: 'Guild', type: {name: 'string', typeArguments: []}, description: 'Player guild.' },
+        { parent: this, label: 'Team', type: {name: 'string', typeArguments: []}, description: 'Player\'s chosen team ("None", "Blue", "Red", "Titan", "Human").' },
+        { parent: this, label: 'Status', type: {name: 'string', typeArguments: []}, description: 'Player\'s spawn status ("Alive", "Dead", "Spectating").' },
+        { parent: this, label: 'CharacterType', type: {name: 'string', typeArguments: []}, description: 'Player\'s chosen character ("Human", "Titan", "Shifter").' },
+        { parent: this, label: 'Loadout', type: {name: 'string', typeArguments: []}, description: 'Player\'s chosen loadout ("Blades", "AHSS", "APG", "ThunderSpear").' },
+        { parent: this, label: 'Kills', type: {name: 'int', typeArguments: []}, description: 'Player kills.' },
+        { parent: this, label: 'Deaths', type: {name: 'int', typeArguments: []}, description: 'Player deaths.' },
+        { parent: this, label: 'HighestDamage', type: {name: 'int', typeArguments: []}, description: 'Player highest damage.' },
+        { parent: this, label: 'TotalDamage', type: {name: 'int', typeArguments: []}, description: 'Player total damage.' },
+        { parent: this, label: 'SpawnPoint', type: { name: 'Vector3', typeArguments: [] }, description: "Player\'s respawn point. Can be null." },
+        { parent: this, label: 'Ping', type: {name: 'int', typeArguments: []}, description: "The player's connection ping." },
+        { parent: this, label: 'SpectateID', type: {name: 'int', typeArguments: []}, description: "The player's spectating ID. If not spectating anyone, returns -1." }
     ];
 
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'GetCustomProperty',
-            returnType: 'Object',
+            returnType: {name: 'Object', typeArguments: []},
             description: 'Get a custom property at the given key. Must be a primitive type. This is synced to all clients.',
-            parameters: [{ name: 'key', type: 'string', description: 'The key for the custom property.' }]
+            parameters: [{ name: 'key', type: {name: 'string', typeArguments: []}, description: 'The key for the custom property.' }]
         },
         {
+            parent: this,
             label: 'SetCustomProperty',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Sets a custom property at the given key. Must be a primitive type. This is synced to all clients.',
             parameters: [
-                { name: 'key', type: 'string', description: 'The key for the custom property.' },
-                { name: 'value', type: 'Object', description: 'The value to assign to the custom property.' }
+                { name: 'key', type: {name: 'string', typeArguments: []}, description: 'The key for the custom property.' },
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to assign to the custom property.' }
             ]
         },
         {
+            parent: this,
             label: 'ClearKDR',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Clears kills, deaths, highest damage, and total damage properties.',
             parameters: []
         }

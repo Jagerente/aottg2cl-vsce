@@ -13,61 +13,68 @@ export class PersistentDataClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'SetProperty',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Sets the property with given name to the object value. Valid value types are float, string, bool, and int.',
             parameters: [
-                { name: 'name', type: 'string', description: 'The name of the property.' },
-                { name: 'value', type: 'object', description: 'The value to set. Can be float, string, bool, or int.' }
+                { name: 'name', type: {name: 'string', typeArguments: []}, description: 'The name of the property.' },
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to set. Can be float, string, bool, or int.' }
             ]
         },
         {
+            parent: this,
             label: 'GetProperty',
-            returnType: 'object',
+            returnType: {name: 'Object', typeArguments: []},
             description: 'Gets the property with given name. If the property does not exist, returns the defaultValue.',
             parameters: [
-                { name: 'name', type: 'string', description: 'The name of the property.' },
-                { name: 'defaultValue', type: 'object', description: 'The default value to return if the property does not exist.' }
+                { name: 'name', type: {name: 'string', typeArguments: []}, description: 'The name of the property.' },
+                { name: 'defaultValue', type: {name: 'Object', typeArguments: []}, description: 'The default value to return if the property does not exist.' }
             ]
         },
         {
+            parent: this,
             label: 'Clear',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Clears current persistent data.',
             parameters: []
         },
         {
+            parent: this,
             label: 'SaveToFile',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Saves current persistent data to the given file name. If encrypted is true, will also encrypt the file instead of using plaintext.',
             parameters: [
-                { name: 'fileName', type: 'string', description: 'The file name to save the data to.' },
-                { name: 'encrypted', type: 'bool', description: 'Whether to encrypt the file.' }
+                { name: 'fileName', type: {name: 'string', typeArguments: []}, description: 'The file name to save the data to.' },
+                { name: 'encrypted', type: { name: 'bool', typeArguments: [] }, description: 'Whether to encrypt the file.' }
             ]
         },
         {
+            parent: this,
             label: 'LoadFromFile',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Loads persistent data from the given file name. If encrypted is true, will treat the file as having been saved as encrypted.',
             parameters: [
-                { name: 'fileName', type: 'string', description: 'The file name to load the data from.' },
-                { name: 'encrypted', type: 'bool', description: 'Whether the file is encrypted.' }
+                { name: 'fileName', type: {name: 'string', typeArguments: []}, description: 'The file name to load the data from.' },
+                { name: 'encrypted', type: { name: 'bool', typeArguments: [] }, description: 'Whether the file is encrypted.' }
             ]
         },
         {
+            parent: this,
             label: 'IsValidFileName',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Determines whether or not the given fileName is valid for use when saving/loading a file.',
             parameters: [
-                { name: 'fileName', type: 'string', description: 'The file name to validate.' }
+                { name: 'fileName', type: {name: 'string', typeArguments: []}, description: 'The file name to validate.' }
             ]
         },
         {
+            parent: this,
             label: 'FileExists',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Determines whether the file already exists. Throws an error if given an invalid file name.',
             parameters: [
-                { name: 'fileName', type: 'string', description: 'The file name to check.' }
+                { name: 'fileName', type: {name: 'string', typeArguments: []}, description: 'The file name to check.' }
             ]
         }
     ];

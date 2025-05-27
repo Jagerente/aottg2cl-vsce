@@ -1,4 +1,3 @@
-import { BaseInstantiatableClass } from './BaseInstantiatableClass';
 import { ClassKinds, IClass, IField, IMethod } from './IClass';
 
 export class ObjectClass implements IClass {
@@ -6,17 +5,19 @@ export class ObjectClass implements IClass {
     public name = 'Object';
     public description = 'Base class for all objects in custom logic.';
 
-    public extends?: IClass[] = [new BaseInstantiatableClass('List')];
+    public extends?: IClass[] = [];
 
     public instanceFields: IField[] = [
         {
+            parent: this,
             label: 'Type',
-            type: 'string',
+            type: {name: 'string', typeArguments: []},
             description: 'The type of the object (such as "Human").',
         },
         {
+            parent: this,
             label: 'IsCharacter',
-            type: 'bool',
+            type: { name: 'bool', typeArguments: [] },
             description: 'Whether or not the object is a Character type or any of its inheritors.',
         },
     ];

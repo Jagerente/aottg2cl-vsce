@@ -10,83 +10,92 @@ export class CameraClass implements IClass {
     public instanceMethods: IMethod[] = [];
 
     public staticFields: IField[] = [
-        { label: 'IsManual', type: 'bool', description: 'Indicates if the camera is in manual mode.', readonly: true },
-        { label: 'Position', type: 'Vector3', description: 'Current camera position.', readonly: true },
-        { label: 'Rotation', type: 'Vector3', description: 'Current camera rotation.', readonly: true },
-        { label: 'Velocity', type: 'Vector3', description: 'Current camera velocity if set using SetVelocity().', readonly: true },
-        { label: 'FOV', type: 'float', description: 'Current camera field of view if set using SetFOV().', readonly: true },
-        { label: 'FollowDistance', type: 'float', description: 'Current camera follow distance from target character.', readonly: false },
-        { label: 'Forward', type: 'Vector3', description: 'The forward direction of the camera.', readonly: false },
-        { label: 'Right', type: 'Vector3', description: 'The right direction of the camera.', readonly: false },
-        { label: 'Up', type: 'Vector3', description: 'The up direction of the camera.', readonly: false }
+        { parent: this, label: 'IsManual', type: { name: 'bool', typeArguments: [] }, description: 'Indicates if the camera is in manual mode.', readonly: true },
+        { parent: this, label: 'Position', type: { name: 'Vector3', typeArguments: [] }, description: 'Current camera position.', readonly: true },
+        { parent: this, label: 'Rotation', type: { name: 'Vector3', typeArguments: [] }, description: 'Current camera rotation.', readonly: true },
+        { parent: this, label: 'Velocity', type: { name: 'Vector3', typeArguments: [] }, description: 'Current camera velocity if set using SetVelocity().', readonly: true },
+        { parent: this, label: 'FOV', type: {name: 'float', typeArguments: []}, description: 'Current camera field of view if set using SetFOV().', readonly: true },
+        { parent: this, label: 'FollowDistance', type: {name: 'float', typeArguments: []}, description: 'Current camera follow distance from target character.', readonly: false },
+        { parent: this, label: 'Forward', type: { name: 'Vector3', typeArguments: [] }, description: 'The forward direction of the camera.', readonly: false },
+        { parent: this, label: 'Right', type: { name: 'Vector3', typeArguments: [] }, description: 'The right direction of the camera.', readonly: false },
+        { parent: this, label: 'Up', type: { name: 'Vector3', typeArguments: [] }, description: 'The up direction of the camera.', readonly: false }
     ];
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'SetManual',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Sets the camera manual mode. If true, camera will only be controlled by custom logic. If false, camera will follow the spawned or spectated player and read input.',
             parameters: [
-                { name: 'isManual', type: 'bool', description: 'Whether to enable manual mode.' }
+                { name: 'isManual', type: { name: 'bool', typeArguments: [] }, description: 'Whether to enable manual mode.' }
             ]
         },
         {
+            parent: this,
             label: 'SetPosition',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Sets camera position.',
             parameters: [
-                { name: 'position', type: 'Vector3', description: 'New position of the camera.' }
+                { name: 'position', type: { name: 'Vector3', typeArguments: [] }, description: 'New position of the camera.' }
             ]
         },
         {
+            parent: this,
             label: 'SetRotation',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Sets camera rotation.',
             parameters: [
-                { name: 'rotation', type: 'Vector3', description: 'New rotation of the camera.' }
+                { name: 'rotation', type: { name: 'Vector3', typeArguments: [] }, description: 'New rotation of the camera.' }
             ]
         },
         {
+            parent: this,
             label: 'SetVelocity',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Sets camera velocity.',
             parameters: [
-                { name: 'velocity', type: 'Vector3', description: 'New velocity of the camera.' }
+                { name: 'velocity', type: { name: 'Vector3', typeArguments: [] }, description: 'New velocity of the camera.' }
             ]
         },
         {
+            parent: this,
             label: 'LookAt',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Sets the camera forward direction such that it is looking at a world position.',
             parameters: [
-                { name: 'position', type: 'Vector3', description: 'The position the camera will look at.' }
+                { name: 'position', type: { name: 'Vector3', typeArguments: [] }, description: 'The position the camera will look at.' }
             ]
         },
         {
+            parent: this,
             label: 'SetFOV',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Sets the camera field of view. Use 0 to use the default field of view.',
             parameters: [
-                { name: 'fov', type: 'float', description: 'The new field of view.' }
+                { name: 'fov', type: {name: 'float', typeArguments: []}, description: 'The new field of view.' }
             ]
         },
         {
+            parent: this,
             label: 'SetCameraMode',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Forces the player to use a certain camera mode, taking priority over their camera setting. Accepted values are TPS, Original, FPS.',
             parameters: [
-                { name: 'mode', type: 'string', description: 'The camera mode to set.' }
+                { name: 'mode', type: {name: 'string', typeArguments: []}, description: 'The camera mode to set.' }
             ]
         },
         {
+            parent: this,
             label: 'ResetDistance',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Resets the follow distance to player\'s settings.',
             parameters: []
         },
         {
+            parent: this,
             label: 'ResetCameraMode',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Resets the camera mode to player\'s settings.',
             parameters: []
         }        

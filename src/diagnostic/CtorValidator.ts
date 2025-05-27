@@ -13,7 +13,7 @@ export class CtorValidator implements IValidator {
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         const diagnostics: vscode.Diagnostic[] = [];
 
-        this.documentTreeProvider.getUserDefinedClassesMap().forEach((classDef: IClass) => {
+        this.documentTreeProvider.getUserDefinedClasses(document).forEach((classDef: IClass) => {
             if (classDef.kind !== ClassKinds.EXTENSION) {
                 const constructors = classDef.constructors;
 

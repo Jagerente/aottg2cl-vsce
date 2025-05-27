@@ -7,9 +7,10 @@ export class RandomClass implements IClass {
 
     public constructors: IConstructor[] = [
         {
+            parent: this,
             description: "Create an instance of Random with a seed value",
             parameters: [
-                { name: "seed", type: "int", description: "Seed value to initialize the random generator" }
+                { name: "seed", type: {name: 'int', typeArguments: []}, description: "Seed value to initialize the random generator" }
             ]
         }
     ];
@@ -18,57 +19,64 @@ export class RandomClass implements IClass {
     
     public instanceMethods: IMethod[] = [
         {
+            parent: this,
             label: 'RandomInt',
-            returnType: 'int',
+            returnType: {name: 'int', typeArguments: []},
             description: 'Returns random integer between min and max (exclusive).',
             parameters: [
-                { name: 'min', type: 'int', description: 'Minimum value.' },
-                { name: 'max', type: 'int', description: 'Maximum value (exclusive).' }
+                { name: 'min', type: {name: 'int', typeArguments: []}, description: 'Minimum value.' },
+                { name: 'max', type: {name: 'int', typeArguments: []}, description: 'Maximum value (exclusive).' }
             ]
         },
         {
+            parent: this,
             label: 'RandomFloat',
-            returnType: 'float',
+            returnType: {name: 'float', typeArguments: []},
             description: 'Returns random float between min and max.',
             parameters: [
-                { name: 'min', type: 'float', description: 'Minimum value.' },
-                { name: 'max', type: 'float', description: 'Maximum value.' }
+                { name: 'min', type: {name: 'float', typeArguments: []}, description: 'Minimum value.' },
+                { name: 'max', type: {name: 'float', typeArguments: []}, description: 'Maximum value.' }
             ]
         },
         {
+            parent: this,
             label: 'RandomBool',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Returns random boolean.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomDirection',
-            returnType: 'Vector3',
+            returnType: {name: 'Vector3', typeArguments: []},
             description: 'Returns random normalized Vector3.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomSign',
-            returnType: 'int',
+            returnType: {name: 'int', typeArguments: []},
             description: 'Returns either -1 or 1.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomVector3',
-            returnType: 'Vector3',
+            returnType: {name: 'Vector3', typeArguments: []},
             description: 'Returns a random Vector3 between min and max.',
             parameters: [
-                { name: 'min', type: 'Vector3', description: 'Minimum Vector3 value.' },
-                { name: 'max', type: 'Vector3', description: 'Maximum Vector3 value.' }
+                { name: 'min', type: { name: 'Vector3', typeArguments: [] }, description: 'Minimum Vector3 value.' },
+                { name: 'max', type: { name: 'Vector3', typeArguments: [] }, description: 'Maximum Vector3 value.' }
             ]
         },
         {
+            parent: this,
             label: 'PerlinNoise',
-            returnType: 'float',
+            returnType: {name: 'float', typeArguments: []},
             description: 'Returns a point sampled from generated 2D Perlin noise.',
             parameters: [
-                { name: 'x', type: 'float', description: 'The x coordinate.' },
-                { name: 'y', type: 'float', description: 'The y coordinate.' }
+                { name: 'x', type: {name: 'float', typeArguments: []}, description: 'The x coordinate.' },
+                { name: 'y', type: {name: 'float', typeArguments: []}, description: 'The y coordinate.' }
             ]
         }
     ];
@@ -77,57 +85,64 @@ export class RandomClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'RandomInt',
-            returnType: 'int',
+            returnType: {name: 'int', typeArguments: []},
             description: 'Returns random integer between min and max (exclusive).',
             parameters: [
-                { name: 'min', type: 'int', description: 'Minimum value.' },
-                { name: 'max', type: 'int', description: 'Maximum value (exclusive).' }
+                { name: 'min', type: {name: 'int', typeArguments: []}, description: 'Minimum value.' },
+                { name: 'max', type: {name: 'int', typeArguments: []}, description: 'Maximum value (exclusive).' }
             ]
         },
         {
+            parent: this,
             label: 'RandomFloat',
-            returnType: 'float',
+            returnType: {name: 'float', typeArguments: []},
             description: 'Returns random float between min and max.',
             parameters: [
-                { name: 'min', type: 'float', description: 'Minimum value.' },
-                { name: 'max', type: 'float', description: 'Maximum value.' }
+                { name: 'min', type: {name: 'float', typeArguments: []}, description: 'Minimum value.' },
+                { name: 'max', type: {name: 'float', typeArguments: []}, description: 'Maximum value.' }
             ]
         },
         {
+            parent: this,
             label: 'RandomBool',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Returns random boolean.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomDirection',
-            returnType: 'Vector3',
+            returnType: {name: 'Vector3', typeArguments: []},
             description: 'Returns random normalized Vector3.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomSign',
-            returnType: 'int',
+            returnType: {name: 'int', typeArguments: []},
             description: 'Returns either -1 or 1.',
             parameters: []
         },
         {
+            parent: this,
             label: 'RandomVector3',
-            returnType: 'Vector3',
+            returnType: {name: 'Vector3', typeArguments: []},
             description: 'Returns a random Vector3 between min and max.',
             parameters: [
-                { name: 'min', type: 'Vector3', description: 'Minimum Vector3 value.' },
-                { name: 'max', type: 'Vector3', description: 'Maximum Vector3 value.' }
+                { name: 'min', type: { name: 'Vector3', typeArguments: [] }, description: 'Minimum Vector3 value.' },
+                { name: 'max', type: { name: 'Vector3', typeArguments: [] }, description: 'Maximum Vector3 value.' }
             ]
         },
         {
+            parent: this,
             label: 'PerlinNoise',
-            returnType: 'float',
+            returnType: {name: 'float', typeArguments: []},
             description: 'Returns a point sampled from generated 2D Perlin noise.',
             parameters: [
-                { name: 'x', type: 'float', description: 'The x coordinate.' },
-                { name: 'y', type: 'float', description: 'The y coordinate.' }
+                { name: 'x', type: {name: 'float', typeArguments: []}, description: 'The x coordinate.' },
+                { name: 'y', type: {name: 'float', typeArguments: []}, description: 'The y coordinate.' }
             ]
         }
     ];

@@ -15,19 +15,9 @@ export class BaseInstantiatableClass implements IClass {
 
     public constructors?: IConstructor[] = [
         {
+            parent: this,
             parameters: [],
             description: 'Default constructor.'
         }
     ];
-
-    constructor(initReturnType: string) {
-        this.instanceMethods = [
-            {
-                label: 'Init',
-                returnType: initReturnType,
-                description: 'Called upon class creation.',
-                parameters: []
-            },
-        ];
-    }
 }

@@ -1,192 +1,18 @@
+import { DocumentTreeProvider } from './DocumentTreeProvider';
 import * as vscode from 'vscode';
-import { StringAwareParser as StringAwareParser } from './StringAwareParser';
-import { CommentAwareTextProcessor } from '../diagnostic/CommentAwareTextProcessor';
-
-/**
- * Matches any class definition (class, component, extension, cutscene).
- * 
- * @example
- * 'class MyClass' -> ['class MyClass', 'class', 'MyClass']
- * 'component MyComponent' -> ['component MyComponent', 'component', 'MyComponent']
- * 
- * @returns
- *  - [0]: the full match (e.g., 'class MyClass')
- *  - [1]: the type of class (e.g., 'class', 'component', 'extension', or 'cutscene')
- *  - [2]: the name of the class (e.g., 'MyClass', 'MyComponent')
- */
-export const REGEX_ANY_CLASS = /\b(class|component|extension|cutscene)\s+(\w+)/;
-
-/**
- * Matches class definitions.
- * 
- * @example
- * 'class MyClass' -> ['class MyClass', 'MyClass']
- * 
- * @returns
- *  - [0]: the full match (e.g., 'class MyClass')
- *  - [1]: the name of the class (e.g., 'MyClass')
- */
-export const REGEX_CLASS = /\bclass\s+(\w+)/;
-
-/**
- * Matches component definitions.
- * 
- * @example
- * 'component MyComponent' -> ['component MyComponent', 'MyComponent']
- * 
- * @returns
- *  - [0]: the full match (e.g., 'component MyComponent')
- *  - [1]: the name of the component (e.g., 'MyComponent')
- */
-export const REGEX_COMPONENT = /\bcomponent\s+(\w+)/;
-
-/**
- * Matches extension definitions.
- * 
- * @example
- * 'extension MyExtension' -> ['extension MyExtension', 'MyExtension']
- * 
- * @returns
- *  - [0]: the full match (e.g., 'extension MyExtension')
- *  - [1]: the name of the extension (e.g., 'MyExtension')
- */
-export const REGEX_EXTENSION = /\bextension\s+(\w+)/;
-
-/**
- * Matches cutscene definitions.
- * 
- * @example
- * 'cutscene MyCutscene' -> ['cutscene MyCutscene', 'MyCutscene']
- * 
- * @returns
- *  - [0]: the full match (e.g., 'cutscene MyCutscene')
- *  - [1]: the name of the cutscene (e.g., 'MyCutscene')
- */
-export const REGEX_CUTSCENE = /\bcutscene\s+(\w+)/;
-
+import {
+    IClass,
+    IMethod,
+    IConstructor,
+    IField,
+    IVariable,
+    IParameter,
+    FindFieldInClassHierarchy,
+    FindMethodInClassHierarchy,
+    TypeReference
+} from '../classes/IClass';
 
 export class CodeContextUtils {
-    public static canSuggestElse(document: vscode.TextDocument, position: vscode.Position): boolean {
-        let openBracesCount = 0;
-        let closeBracesCount = 0;
-        let hasIf = false;
-        let hasElse = false;
-
-        for (let i = position.line - 1; i >= 0; i--) {
-            const lineText = document.lineAt(i).text.trim();
-
-            if (lineText === '' || lineText === '{' || lineText === '}') {
-                continue;
-            }
-
-            if (lineText.startsWith('if ') || lineText.startsWith('elif ')) {
-                hasIf = true;
-                if (openBracesCount === closeBracesCount) {
-                    return true;
-                }
-            }
-
-            if (lineText.startsWith('else ')) {
-                hasElse = true;
-                if (openBracesCount === closeBracesCount) {
-                    return false;
-                }
-            }
-
-            closeBracesCount += (lineText.match(/\}/g) || []).length;
-            openBracesCount += (lineText.match(/\{/g) || []).length;
-
-            if (lineText.startsWith('for ')
-                || lineText.startsWith('while ')
-                || lineText.startsWith('function ')
-                || lineText.startsWith('coroutine ')
-                || lineText.startsWith('cutscene ')
-                || lineText.startsWith('class ')
-                || lineText.startsWith('component ')
-                || lineText.startsWith('extensions ')) {
-                return false;
-            }
-        }
-
-        return hasIf && !hasElse;
-    }
-
-    public static isInsideLoop(document: vscode.TextDocument, position: vscode.Position): boolean {
-        let openBracesCount = 0;
-        let closeBracesCount = 0;
-
-        const commentAwareTextProcessor = new CommentAwareTextProcessor(document);
-        const stringAwareParser = new StringAwareParser();
-
-        for (let i = position.line; i >= 0; i--) {
-            let lineText = document.lineAt(i).text;
-
-            if (i === position.line) {
-                lineText = lineText.slice(0, position.character);
-                const range = new vscode.Range(new vscode.Position(i, 0), position);
-                lineText = commentAwareTextProcessor.removeCommentsFromRange(lineText, range);
-            } else {
-                lineText = commentAwareTextProcessor.removeCommentsFromRange(lineText, new vscode.Range(i, 0, i, lineText.length));
-            }
-
-            let resultLine = lineText.trim();
-            resultLine = stringAwareParser.parseLine(resultLine);
-            resultLine = resultLine.trim();
-
-            if (resultLine.startsWith('for ') || resultLine.startsWith('while ')) {
-                if (openBracesCount > closeBracesCount) {
-                    return true;
-                }
-            }
-
-            closeBracesCount += (resultLine.match(/\}/g) || []).length;
-            openBracesCount += (resultLine.match(/\{/g) || []).length;
-
-            if (closeBracesCount > openBracesCount) {
-                return false;
-            }
-
-            if (resultLine.startsWith('function ')
-                || resultLine.startsWith('coroutine ')
-                || resultLine.startsWith('cutscene ')
-                || resultLine.startsWith('class ')
-                || resultLine.startsWith('component ')
-                || resultLine.startsWith('extensions ')
-                || resultLine.startsWith('cutscene ')
-            ) {
-                return false;
-            }
-        }
-
-        return false;
-    }
-
-
-
-    public static isInsideClass(document: vscode.TextDocument, position: vscode.Position): boolean {
-        return CodeContextUtils.isInside(document, position, 'class');
-    }
-
-    public static isInsideComponent(document: vscode.TextDocument, position: vscode.Position): boolean {
-        return CodeContextUtils.isInside(document, position, 'component');
-    }
-
-    public static isInsideExtension(document: vscode.TextDocument, position: vscode.Position): boolean {
-        return CodeContextUtils.isInside(document, position, 'extension');
-    }
-
-    public static isInsideCutscene(document: vscode.TextDocument, position: vscode.Position): boolean {
-        return CodeContextUtils.isInside(document, position, 'cutscene');
-    }
-
-    public static isInsideFunction(document: vscode.TextDocument, position: vscode.Position): boolean {
-        return CodeContextUtils.isInside(document, position, 'function');
-    }
-
-    public static isInsideCoroutine(document: vscode.TextDocument, position: vscode.Position): boolean {
-        return CodeContextUtils.isInside(document, position, 'coroutine');
-    }
-
     public static isDeclaringFunction(document: vscode.TextDocument, position: vscode.Position): boolean {
         const line = document.lineAt(position).text;
         return line.trim().startsWith('function');
@@ -197,81 +23,64 @@ export class CodeContextUtils {
         return line.trim().startsWith('coroutine');
     }
 
-    private static isInside(document: vscode.TextDocument, position: vscode.Position, keyword: string): boolean {
-        let openBraces = 0;
-        let closeBraces = 0;
+    public static parseCallChain(input: string): string {
+        let methodChain = '';
+        let bracesDepth = 0;
+        let inString = false;
+        let stringChar: string | null = null;
+        let escape = false;
 
-        for (let i = position.line; i >= 0; i--) {
-            const lineText = document.lineAt(i).text;
+        for (let i = input.length - 1; i >= 0; i--) {
+            const char = input[i];
 
-            closeBraces += (lineText.match(/\}/g) || []).length;
-            openBraces += (lineText.match(/\{/g) || []).length;
-
-            if (lineText.includes(keyword) && openBraces > closeBraces) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static isInsideConditionDefinition(document: vscode.TextDocument, position: vscode.Position): boolean {
-        let openParensCount = 0;
-        let closeParensCount = 0;
-        let isInsideCondition = false;
-
-        for (let i = position.line; i >= 0; i--) {
-            const lineText = document.lineAt(i).text;
-
-            if (lineText.includes('if ') || lineText.includes('elif ')) {
-                isInsideCondition = true;
-            }
-
-            openParensCount += (lineText.match(/\(/g) || []).length;
-            closeParensCount += (lineText.match(/\)/g) || []).length;
-
-            if (isInsideCondition && openParensCount > closeParensCount) {
-                return true;
+            if (inString) {
+                if (escape) {
+                    escape = false;
+                } else if (char === '\\') {
+                    escape = true;
+                } else if (char === stringChar) {
+                    inString = false;
+                    stringChar = null;
+                }
+                methodChain = char + methodChain;
+                continue;
+            } else {
+                if (char === '"' || char === "'" || char === '`') {
+                    inString = true;
+                    stringChar = char;
+                    methodChain = char + methodChain;
+                    continue;
+                }
             }
 
-            if (lineText.includes('{') || lineText.includes('}')) {
+            if (char === ')') {
+                bracesDepth++;
+            } else if (char === '(') {
+                bracesDepth--;
+                if (bracesDepth < 0) {
+                    break;
+                }
+            }
+
+            if (
+                bracesDepth === 0 &&
+                (char === '=' || char === '&' || char === '|' || char === '>' || char === '<' || /\s/.test(char) || char === ';' || char === ',' || char === '!')
+            ) {
                 break;
             }
+
+            methodChain = char + methodChain;
         }
 
-        return false;
-    }
-
-    public static findCurrentClassName(document: vscode.TextDocument, position: vscode.Position): string | undefined {
-        const text = document.getText();
-        const lines = text.split(/\r?\n/);
-
-        for (let lineIndex = position.line; lineIndex >= 0; lineIndex--) {
-            const line = lines[lineIndex].trim();
-
-            const classMatch = line.match(REGEX_ANY_CLASS);
-            if (classMatch) {
-                return classMatch[2];
-            }
+        if (!/^[A-Za-z_]\w*/.test(methodChain)) {
+            return '';
         }
 
-        return undefined;
-    }
-
-    public static findContextStartLine(
-        document: vscode.TextDocument,
-        position: vscode.Position
-    ): number | null {
-        const text = document.getText();
-        const lines = text.split(/\r?\n/);
-
-        for (let lineIndex = position.line; lineIndex >= 0; lineIndex--) {
-            const line = lines[lineIndex].trim();
-            if (/^\s*(function|coroutine)\s+\w+\s*\(.*?\)\s*(\{)?\s*$/.test(line)) {
-                return lineIndex;
-            }
+        if (!this.areParenthesesBalanced(methodChain)) {
+            return '';
         }
 
-        return null;
+        return methodChain.trim();
     }
 
     public static splitCallChain(chain: string): string[] {
@@ -328,66 +137,6 @@ export class CodeContextUtils {
         return components;
     }
 
-    public static parseCallChain(input: string): string {
-        let methodChain = '';
-        let bracesDepth = 0;
-        let inString = false;
-        let stringChar: string | null = null;
-        let escape = false;
-
-        for (let i = input.length - 1; i >= 0; i--) {
-            const char = input[i];
-
-            if (inString) {
-                if (escape) {
-                    escape = false;
-                } else if (char === '\\') {
-                    escape = true;
-                } else if (char === stringChar) {
-                    inString = false;
-                    stringChar = null;
-                }
-                methodChain = char + methodChain;
-                continue;
-            } else {
-                if (char === '"' || char === "'" || char === '`') {
-                    inString = true;
-                    stringChar = char;
-                    methodChain = char + methodChain;
-                    continue;
-                }
-            }
-
-            if (char === ')') {
-                bracesDepth++;
-            } else if (char === '(') {
-                bracesDepth--;
-                if (bracesDepth < 0) {
-                    break;
-                }
-            }
-    
-            if (
-                bracesDepth === 0 &&
-                (char === '=' || char === '&' || char === '|' || char === '>' || char === '<' || /\s/.test(char) || char === ';' || char === ',' || char === '!')
-            ) {
-                break;
-            }
-
-            methodChain = char + methodChain;
-        }
-
-        if (!/^[A-Za-z_]\w*/.test(methodChain)) {
-            return '';
-        }
-
-        if (!this.areParenthesesBalanced(methodChain)) {
-            return '';
-        }
-    
-        return methodChain.trim();
-    }
-
     public static areParenthesesBalanced(str: string): boolean {
         let balance = 0;
         let inString = false;
@@ -426,5 +175,301 @@ export class CodeContextUtils {
         }
 
         return balance === 0 && !inString;
+    }
+
+    public static resolveChainType(
+        document: vscode.TextDocument | string,
+        position: vscode.Position,
+        documentTreeProvider: DocumentTreeProvider,
+        identifierChain: string[],
+        currentClassDef?: IClass,
+        currentMethod?: IMethod | IConstructor
+    ): TypeReference | undefined {
+        if (identifierChain.length === 0) {
+            return undefined;
+        }
+        let currentTypeRef: TypeReference | undefined;
+        for (let i = 0; i < identifierChain.length; i++) {
+            const id = identifierChain[i];
+            if (i === 0) {
+                if (id === 'self') {
+                    if (!currentClassDef) {
+                        return undefined;
+                    }
+                    currentTypeRef = { name: currentClassDef.name, typeArguments: [] };
+                } else {
+                    const param = currentMethod?.parameters.find(p => p.name === id);
+                    let local: IVariable | undefined = undefined;
+                    if (!param && currentMethod) {
+                        local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, id, true, position);
+                    }
+
+                    if (param) {
+                        currentTypeRef = param.type;
+                    } else if (local) {
+                        currentTypeRef = local.type;
+                    } else {
+                        const tr = CodeContextUtils.parseTypeReference(id);
+                        const cls = documentTreeProvider.findClassByName(document, id);
+                        if (!cls) {
+                            return undefined;
+                        }
+                        currentTypeRef = tr;
+                    }
+                }
+            } else {
+                if (!currentTypeRef) {
+                    return undefined;
+                }
+                const raw = this.typeRefToString(currentTypeRef);
+                const cls = documentTreeProvider.findClassByName(document, raw);
+                if (!cls) {
+                    return undefined;
+                }
+                const field = FindFieldInClassHierarchy(cls, id, true, true, true, true);
+                if (field) {
+                    currentTypeRef = field.type;
+                    continue;
+                }
+                const callMatch = id.match(/^(\w+)\s*\(/);
+                if (callMatch) {
+                    const method = FindMethodInClassHierarchy(cls, callMatch[1], -1, true, true);
+                    if (method) {
+                        currentTypeRef = method.returnType;
+                        continue;
+                    }
+                }
+                return undefined;
+            }
+        }
+        return currentTypeRef;
+    }
+
+    public static resolveChainFinalPart(
+        document: vscode.TextDocument,
+        position: vscode.Position,
+        documentTreeProvider: DocumentTreeProvider,
+        identifierChain: string[],
+        currentClassDef?: IClass,
+        currentMethod?: IMethod | IConstructor
+    ): IClass | IMethod | IField | IVariable | IParameter | undefined {
+        if (identifierChain.length === 0) {
+            return undefined;
+        }
+        let currentTypeRef: TypeReference | undefined;
+        let currentPart: IClass | IMethod | IField | IVariable | IParameter | undefined;
+        for (let i = 0; i < identifierChain.length; i++) {
+            const id = identifierChain[i];
+            if (i === 0) {
+                if (id === 'self') {
+                    if (!currentClassDef) {
+                        return undefined;
+                    }
+                    currentTypeRef = { name: currentClassDef.name, typeArguments: [] };
+                    currentPart = currentClassDef;
+                } else {
+                    let local: IVariable | undefined;
+                    let param: IParameter | undefined;
+                    if (currentMethod) {
+                        local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, id, true, position);
+                        if (!local) {
+                            param = currentMethod?.parameters.find(p => p.name === id);
+                        }
+                    }
+
+                    if (param) {
+                        currentTypeRef = param.type;
+                        currentPart = param;
+                    } else if (local) {
+                        currentTypeRef = local.type;
+                        currentPart = local;
+                    } else {
+                        const tr = CodeContextUtils.parseTypeReference(id);
+                        const cls = documentTreeProvider.findClassByName(document, id);
+                        if (!cls) {
+                            return undefined;
+                        }
+                        currentTypeRef = tr;
+                        currentPart = cls;
+                    }
+                }
+            } else {
+                if (!currentTypeRef) {
+                    return undefined;
+                }
+
+                let cls: IClass | undefined;
+                if (currentPart && 'kind' in currentPart && 'name' in currentPart) {
+                    cls = currentPart;
+                } else {
+                    cls = documentTreeProvider.findClassByReference(document, currentTypeRef);
+                }
+
+                if (!cls) {
+                    return undefined;
+                }
+
+                const field = FindFieldInClassHierarchy(cls, id, true, true, true, true);
+                if (field) {
+                    currentTypeRef = field.type;
+                    currentPart = field;
+                    continue;
+                }
+                
+                let methodName = id;
+                const callMatch = methodName.match(/^(\w+)\s*\(/);
+                if (callMatch) {
+                    methodName = callMatch[1];
+                }
+
+                const method = FindMethodInClassHierarchy(cls, methodName, -1, true, true);
+                if (method) {
+                    currentTypeRef = method.returnType;
+                    currentPart = method;
+                    continue;
+                }
+                
+                return undefined;
+            }
+        }
+        return currentPart;
+    }
+
+    public static parseTypeReference(typeStr: string): TypeReference {
+        const s = typeStr.trim();
+        // Generic Foo<Bar,Baz>
+        const lt = s.indexOf('<');
+        if (lt >= 0 && s.endsWith('>')) {
+            const name = s.substring(0, lt).trim();
+            const inner = s.substring(lt + 1, s.length - 1);
+            const args: TypeReference[] = [];
+            let depth = 0, start = 0;
+            for (let i = 0; i < inner.length; i++) {
+                const c = inner[i];
+                if (c === '<') {
+                    depth++;
+                } else if (c === '>') {
+                    depth--;
+                } else if (c === ',' && depth === 0) {
+                    args.push(this.parseTypeReference(inner.substring(start, i).trim()));
+                    start = i + 1;
+                }
+            }
+            args.push(this.parseTypeReference(inner.substring(start).trim()));
+            return { name, typeArguments: args };
+        }
+        // String literal
+        if (/^".*"$/.test(s)) {
+            return { name: 'string', typeArguments: [] };
+        }
+        // Float
+        if (/^\d+\.\d+$/.test(s)) {
+            return { name: 'float', typeArguments: [] };
+        }
+        // Int
+        if (/^\d+$/.test(s)) {
+            return { name: 'int', typeArguments: [] };
+        }
+        // Bool
+        if (s === 'true' || s === 'false') {
+            return { name: 'bool', typeArguments: [] };
+        }
+
+        if (s === 'List' || s === 'List()') {
+            return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+        }
+
+        if (s === 'Dict' || s === 'Dict()') {
+            return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+        }
+
+        // Simple call: Foo(...) but not a field access Foo.Bar(...)
+        const callMatch = s.match(/^([A-Za-z_]\w*)\s*\(/);
+        if (callMatch && !/^[A-Za-z_]\w*\.[A-Za-z_]\w*/.test(s)) {
+            let name = callMatch[1];
+            if (name === 'List') {
+                return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+            }
+
+            if (name === 'Dict') {
+                return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+            }
+
+            return { name: name, typeArguments: [] };
+        }
+
+        return { name: s, typeArguments: [] };
+    }
+
+    public static parseTypeReferenceFallback(typeStr: string, fallback: string): TypeReference {
+        const s = typeStr.trim();
+        // Generic Foo<Bar,Baz>
+        const lt = s.indexOf('<');
+        if (lt >= 0 && s.endsWith('>')) {
+            const name = s.substring(0, lt).trim();
+            const inner = s.substring(lt + 1, s.length - 1);
+            const args: TypeReference[] = [];
+            let depth = 0, start = 0;
+            for (let i = 0; i < inner.length; i++) {
+                const c = inner[i];
+                if (c === '<') {
+                    depth++;
+                } else if (c === '>') {
+                    depth--;
+                } else if (c === ',' && depth === 0) {
+                    args.push(this.parseTypeReference(inner.substring(start, i).trim()));
+                    start = i + 1;
+                }
+            }
+            args.push(this.parseTypeReference(inner.substring(start).trim()));
+            return { name, typeArguments: args };
+        }
+        // String literal
+        if (/^".*"$/.test(s)) {
+            return { name: 'string', typeArguments: [] };
+        }
+        // Float
+        if (/^\d+\.\d+$/.test(s)) {
+            return { name: 'float', typeArguments: [] };
+        }
+        // Int
+        if (/^\d+$/.test(s)) {
+            return { name: 'int', typeArguments: [] };
+        }
+        // Bool
+        if (s === 'true' || s === 'false') {
+            return { name: 'bool', typeArguments: [] };
+        }
+
+        if (s === 'List' || s === 'List()') {
+            return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+        }
+
+        if (s === 'Dict' || s === 'Dict()') {
+            return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+        }
+
+        // Simple call: Foo(...) but not a field access Foo.Bar(...)
+        const callMatch = s.match(/^([A-Za-z_]\w*)\s*\(/);
+        if (callMatch && !/^[A-Za-z_]\w*\.[A-Za-z_]\w*/.test(s)) {
+            let name = callMatch[1];
+            if (name === 'List') {
+                return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+            }
+
+            if (name === 'Dict') {
+                return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+            }
+
+            return { name: name, typeArguments: [] };
+        }
+        return { name: fallback, typeArguments: [] };
+    }
+
+    public static typeRefToString(tr: TypeReference): string {
+        if (tr.typeArguments.length === 0) {
+            return tr.name;
+        }
+        return `${tr.name}<${tr.typeArguments.map(a => this.typeRefToString(a)).join(',')}>`;
     }
 }

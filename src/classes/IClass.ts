@@ -32,43 +32,63 @@ export interface IConditionNode {
     afterBlockRange: vscode.Range;
 }
 
+export interface IReassignment {
+    range: vscode.Range;
+    value: string;
+}
+
+export interface TypeReference {
+    name: string;
+    typeArguments: TypeReference[];
+}
+
 export interface IVariable {
     name: string;
     value: string;
-    type: string;
+    type: TypeReference;
     declarationRange?: vscode.Range;
+    scopeRange?: vscode.Range;
+    reassignments?: IReassignment[];
+    inLoop?: boolean;
 }
 
 export interface IParameter {
     name: string;
-    type: string;
+    type: TypeReference;
     description: string;
+    declarationRange?: vscode.Range;
     isOptional?: boolean;
     isVariadic?: boolean;
+    reassignments?: IReassignment[];
 }
 
 export interface IConstructor {
+    parent: IClass;
     parameters: IParameter[];
     description: string;
     declarationRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
+    localVariables?: IVariable[];
 }
 
 export interface IMethod {
+    parent: IClass;
     label: string;
     kind?: MethodKinds;
-    returnType: string;
+    returnType: TypeReference;
     description: string;
     parameters: IParameter[];
     declarationRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
+    localVariables?: IVariable[];
 }
 
 export interface IField {
+    parent: IClass;
     label: string;
-    type: string;
+    type: TypeReference;
     description: string;
     readonly?: boolean;
     private?: boolean
@@ -89,6 +109,12 @@ export interface IClass {
     declarationRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
+    hidden?: boolean;
+}
+
+export interface IGenericClass extends IClass {
+    typeParameters: string[];
+    instantiate(typeArgs: TypeReference[]): IClass;
 }
 
 export function FindFieldInClassHierarchy(
@@ -167,7 +193,7 @@ export function FindMethodInClassHierarchy(
 
         return argCount <= maxParams;
     });
-    
+
     if (method) {
         return method;
     }
@@ -236,6 +262,7 @@ export function FindConstructorInClassHierarchy(classDef: IClass, argCount: numb
     }
     return null;
 }
+
 export interface IError {
     line: number;
     charPositionInLine: number;

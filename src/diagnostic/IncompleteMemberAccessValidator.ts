@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { DiagnosticUtils } from './DiagnosticUtils';
-import { CommentAwareTextProcessor } from './CommentAwareTextProcessor';
-import { IValidator } from './DiagnosticManager';
+import {DiagnosticUtils} from './DiagnosticUtils';
+import {CommentAwareTextProcessor} from './CommentAwareTextProcessor';
+import {IValidator} from './DiagnosticManager';
 
 export class IncompleteMemberAccessValidator implements IValidator {
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
