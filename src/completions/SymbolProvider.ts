@@ -7,18 +7,19 @@ import {
     Range,
 } from 'vscode';
 
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
-import { IClass, IField, IMethod, MethodKinds } from '../classes/IClass';
+import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
+import {IClass, IField, IMethod, MethodKinds} from '../classes/IClass';
 
 export class SymbolProvider implements DocumentSymbolProvider {
-    constructor(private documentTreeProvider: DocumentTreeProvider) { }
+    constructor(private documentTreeProvider: DocumentTreeProvider) {
+    }
 
     public async provideDocumentSymbols(
         doc: TextDocument,
         token: CancellationToken
     ): Promise<DocumentSymbol[]> {
         const symbols: DocumentSymbol[] = [];
-        for (const classDef of this.documentTreeProvider.getUserDefinedClassesMap().values()) {
+        for (const classDef of this.documentTreeProvider.getUserDefinedClasses(doc)) {
             const classSymbol = this.createClassSymbolSafe(classDef);
             if (classSymbol) {
                 symbols.push(classSymbol);

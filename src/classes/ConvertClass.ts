@@ -13,75 +13,84 @@ export class ConvertClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'ToFloat',
-            returnType: 'float',
+            returnType: {name: 'float', typeArguments: []},
             description: 'Convert the value to floating type.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The value to convert.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to convert.' }
             ]
         },
         {
+            parent: this,
             label: 'ToInt',
-            returnType: 'int',
+            returnType: {name: 'int', typeArguments: []},
             description: 'Convert the value to integer type.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The value to convert.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to convert.' }
             ]
         },
         {
+            parent: this,
             label: 'ToBool',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Convert the value to boolean type.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The value to convert.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to convert.' }
             ]
         },
         {
+            parent: this,
             label: 'ToString',
-            returnType: 'string',
+            returnType: {name: 'string', typeArguments: []},
             description: 'Convert the value to string type.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The value to convert.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to convert.' }
             ]
         },
         {
+            parent: this,
             label: 'IsFloat',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Returns true if the object is a float.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The value to check.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to check.' }
             ]
         },
         {
+            parent: this,
             label: 'IsInt',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Returns true if the object is an int.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The value to check.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to check.' }
             ]
         },
         {
+            parent: this,
             label: 'IsBool',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Returns true if the object is a bool.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The value to check.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to check.' }
             ]
         },
         {
+            parent: this,
             label: 'IsString',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Returns true if the object is a string.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The value to check.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to check.' }
             ]
         },
         {
+            parent: this,
             label: 'IsObject',
-            returnType: 'bool',
+            returnType: {name: 'bool', typeArguments: []},
             description: 'Returns true if the object is an Object. You can use value.Type for further type checking.',
             parameters: [
-                { name: 'value', type: 'object', description: 'The value to check.' }
+                { name: 'value', type: {name: 'Object', typeArguments: []}, description: 'The value to check.' }
             ]
         }
     ];

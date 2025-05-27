@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { ClassKinds, MethodKinds } from '../classes/IClass';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
+import {ClassKinds, MethodKinds} from '../classes/IClass';
+import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
 
 export class CutsceneValidator {
     private documentTreeProvider: DocumentTreeProvider;
@@ -12,7 +12,7 @@ export class CutsceneValidator {
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         const diagnostics: vscode.Diagnostic[] = [];
 
-        this.documentTreeProvider.getUserDefinedClassesMap().forEach((classDef) => {
+        this.documentTreeProvider.getUserDefinedClasses(document).forEach((classDef) => {
             if (classDef.kind === ClassKinds.CUTSCENE) {
                 if (!classDef.instanceMethods.some(method => method.label === 'Start' && method.kind === MethodKinds.COROUTINE && method.parameters.length === 0)) {
                     const diagnostic = new vscode.Diagnostic(

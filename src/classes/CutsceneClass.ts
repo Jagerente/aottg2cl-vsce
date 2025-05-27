@@ -13,38 +13,42 @@ export class CutsceneClass implements IClass {
 
     public staticMethods: IMethod[] = [
         {
+            parent: this,
             label: 'Start',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Starts cutscene with name. If full is true, will enter cinematic mode. Otherwise will only show dialogue while still allowing gameplay.',
             parameters: [
-                { name: 'name', type: 'string', description: 'The name of the cutscene.' },
-                { name: 'full', type: 'bool', description: 'Whether to enter full cinematic mode.' }
+                { name: 'name', type: {name: 'string', typeArguments: []}, description: 'The name of the cutscene.' },
+                { name: 'full', type: { name: 'bool', typeArguments: [] }, description: 'Whether to enter full cinematic mode.' }
             ]
         },
         {
+            parent: this,
             label: 'ShowDialogue',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Show dialogue screen with given icon, title, and content. Available icons are the same as profile icon names.',
             parameters: [
-                { name: 'icon', type: 'string', description: 'The icon to show.' },
-                { name: 'title', type: 'string', description: 'The title of the dialogue.' },
-                { name: 'content', type: 'string', description: 'The content of the dialogue.' }
+                { name: 'icon', type: {name: 'string', typeArguments: []}, description: 'The icon to show.' },
+                { name: 'title', type: {name: 'string', typeArguments: []}, description: 'The title of the dialogue.' },
+                { name: 'content', type: {name: 'string', typeArguments: []}, description: 'The content of the dialogue.' }
             ]
         },
         {
+            parent: this,
             label: 'ShowDialogueForTime',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Show dialogue screen and automatically hide after time seconds.',
             parameters: [
-                { name: 'icon', type: 'string', description: 'The icon to show.' },
-                { name: 'title', type: 'string', description: 'The title of the dialogue.' },
-                { name: 'content', type: 'string', description: 'The content of the dialogue.' },
-                { name: 'time', type: 'float', description: 'Hide after.' }
+                { name: 'icon', type: {name: 'string', typeArguments: []}, description: 'The icon to show.' },
+                { name: 'title', type: {name: 'string', typeArguments: []}, description: 'The title of the dialogue.' },
+                { name: 'content', type: {name: 'string', typeArguments: []}, description: 'The content of the dialogue.' },
+                { name: 'time', type: {name: 'float', typeArguments: []}, description: 'Hide after.' }
             ]
         },
         {
+            parent: this,
             label: 'HideDialogue',
-            returnType: 'null',
+            returnType: {name: 'void', typeArguments: []},
             description: 'Hides the dialogue screen.',
             parameters: []
         }

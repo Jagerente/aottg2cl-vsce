@@ -5,7 +5,24 @@ All notable changes to the "aottg2cl" extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.0.9-preview] - 2025-02-28
+## [0.1.0] - 2025-05-27
+
+### Added
+
+- Local variables parsing using ANTLR parsing manager.
+- Diagnostic error report on usage of undeclared classes or variables.
+- Builtin generics types support (List, Dict) for better typing
+- Typing support for variables inside loop definitions 
+
+### Changed
+
+- Fixed Annotation typed constructors shown as default.
+- Removed default callbacks suggestion for user-defined classes.
+- Improved autocompletion behaviour.
+- Typing is much better now.
+- More diagnostic error cases.
+
+## [0.0.9-preview] - 2025-05-23
 
 ### Added
 
