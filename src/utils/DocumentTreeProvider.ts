@@ -59,7 +59,13 @@ export class DocumentTreeProvider {
         });
 
         for (const classDef of userDefinedClasses) {
-            for (const methodDef of classDef.instanceMethods) {
+            let methods: IMethod|IConstructor[] = [...classDef.instanceMethods,...classDef.staticMethods];
+            if (classDef.constructors)
+            {
+                methods = [...methods,...classDef.constructors];
+            }
+
+            for (const methodDef of methods) {
                 if (!methodDef.localVariables) {
                     continue;
                 }
