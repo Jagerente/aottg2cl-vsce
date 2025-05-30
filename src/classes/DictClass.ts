@@ -93,27 +93,43 @@ export class DictClass implements IClass {
         const [K, V] = typeArgs;
         const inst = new DictClass();
         inst.name = `Dict<${K.name},${V.name}>`;
+
+        const subs = {K, V};
         inst.instanceFields = this.instanceFields.map(f => ({
             ...f,
             parent: inst,
-            type: f.type.name === 'K' ? K
-                : f.type.name === 'V' ? V
-                    : f.type
+            type: this.substituteType(f.type, subs),
         }));
+
         inst.instanceMethods = this.instanceMethods.map(m => ({
             ...m,
             parent: inst,
-            returnType: m.returnType.name === 'K' ? K
-                : m.returnType.name === 'V' ? V
-                    : m.returnType,
+            returnType: this.substituteType(m.returnType, subs),
             parameters: m.parameters.map(p => ({
                 ...p,
-                type: p.type.name === 'K' ? K
-                    : p.type.name === 'V' ? V
-                        : p.type
-            }))
+                type: this.substituteType(p.type, subs),
+            })),
         }));
+
         return inst;
+    }
+
+
+    private substituteType(
+        typeRef: TypeReference,
+        subs: { K: TypeReference; V: TypeReference }
+    ): TypeReference {
+        if (typeRef.name === 'K') {
+            return subs.K;
+        }
+        if (typeRef.name === 'V') {
+            return subs.V;
+        }
+
+        return {
+            ...typeRef,
+            typeArguments: typeRef.typeArguments.map(arg => this.substituteType(arg, subs))
+        };
     }
 }
 

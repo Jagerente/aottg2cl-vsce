@@ -2,7 +2,7 @@
   "name": "aottg2cl",
   "displayName": "AoTTG 2 Custom Logic Language Support",
   "description": "Syntax highlighting and autocomplete for AoTTG 2 Custom Logic",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "Jagerente",
   "repository": {
     "type": "git",
