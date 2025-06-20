@@ -80,6 +80,16 @@
           "minimum": 1,
           "maximum": 8,
           "description": "Number of spaces used for indentation"
+        },
+        "aottg2cl.build.rememberLastPath": {
+          "type": "boolean",
+          "default": true,
+          "description": "Remember the last folder used when saving the final file."
+        },
+        "aottg2cl.build.rememberLastName": {
+          "type": "boolean",
+          "default": true,
+          "description": "Remember the last filename used when saving the final file."
         }
       }
     }
