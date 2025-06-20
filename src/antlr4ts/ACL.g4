@@ -66,14 +66,12 @@ RPAREN: ')';
 WS: [ \t\r\n]+ -> skip;
 
 ANNOTATION_COMMENT: '#' WS* '@' ~[\r\n]*;
-
 ANNOTATION_BLOCK_COMMENT: '/*' .*? '@' .*? '*/';
 
-COMMENT: '#' ~[\r\n]* -> skip;
+LINE_COMMENT: '#' ~[\r\n]* -> channel(HIDDEN);
+BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
 
-BLOCK_COMMENT: '/*' .*? '*/' -> skip;
-
-program: annotation* classDecl*;
+program: (annotation* classDecl)*;
 
 classDecl: (CLASS | COMPONENT | EXTENSION | CUTSCENE) ID LBRACE classBody RBRACE;
 

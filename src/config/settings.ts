@@ -1,4 +1,4 @@
-import {workspace, WorkspaceConfiguration} from 'vscode';
+import { workspace, WorkspaceConfiguration } from 'vscode';
 
 export class Settings {
     private static readonly section = 'aottg2cl';
@@ -8,10 +8,22 @@ export class Settings {
     }
 
     public static get showClassUsageDiagnostics(): boolean {
-        return Settings.config.get<boolean>('showClassUsageDiagnostics', true);
+        return Settings.config.get<boolean>('diagnostics.showClassUsage', true);
     }
 
     public static get showUnresolvedMemberWarnings(): boolean {
-        return Settings.config.get<boolean>('showUnresolvedMemberWarnings', false);
+        return Settings.config.get<boolean>('diagnostics.showUnresolvedMembers', false);
+    }
+
+    public static get enableFormatter(): boolean {
+        return Settings.config.get<boolean>('format.enableFormatter', true);
+    }
+
+    public static get insertSpaces(): boolean {
+        return Settings.config.get<boolean>('format.insertSpaces', false);
+    }
+
+    public static get tabSize(): number {
+        return Settings.config.get<number>('format.tabSize', 4);
     }
 }
