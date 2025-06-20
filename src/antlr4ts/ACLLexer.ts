@@ -68,7 +68,7 @@ export class ACLLexer extends Lexer {
 	public static readonly WS = 50;
 	public static readonly ANNOTATION_COMMENT = 51;
 	public static readonly ANNOTATION_BLOCK_COMMENT = 52;
-	public static readonly COMMENT = 53;
+	public static readonly LINE_COMMENT = 53;
 	public static readonly BLOCK_COMMENT = 54;
 
 	// tslint:disable:no-trailing-whitespace
@@ -89,7 +89,7 @@ export class ACLLexer extends Lexer {
 		"DIVIDE", "PLUS_ASSIGN", "MINUS_ASSIGN", "MULTIPLY_ASSIGN", "DIVIDE_ASSIGN", 
 		"EQUALS", "NOT_EQUALS", "LESS", "LESS_EQUAL", "GREATER", "GREATER_EQUAL", 
 		"AND", "OR", "NOT", "LBRACE", "RBRACE", "LPAREN", "RPAREN", "WS", "ANNOTATION_COMMENT", 
-		"ANNOTATION_BLOCK_COMMENT", "COMMENT", "BLOCK_COMMENT",
+		"ANNOTATION_BLOCK_COMMENT", "LINE_COMMENT", "BLOCK_COMMENT",
 	];
 
 	private static readonly _LITERAL_NAMES: Array<string | undefined> = [
@@ -109,7 +109,8 @@ export class ACLLexer extends Lexer {
 		"MULTIPLY", "DIVIDE", "PLUS_ASSIGN", "MINUS_ASSIGN", "MULTIPLY_ASSIGN", 
 		"DIVIDE_ASSIGN", "EQUALS", "NOT_EQUALS", "LESS", "LESS_EQUAL", "GREATER", 
 		"GREATER_EQUAL", "AND", "OR", "NOT", "LBRACE", "RBRACE", "LPAREN", "RPAREN", 
-		"WS", "ANNOTATION_COMMENT", "ANNOTATION_BLOCK_COMMENT", "COMMENT", "BLOCK_COMMENT",
+		"WS", "ANNOTATION_COMMENT", "ANNOTATION_BLOCK_COMMENT", "LINE_COMMENT", 
+		"BLOCK_COMMENT",
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(ACLLexer._LITERAL_NAMES, ACLLexer._SYMBOLIC_NAMES, []);
 
@@ -314,14 +315,15 @@ export class ACLLexer extends Lexer {
 		"\x03\x02\x02\x02\u0177\u017B\x07%\x02\x02\u0178\u017A\n\x07\x02\x02\u0179" +
 		"\u0178\x03\x02\x02\x02\u017A\u017D\x03\x02\x02\x02\u017B\u0179\x03\x02" +
 		"\x02\x02\u017B\u017C\x03\x02\x02\x02\u017C\u017E\x03\x02\x02\x02\u017D" +
-		"\u017B\x03\x02\x02\x02\u017E\u017F\b6\x02\x02\u017Fl\x03\x02\x02\x02\u0180" +
+		"\u017B\x03\x02\x02\x02\u017E\u017F\b6\x03\x02\u017Fl\x03\x02\x02\x02\u0180" +
 		"\u0181\x071\x02\x02\u0181\u0182\x07,\x02\x02\u0182\u0186\x03\x02\x02\x02" +
 		"\u0183\u0185\v\x02\x02\x02\u0184\u0183\x03\x02\x02\x02\u0185\u0188\x03" +
 		"\x02\x02\x02\u0186\u0187\x03\x02\x02\x02\u0186\u0184\x03\x02\x02\x02\u0187" +
 		"\u0189\x03\x02\x02\x02\u0188\u0186\x03\x02\x02\x02\u0189\u018A\x07,\x02" +
 		"\x02\u018A\u018B\x071\x02\x02\u018B\u018C\x03\x02\x02\x02\u018C\u018D" +
-		"\b7\x02\x02\u018Dn\x03\x02\x02\x02\x11\x02\xDE\xF3\xF8\xFE\u0104\u0106" +
-		"\u0114\u0152\u015A\u0161\u016A\u0171\u017B\u0186\x03\b\x02\x02";
+		"\b7\x03\x02\u018Dn\x03\x02\x02\x02\x11\x02\xDE\xF3\xF8\xFE\u0104\u0106" +
+		"\u0114\u0152\u015A\u0161\u016A\u0171\u017B\u0186\x04\b\x02\x02\x02\x03" +
+		"\x02";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!ACLLexer.__ATN) {

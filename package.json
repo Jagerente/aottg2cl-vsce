@@ -54,15 +54,32 @@
       "type": "object",
       "title": "AoTTG 2 Custom Logic Language",
       "properties": {
-        "aottg2cl.showClassUsageDiagnostics": {
+        "aottg2cl.diagnostics.showClassUsage": {
           "type": "boolean",
           "default": true,
           "description": "Show diagnostics for class usage."
         },
-        "aottg2cl.showUnresolvedMemberWarnings": {
+        "aottg2cl.diagnostics.showUnresolvedMembers": {
           "type": "boolean",
           "default": true,
           "description": "Show warnings for unresolved methods and fields."
+        },
+        "aottg2cl.format.enableFormatter": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable formatting"
+        },
+        "aottg2cl.format.insertSpaces": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use spaces instead of tabs for indentation"
+        },
+        "aottg2cl.format.tabSize": {
+          "type": "number",
+          "default": 4,
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Number of spaces used for indentation"
         }
       }
     }
