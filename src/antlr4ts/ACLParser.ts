@@ -80,7 +80,7 @@ export class ACLParser extends Parser {
 	public static readonly WS = 50;
 	public static readonly ANNOTATION_COMMENT = 51;
 	public static readonly ANNOTATION_BLOCK_COMMENT = 52;
-	public static readonly COMMENT = 53;
+	public static readonly LINE_COMMENT = 53;
 	public static readonly BLOCK_COMMENT = 54;
 	public static readonly RULE_program = 0;
 	public static readonly RULE_classDecl = 1;
@@ -145,7 +145,8 @@ export class ACLParser extends Parser {
 		"MULTIPLY", "DIVIDE", "PLUS_ASSIGN", "MINUS_ASSIGN", "MULTIPLY_ASSIGN", 
 		"DIVIDE_ASSIGN", "EQUALS", "NOT_EQUALS", "LESS", "LESS_EQUAL", "GREATER", 
 		"GREATER_EQUAL", "AND", "OR", "NOT", "LBRACE", "RBRACE", "LPAREN", "RPAREN", 
-		"WS", "ANNOTATION_COMMENT", "ANNOTATION_BLOCK_COMMENT", "COMMENT", "BLOCK_COMMENT",
+		"WS", "ANNOTATION_COMMENT", "ANNOTATION_BLOCK_COMMENT", "LINE_COMMENT", 
+		"BLOCK_COMMENT",
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(ACLParser._LITERAL_NAMES, ACLParser._SYMBOLIC_NAMES, []);
 
@@ -181,26 +182,26 @@ export class ACLParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 71;
-			this._errHandler.sync(this);
-			_la = this._input.LA(1);
-			while (_la === ACLParser.ANNOTATION_COMMENT || _la === ACLParser.ANNOTATION_BLOCK_COMMENT) {
-				{
-				{
-				this.state = 68;
-				this.annotation();
-				}
-				}
-				this.state = 73;
-				this._errHandler.sync(this);
-				_la = this._input.LA(1);
-			}
 			this.state = 77;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
-			while ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << ACLParser.CLASS) | (1 << ACLParser.COMPONENT) | (1 << ACLParser.EXTENSION) | (1 << ACLParser.CUTSCENE))) !== 0)) {
+			while ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << ACLParser.CLASS) | (1 << ACLParser.COMPONENT) | (1 << ACLParser.EXTENSION) | (1 << ACLParser.CUTSCENE))) !== 0) || _la === ACLParser.ANNOTATION_COMMENT || _la === ACLParser.ANNOTATION_BLOCK_COMMENT) {
 				{
 				{
+				this.state = 71;
+				this._errHandler.sync(this);
+				_la = this._input.LA(1);
+				while (_la === ACLParser.ANNOTATION_COMMENT || _la === ACLParser.ANNOTATION_BLOCK_COMMENT) {
+					{
+					{
+					this.state = 68;
+					this.annotation();
+					}
+					}
+					this.state = 73;
+					this._errHandler.sync(this);
+					_la = this._input.LA(1);
+				}
 				this.state = 74;
 				this.classDecl();
 				}
@@ -1738,7 +1739,7 @@ export class ACLParser extends Parser {
 		"\x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x022\x024\x026\x028\x02:\x02" +
 		"<\x02>\x02@\x02B\x02D\x02\x02\f\x03\x02\x03\x06\x03\x02\x07\b\x04\x02" +
 		"\x17\x17#&\x03\x02\'(\x03\x02),\x03\x02\x1F \x03\x02!\"\x04\x02  //\x03" +
-		"\x02\x1A\x1E\x03\x0256\x02\u0142\x02I\x03\x02\x02\x02\x04R\x03\x02\x02" +
+		"\x02\x1A\x1E\x03\x0256\x02\u0142\x02O\x03\x02\x02\x02\x04R\x03\x02\x02" +
 		"\x02\x06\\\x03\x02\x02\x02\bb\x03\x02\x02\x02\nq\x03\x02\x02\x02\f}\x03" +
 		"\x02\x02\x02\x0E\x88\x03\x02\x02\x02\x10\x8D\x03\x02\x02\x02\x12\xA4\x03" +
 		"\x02\x02\x02\x14\xA6\x03\x02\x02\x02\x16\xAC\x03\x02\x02\x02\x18\xB4\x03" +
@@ -1750,8 +1751,8 @@ export class ACLParser extends Parser {
 		"\x02\x02\x02:\u0123\x03\x02\x02\x02<\u0126\x03\x02\x02\x02>\u012F\x03" +
 		"\x02\x02\x02@\u0131\x03\x02\x02\x02B\u0133\x03\x02\x02\x02D\u013B\x03" +
 		"\x02\x02\x02FH\x05D#\x02GF\x03\x02\x02\x02HK\x03\x02\x02\x02IG\x03\x02" +
-		"\x02\x02IJ\x03\x02\x02\x02JO\x03\x02\x02\x02KI\x03\x02\x02\x02LN\x05\x04" +
-		"\x03\x02ML\x03\x02\x02\x02NQ\x03\x02\x02\x02OM\x03\x02\x02\x02OP\x03\x02" +
+		"\x02\x02IJ\x03\x02\x02\x02JL\x03\x02\x02\x02KI\x03\x02\x02\x02LN\x05\x04" +
+		"\x03\x02MI\x03\x02\x02\x02NQ\x03\x02\x02\x02OM\x03\x02\x02\x02OP\x03\x02" +
 		"\x02\x02P\x03\x03\x02\x02\x02QO\x03\x02\x02\x02RS\t\x02\x02\x02ST\x07" +
 		"\x13\x02\x02TU\x070\x02\x02UV\x05\x06\x04\x02VW\x071\x02\x02W\x05\x03" +
 		"\x02\x02\x02X[\x05\b\x05\x02Y[\x05\n\x06\x02ZX\x03\x02\x02\x02ZY\x03\x02" +
@@ -1854,15 +1855,6 @@ export class ACLParser extends Parser {
 }
 
 export class ProgramContext extends ParserRuleContext {
-	public annotation(): AnnotationContext[];
-	public annotation(i: number): AnnotationContext;
-	public annotation(i?: number): AnnotationContext | AnnotationContext[] {
-		if (i === undefined) {
-			return this.getRuleContexts(AnnotationContext);
-		} else {
-			return this.getRuleContext(i, AnnotationContext);
-		}
-	}
 	public classDecl(): ClassDeclContext[];
 	public classDecl(i: number): ClassDeclContext;
 	public classDecl(i?: number): ClassDeclContext | ClassDeclContext[] {
@@ -1870,6 +1862,15 @@ export class ProgramContext extends ParserRuleContext {
 			return this.getRuleContexts(ClassDeclContext);
 		} else {
 			return this.getRuleContext(i, ClassDeclContext);
+		}
+	}
+	public annotation(): AnnotationContext[];
+	public annotation(i: number): AnnotationContext;
+	public annotation(i?: number): AnnotationContext | AnnotationContext[] {
+		if (i === undefined) {
+			return this.getRuleContexts(AnnotationContext);
+		} else {
+			return this.getRuleContext(i, AnnotationContext);
 		}
 	}
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {

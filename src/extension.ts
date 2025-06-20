@@ -9,12 +9,19 @@ import {ACLManager} from './antlr4ts/ACLManager';
 import {DiagnosticManager} from './diagnostic/DiagnosticManager';
 import {DocumentTreeProvider} from './utils/DocumentTreeProvider';
 import {buildFinalFile} from './commands/BuildFinalFile';
+import {BuildFinalFileTaskProvider} from './tasks/BuildFinalFileTaskProvider';
+import {ACLFormatter} from './formatting/ACLFormatter';
+
+export let extensionContext: vscode.ExtensionContext;
 
 export async function activate(context: vscode.ExtensionContext) {
+    extensionContext = context;
+
     const aclManager = new ACLManager();
     const documentTreeProvider = new DocumentTreeProvider(aclManager, AvailableClassesMap, AvailableGenericClassesMap);
     const keywordsProvider = new KeywordCompletionProvider(documentTreeProvider);
     const variablesProvider = new VariableCompletionProvider(documentTreeProvider);
+    const formatter = new ACLFormatter();
 
     const callbacksProvider = new MainFunctionsCompletionProvider(documentTreeProvider);
     const variableDefinitionProvider = new VariableDefinitionProvider(documentTreeProvider);
@@ -29,9 +36,11 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerHoverProvider({language: 'acl'}, keywordsProvider),
         vscode.languages.registerSignatureHelpProvider({language: 'acl'}, variablesProvider, '(', ',', ' '),
         vscode.languages.registerDefinitionProvider({language: 'acl'}, variableDefinitionProvider),
+        vscode.languages.registerDocumentFormattingEditProvider({language: 'acl'}, formatter),
         diagnosticCollection,
         vscode.commands.registerCommand('extension.buildScript', buildFinalFile),
         vscode.languages.registerDocumentSymbolProvider({language: 'acl', scheme: 'file'}, symbolProvider),
+        vscode.tasks.registerTaskProvider(BuildFinalFileTaskProvider.type, new BuildFinalFileTaskProvider())
     );
 
     const refetchDocumentData = async (document: vscode.TextDocument) => {

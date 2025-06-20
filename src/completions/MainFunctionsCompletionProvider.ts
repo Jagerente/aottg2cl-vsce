@@ -20,6 +20,7 @@ export class MainFunctionsCompletionProvider implements vscode.CompletionItemPro
         { parent: this, label: 'OnChatInput', snippet: 'OnChatInput(message)\n{\n\t$0\n}', description: 'Called upon chat input from the player' },
         { parent: this, label: 'OnPlayerSpawn', snippet: 'OnPlayerSpawn(player, character)\n{\n\t$0\n}', description: 'Called upon any player spawning' },
         { parent: this, label: 'OnCharacterSpawn', snippet: 'OnCharacterSpawn(character)\n{\n\t$0\n}', description: 'Called upon any character spawning' },
+        { parent: this, label: 'OnCharacterReloaded', snippet: 'OnCharacterReloaded(character)\n{\n\t$0\n}', description: 'Called upon any character being reloaded (changing weapon/character model at gas).' },
         { parent: this, label: 'OnCharacterDie', snippet: 'OnCharacterDie(victim, killer, killerName)\n{\n\t$0\n}', description: 'Called upon a character dying. Killer may be null.' },
         { parent: this, label: 'OnCharacterDamaged', snippet: 'OnCharacterDamaged(victim, killer, killerName, damage)\n{\n\t$0\n}', description: 'Called upon a character being damaged. Killer may be null.' },
         { parent: this, label: 'OnPlayerJoin', snippet: 'OnPlayerJoin(player)\n{\n\t$0\n}', description: 'Called upon a player joining the room' },

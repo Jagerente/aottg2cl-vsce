@@ -241,6 +241,15 @@ export class MapObjectClass implements IClass {
                 { name: 'name', type: {name: 'string', typeArguments: []}, description: 'The name of the component to read.' },
                 { name: 'field', type: {name: 'string', typeArguments: []}, description: 'The specific field to read.' }
             ]
+        },
+        {
+            parent: this,
+            label: 'HasTag',
+            returnType: {name: 'bool', typeArguments: []},
+            description: 'Whether or not the object has the given tag.',
+            parameters: [
+                { name: 'tag', type: {name: 'string', typeArguments: []}, description: 'The tag name of the map object.' }
+            ]
         }
     ];
 
