@@ -1,4 +1,4 @@
-import { workspace, WorkspaceConfiguration } from 'vscode';
+import {workspace, WorkspaceConfiguration} from 'vscode';
 
 export class Settings {
     private static readonly section = 'aottg2cl';
@@ -25,5 +25,13 @@ export class Settings {
 
     public static get tabSize(): number {
         return Settings.config.get<number>('format.tabSize', 4);
+    }
+
+    public static get rememberLastPath(): boolean {
+        return Settings.config.get<boolean>('build.rememberLastPath', false);
+    }
+
+    public static get rememberLastName(): boolean {
+        return Settings.config.get<boolean>('build.rememberLastName', false);
     }
 }
