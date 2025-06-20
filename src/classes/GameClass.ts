@@ -135,7 +135,7 @@ export class GameClass implements IClass {
         {
             parent: this,
             label: 'SpawnShifter',
-            returnType: {name: 'Sh', typeArguments: []},
+            returnType: {name: 'Shifter', typeArguments: []},
             description: 'Spawns a shifter. Master client only. Valid types: "Annie".',
             parameters: [
                 { name: 'type', type: {name: 'string', typeArguments: []}, description: 'Type of shifter to spawn.' }
@@ -144,7 +144,7 @@ export class GameClass implements IClass {
         {
             parent: this,
             label: 'SpawnShifterAt',
-            returnType: {name: 'Sh', typeArguments: []},
+            returnType: {name: 'Shifter', typeArguments: []},
             description: 'Spawn a shifter at a specific position. Master client only.',
             parameters: [
                 { name: 'type', type: {name: 'string', typeArguments: []}, description: 'Type of shifter to spawn.' },

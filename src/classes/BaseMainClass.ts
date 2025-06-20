@@ -84,6 +84,15 @@ export class BaseMainClass implements IClass {
             },
             {
                 parent: this,
+                label: 'OnCharacterReloaded',
+                returnType: {name: 'void', typeArguments: []},
+                description: 'Called upon any character being reloaded (changing weapon/character model at gas).',
+                parameters: [
+                    { name: 'character', type: {name: 'Character', typeArguments: []}, description: 'The character that are being reloaded.', isOptional: false, isVariadic: false }
+                ]
+            },
+            {
+                parent: this,
                 label: 'OnCharacterDie',
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon a character dying. Killer may be null.',
