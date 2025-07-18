@@ -5,6 +5,20 @@ All notable changes to the "aottg2cl" extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2025-07-18
+
+### Added
+
+- New build command: "Build Custom Logic Into Custom Map"
+  - Inserts logic into existing Custom Map file between `/// Logic` and `/// Weather` boundaries
+  - Available via Ctrl + Shift + P and Ctrl + Shift + B
+- Completion settings:
+  - New setting to disable automatic parameter completion in method calls and constructors
+- README.md documentation update
+  - Enhanced annotation examples with generic types (List<T>, Dict<K,V>)
+  - Added modular imports documentation with complete examples
+  - Added commands documentation
+
 ## [0.1.3] - 2025-06-20
 
 ### Added
