@@ -1,19 +1,19 @@
 import * as vscode from 'vscode';
 
-export class BuildFinalFileTaskProvider implements vscode.TaskProvider {
+export class BuildFinalFileIntoMapTaskProvider implements vscode.TaskProvider {
     static type = 'acl';
 
     provideTasks(): vscode.Task[] {
-        const def: vscode.TaskDefinition = {type: BuildFinalFileTaskProvider.type, task: 'build'};
+        const def: vscode.TaskDefinition = {type: BuildFinalFileIntoMapTaskProvider.type, task: 'build-into-map'};
         const execution = new vscode.CustomExecution(async (): Promise<vscode.Pseudoterminal> => {
-            return new BuildPseudoterminal();
+            return new BuildIntoMapPseudoterminal();
         });
 
         const task = new vscode.Task(
             def,
             vscode.TaskScope.Workspace,
-            'Build Custom Logic',
-            BuildFinalFileTaskProvider.type,
+            'Build Custom Logic Into Custom Map',
+            BuildFinalFileIntoMapTaskProvider.type,
             execution
         );
         task.group = vscode.TaskGroup.Build;
@@ -24,7 +24,8 @@ export class BuildFinalFileTaskProvider implements vscode.TaskProvider {
         return task;
     }
 }
-class BuildPseudoterminal implements vscode.Pseudoterminal {
+
+class BuildIntoMapPseudoterminal implements vscode.Pseudoterminal {
     private writeEmitter = new vscode.EventEmitter<string>();
     onDidWrite = this.writeEmitter.event;
     
@@ -32,14 +33,14 @@ class BuildPseudoterminal implements vscode.Pseudoterminal {
     onDidClose = this.closeEmitter.event;
 
     open(_initialDimensions: vscode.TerminalDimensions | undefined): void {
-        vscode.commands.executeCommand('extension.buildScript')
+        vscode.commands.executeCommand('extension.buildScriptIntoMap')
             .then(
                 () => {
-                    this.writeEmitter.fire('Build command executed.\r\n');
+                    this.writeEmitter.fire('Build into map command executed.\r\n');
                     this.close();
                 },
                 err => {
-                    this.writeEmitter.fire(`Build command failed: ${err?.message || err}\r\n`);
+                    this.writeEmitter.fire(`Build into map command failed: ${err?.message || err}\r\n`);
                     this.close();
                 }
             );
@@ -48,5 +49,4 @@ class BuildPseudoterminal implements vscode.Pseudoterminal {
     close(): void {
         this.closeEmitter.fire();
     }
-}
-
+} 

@@ -9,7 +9,9 @@ import {ACLManager} from './antlr4ts/ACLManager';
 import {DiagnosticManager} from './diagnostic/DiagnosticManager';
 import {DocumentTreeProvider} from './utils/DocumentTreeProvider';
 import {buildFinalFile} from './commands/BuildFinalFile';
+import {buildFinalFileIntoMap} from './commands/BuildFinalFileIntoMap';
 import {BuildFinalFileTaskProvider} from './tasks/BuildFinalFileTaskProvider';
+import {BuildFinalFileIntoMapTaskProvider} from './tasks/BuildFinalFileIntoMapTaskProvider';
 import {ACLFormatter} from './formatting/ACLFormatter';
 
 export let extensionContext: vscode.ExtensionContext;
@@ -39,8 +41,10 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerDocumentFormattingEditProvider({language: 'acl'}, formatter),
         diagnosticCollection,
         vscode.commands.registerCommand('extension.buildScript', buildFinalFile),
+        vscode.commands.registerCommand('extension.buildScriptIntoMap', buildFinalFileIntoMap),
         vscode.languages.registerDocumentSymbolProvider({language: 'acl', scheme: 'file'}, symbolProvider),
-        vscode.tasks.registerTaskProvider(BuildFinalFileTaskProvider.type, new BuildFinalFileTaskProvider())
+        vscode.tasks.registerTaskProvider(BuildFinalFileTaskProvider.type, new BuildFinalFileTaskProvider()),
+        vscode.tasks.registerTaskProvider(BuildFinalFileIntoMapTaskProvider.type, new BuildFinalFileIntoMapTaskProvider())
     );
 
     const refetchDocumentData = async (document: vscode.TextDocument) => {
