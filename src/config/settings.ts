@@ -34,4 +34,8 @@ export class Settings {
     public static get rememberLastName(): boolean {
         return Settings.config.get<boolean>('build.rememberLastName', false);
     }
+
+    public static get disableAutoParameters(): boolean {
+        return Settings.config.get<boolean>('completion.disableAutoParameters', false);
+    }
 }

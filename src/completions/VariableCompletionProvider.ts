@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as markdown from '../utils/MarkdownHelper';
 import { CodeContextUtils } from '../utils/CodeContextUtils';
+import { Settings } from '../config/settings';
 import {
     ClassKinds,
     FindFieldInClassHierarchy,
@@ -128,14 +129,15 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                     item.range = wordRange;
                 }
 
-                const snippetParams = method.parameters.map((param, index) => {
-                    const placeholder = `\${${index + 1}:${param.name}}`;
-                    return param.isVariadic ? `...${placeholder}` : placeholder;
-                }).join(', ');
-
                 if (nextIsParen) {
                     item.insertText = new vscode.SnippetString(method.label);
+                } else if (Settings.disableAutoParameters) {
+                    item.insertText = new vscode.SnippetString(`${method.label}($1)`);
                 } else {
+                    const snippetParams = method.parameters.map((param, index) => {
+                        const placeholder = `\${${index + 1}:${param.name}}`;
+                        return param.isVariadic ? `...${placeholder}` : placeholder;
+                    }).join(', ');
                     item.insertText = new vscode.SnippetString(`${method.label}(${snippetParams})`);
                 }
                 items.push(item);
@@ -165,14 +167,15 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                     item.range = wordRange;
                 }
 
-                const snippetParams = method.parameters.map((param, index) => {
-                    const placeholder = `\${${index + 1}:${param.name}}`;
-                    return param.isVariadic ? `...${placeholder}` : placeholder;
-                }).join(', ');
-
                 if (nextIsParen) {
                     item.insertText = new vscode.SnippetString(method.label);
+                } else if (Settings.disableAutoParameters) {
+                    item.insertText = new vscode.SnippetString(`${method.label}($1)`);
                 } else {
+                    const snippetParams = method.parameters.map((param, index) => {
+                        const placeholder = `\${${index + 1}:${param.name}}`;
+                        return param.isVariadic ? `...${placeholder}` : placeholder;
+                    }).join(', ');
                     item.insertText = new vscode.SnippetString(`${method.label}(${snippetParams})`);
                 }
                 items.push(item);
@@ -230,12 +233,15 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                         item.range = wordRange;
                     }
 
-                    const snippetParams = constructor.parameters.map((param, index) => {
-                        const placeholder = `\${${index + 1}:${param.name}}`;
-                        return param.isVariadic ? `...${placeholder}` : placeholder;
-                    }).join(', ');
-
-                    item.insertText = new vscode.SnippetString(`${classDef.name}(${snippetParams})`);
+                    if (Settings.disableAutoParameters) {
+                        item.insertText = new vscode.SnippetString(`${classDef.name}($1)`);
+                    } else {
+                        const snippetParams = constructor.parameters.map((param, index) => {
+                            const placeholder = `\${${index + 1}:${param.name}}`;
+                            return param.isVariadic ? `...${placeholder}` : placeholder;
+                        }).join(', ');
+                        item.insertText = new vscode.SnippetString(`${classDef.name}(${snippetParams})`);
+                    }
                     item.sortText = `${PRIORITY_CONSTRUCTOR}_${classDef.name}_${index}`;
                     items.push(item);
                 });
