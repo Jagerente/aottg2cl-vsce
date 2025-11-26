@@ -38,4 +38,8 @@ export class Settings {
     public static get disableAutoParameters(): boolean {
         return Settings.config.get<boolean>('completion.disableAutoParameters', false);
     }
+
+    public static get debugPort(): number {
+        return Settings.config.get<number>('debug.port', 4711);
+    }
 }

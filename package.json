@@ -2,7 +2,7 @@
   "name": "aottg2cl",
   "displayName": "AoTTG 2 Custom Logic Language Support",
   "description": "Syntax highlighting and autocomplete for AoTTG 2 Custom Logic",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "publisher": "Jagerente",
   "repository": {
     "type": "git",
@@ -36,6 +36,11 @@
         "language": "acl",
         "scopeName": "source.acl",
         "path": "./syntaxes/acl.tmLanguage.json"
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "acl"
       }
     ],
     "snippets": [
@@ -99,9 +104,83 @@
           "type": "boolean",
           "default": false,
           "description": "Disable automatic parameter completion in function calls. When enabled, only empty parentheses will be inserted."
+        },
+        "aottg2cl.debug.port": {
+          "type": "number",
+          "default": 4711,
+          "minimum": 1,
+          "maximum": 65535,
+          "description": "Default port for the CL debug server."
         }
       }
-    }
+    },
+    "debuggers": [
+      {
+        "type": "cl",
+        "label": "CL Debug",
+        "languages": [
+          "acl"
+        ],
+        "breakpoints": {
+          "languageIds": [
+            "acl"
+          ]
+        },
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to a .cl file.",
+                "default": "${file}"
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Automatically stop after launch.",
+                "default": false
+              },
+              "port": {
+                "type": "number",
+                "description": "Port to connect to the debugger server.",
+                "default": 4711
+              },
+              "trace": {
+                "type": "boolean",
+                "description": "Enable logging of the Debug Adapter Protocol.",
+                "default": false
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "cl",
+            "request": "launch",
+            "name": "Debug CL Script",
+            "program": "${file}",
+            "stopOnEntry": false,
+            "port": 4711
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "CL Debug: Launch",
+            "description": "A new configuration for debugging a CL file.",
+            "body": {
+              "type": "cl",
+              "request": "launch",
+              "name": "Debug CL Script",
+              "program": "^\"\\${file}\"",
+              "stopOnEntry": false,
+              "port": 4711
+            }
+          }
+        ]
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -126,6 +205,7 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
-    "antlr4ts": "^0.5.0-alpha.4"
+    "antlr4ts": "^0.5.0-alpha.4",
+    "vscode-debugadapter": "^1.51.0"
   }
 }

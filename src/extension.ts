@@ -13,6 +13,7 @@ import {buildFinalFileIntoMap} from './commands/BuildFinalFileIntoMap';
 import {BuildFinalFileTaskProvider} from './tasks/BuildFinalFileTaskProvider';
 import {BuildFinalFileIntoMapTaskProvider} from './tasks/BuildFinalFileIntoMapTaskProvider';
 import {ACLFormatter} from './formatting/ACLFormatter';
+import {DebugAdapterDescriptorFactory, DebugConfigurationProvider} from './debugger/adapter';
 
 export let extensionContext: vscode.ExtensionContext;
 
@@ -44,7 +45,9 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('extension.buildScriptIntoMap', buildFinalFileIntoMap),
         vscode.languages.registerDocumentSymbolProvider({language: 'acl', scheme: 'file'}, symbolProvider),
         vscode.tasks.registerTaskProvider(BuildFinalFileTaskProvider.type, new BuildFinalFileTaskProvider()),
-        vscode.tasks.registerTaskProvider(BuildFinalFileIntoMapTaskProvider.type, new BuildFinalFileIntoMapTaskProvider())
+        vscode.tasks.registerTaskProvider(BuildFinalFileIntoMapTaskProvider.type, new BuildFinalFileIntoMapTaskProvider()),
+        vscode.debug.registerDebugAdapterDescriptorFactory('cl', new DebugAdapterDescriptorFactory()),
+        vscode.debug.registerDebugConfigurationProvider('cl', new DebugConfigurationProvider()),
     );
 
     const refetchDocumentData = async (document: vscode.TextDocument) => {
