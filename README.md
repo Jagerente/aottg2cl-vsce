@@ -173,5 +173,5 @@ Builds all imported files and injects the result into an existing Custom Map fil
 ```sh
 npm install -g vsce
 npm i
-vsce package
+npm run build
 ```

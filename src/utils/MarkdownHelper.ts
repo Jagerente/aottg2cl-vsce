@@ -30,7 +30,7 @@ export function createFieldMarkdown(fieldDef: IField): MarkdownString {
 }
 
 export function createMethodMarkdown(methodDef: IMethod, methodSignature: string): MarkdownString {
-    const kind = methodDef.kind ?? MethodKinds.FUNCTION;
+    const kind = methodDef.kind;
     let md = wrapLang(`${kind} ${methodDef.parent.name}.${methodDef.label}${methodSignature}: ${CodeContextUtils.typeRefToString(methodDef.returnType)}`);
     if (methodDef.description !== "") {
         md += `${horizontalLine} ${methodDef.description}`;

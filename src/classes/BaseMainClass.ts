@@ -1,5 +1,5 @@
 import { BaseInstantiatableClass } from './BaseInstantiatableClass';
-import { IClass, IMethod, ClassKinds, IField } from './IClass';
+import { IClass, IMethod, ClassKinds, IField, MethodKinds } from './IClass';
 
 export class BaseMainClass implements IClass {
     public kind = ClassKinds.CLASS;
@@ -22,6 +22,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnGameStart',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon game start.',
                 parameters: []
@@ -29,6 +30,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnTick',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called every fixed update frame (0.02 seconds).',
                 parameters: []
@@ -36,6 +38,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnFrame',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called every update frame.',
                 parameters: []
@@ -43,6 +46,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnLateFrame',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called after every update frame.',
                 parameters: []
@@ -50,6 +54,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnSecond',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called every second.',
                 parameters: []
@@ -57,6 +62,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnChatInput',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon chat input from the player.',
                 parameters: [
@@ -66,6 +72,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnPlayerSpawn',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon any player spawning. Return false to skip printing to chat.',
                 parameters: [
@@ -76,6 +83,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnCharacterSpawn',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon any character spawning.',
                 parameters: [
@@ -85,6 +93,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnCharacterReloaded',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon any character being reloaded (changing weapon/character model at gas).',
                 parameters: [
@@ -94,6 +103,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnCharacterDie',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon a character dying. Killer may be null.',
                 parameters: [
@@ -105,6 +115,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnCharacterDamaged',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon a character being damaged. Killer may be null.',
                 parameters: [
@@ -117,6 +128,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnPlayerJoin',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon a player joining the room.',
                 parameters: [
@@ -126,6 +138,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnPlayerLeave',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon a player leaving the room.',
                 parameters: [
@@ -135,6 +148,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnNetworkMessage',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon receiving a network message.',
                 parameters: [
@@ -145,6 +159,7 @@ export class BaseMainClass implements IClass {
             {
                 parent: this,
                 label: 'OnButtonClick',
+                kind: MethodKinds.FUNCTION,
                 returnType: {name: 'void', typeArguments: []},
                 description: 'Called upon a UI button being pressed.',
                 parameters: [

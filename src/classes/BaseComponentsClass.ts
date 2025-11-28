@@ -1,4 +1,4 @@
-import { IClass, IMethod, ClassKinds, IField } from './IClass';
+import { IClass, IMethod, ClassKinds, IField, MethodKinds } from './IClass';
 import { BaseMainClass } from './BaseMainClass';
 import { BaseNetworkClassInstance } from './BaseNetworkClass';
 
@@ -20,12 +20,16 @@ export class BaseComponentsClass implements IClass {
             label: 'MapObject',
             type: {name: 'MapObject', typeArguments: []},
             description: 'The MapObject the component is attached to.',
+            readonly: true,
+            private: false
         },
         {
             parent: this,
             label: 'NetworkView',
             type: {name: 'NetworkView', typeArguments: []},
             description: 'The NetworkView attached to the MapObject, if Networked is enabled.',
+            readonly: true,
+            private: false
         },
     ];
 
@@ -33,6 +37,7 @@ export class BaseComponentsClass implements IClass {
         {
             parent: this,
             label: 'OnCollisionEnter',
+            kind: MethodKinds.FUNCTION,
             returnType: {name: 'void', typeArguments: []},
             description: 'Called upon another object first colliding with the attached MapObject.',
             parameters: [
@@ -42,6 +47,7 @@ export class BaseComponentsClass implements IClass {
         {
             parent: this,
             label: 'OnCollisionStay',
+            kind: MethodKinds.FUNCTION,
             returnType: {name: 'void', typeArguments: []},
             description: 'Called every frame while another object is colliding with the attached MapObject.',
             parameters: [
@@ -51,6 +57,7 @@ export class BaseComponentsClass implements IClass {
         {
             parent: this,
             label: 'OnCollisionExit',
+            kind: MethodKinds.FUNCTION,
             returnType: {name: 'void', typeArguments: []},
             description: 'Called upon another object exiting collision with the attached MapObject.',
             parameters: [
@@ -60,6 +67,7 @@ export class BaseComponentsClass implements IClass {
         {
             parent: this,
             label: 'OnGetHit',
+            kind: MethodKinds.FUNCTION,
             returnType: {name: 'void', typeArguments: []},
             description: 'Called upon getting hit by a hitbox, such as a blade or titan attack. Only called if the MapObject has a collider of layer "Hitboxes" attached.',
             parameters: [
@@ -72,6 +80,7 @@ export class BaseComponentsClass implements IClass {
         {
             parent: this,
             label: 'OnGetHooked',
+            kind: MethodKinds.FUNCTION,
             returnType: {name: 'void', typeArguments: []},
             description: 'Called upon getting hit by a hook. Only runs for your player character.',
             parameters: [

@@ -60,7 +60,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         } else if (ctx.COMPONENT()) {
             classKind = ClassKinds.COMPONENT;
             extendsList = [new BaseComponentsClass()];
-            classDescription = 'Represents a component script attached to a MapObject.';
+            classDescription = 'Base class for components, providing callback functions specific to components. Components also inherit all callbacks from Main."';
         } else if (ctx.EXTENSION()) {
             classKind = ClassKinds.EXTENSION;
             extendsList = [new BaseInstantiatableClass()];
@@ -149,7 +149,9 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                         type: paramType,
                         description: paramDescription,
                         declarationRange: paramDeclarationRange,
-                        reassignments: []
+                        reassignments: [],
+                        isOptional: false,
+                        isVariadic: false
                     });
                 }
             }
@@ -281,7 +283,8 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 type: fieldType,
                 description: '',
                 private: ctx.PRIVATE() !== undefined,
-                declarationRange
+                declarationRange,
+                readonly: false
             };
 
             if (this.currentClass.kind === ClassKinds.EXTENSION) {

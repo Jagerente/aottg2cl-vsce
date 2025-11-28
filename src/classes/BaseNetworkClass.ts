@@ -1,4 +1,4 @@
-import { IClass, IMethod, ClassKinds, IField } from './IClass';
+import { IClass, IMethod, ClassKinds, IField, MethodKinds } from './IClass';
 
 export class BaseNetworkClass implements IClass {
     public kind = ClassKinds.COMPONENT;
@@ -15,6 +15,7 @@ export class BaseNetworkClass implements IClass {
         {
             parent: this,
             label: 'OnNetworkTransfer',
+            kind: MethodKinds.FUNCTION,
             returnType: {name: 'void', typeArguments: []},
             description: 'Called upon the NetworkView changing ownership.',
             parameters: [
@@ -25,6 +26,7 @@ export class BaseNetworkClass implements IClass {
         {
             parent: this,
             label: 'SendNetworkStream',
+            kind: MethodKinds.FUNCTION,
             returnType: {name: 'void', typeArguments: []},
             description: 'Called every frame for the owner. You can send a series of data using self.NetworkView.SendStream.',
             parameters: []
@@ -32,6 +34,7 @@ export class BaseNetworkClass implements IClass {
         {
             parent: this,
             label: 'OnNetworkStream',
+            kind: MethodKinds.FUNCTION,
             returnType: {name: 'void', typeArguments: []},
             description: 'Called every frame for non-owner observers. You can receive data using self.NetworkView.ReceiveStream.',
             parameters: []
@@ -39,6 +42,7 @@ export class BaseNetworkClass implements IClass {
         {
             parent: this,
             label: 'OnNetworkMessage',
+            kind: MethodKinds.FUNCTION,
             returnType: {name: 'void', typeArguments: []},
             description: 'Called upon receiving a self.NetworkView.SendMessage call.',
             parameters: [

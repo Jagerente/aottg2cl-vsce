@@ -99,7 +99,7 @@ export class SymbolProvider implements DocumentSymbolProvider {
                 result.push(
                     this.wrapSymbol(
                         method.label,
-                        method.kind || MethodKinds.FUNCTION,
+                        method.kind,
                         SymbolKind.Method,
                         method.declarationRange,
                         method.bodyRange

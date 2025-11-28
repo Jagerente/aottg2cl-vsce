@@ -57,8 +57,8 @@ export interface IParameter {
     type: TypeReference;
     description: string;
     declarationRange?: vscode.Range;
-    isOptional?: boolean;
-    isVariadic?: boolean;
+    isOptional: boolean;
+    isVariadic: boolean;
     reassignments?: IReassignment[];
 }
 
@@ -75,7 +75,7 @@ export interface IConstructor {
 export interface IMethod {
     parent: IClass;
     label: string;
-    kind?: MethodKinds;
+    kind: MethodKinds;
     returnType: TypeReference;
     description: string;
     parameters: IParameter[];
@@ -90,8 +90,8 @@ export interface IField {
     label: string;
     type: TypeReference;
     description: string;
-    readonly?: boolean;
-    private?: boolean
+    readonly: boolean;
+    private: boolean
     declarationRange?: vscode.Range;
     sourceUri?: vscode.Uri;
 }
@@ -247,9 +247,28 @@ export function FindFieldInClassParentsHierarchy(
 }
 
 export function FindConstructorInClassHierarchy(classDef: IClass, argCount: number): IConstructor | null {
-    const ctor = classDef.constructors?.find(m => m.parameters.length === argCount);
-    if (ctor) {
-        return ctor;
+    if (classDef.constructors) {
+        const ctor = classDef.constructors.find(c => {
+            if (argCount === -1) {
+                return true;
+            }
+
+            const requiredParams = c.parameters.filter(
+                param => !param.isOptional && !param.isVariadic
+            ).length;
+
+            const maxParams = c.parameters.filter(
+                param => !param.isVariadic
+            ).length;
+
+            const hasVariadic = c.parameters.some(param => param.isVariadic);
+
+            return argCount >= requiredParams && (argCount <= maxParams || hasVariadic);
+        });
+
+        if (ctor) {
+            return ctor;
+        }
     }
 
     if (classDef.extends) {

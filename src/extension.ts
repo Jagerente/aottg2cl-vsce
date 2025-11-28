@@ -4,7 +4,7 @@ import {VariableCompletionProvider} from './completions/VariableCompletionProvid
 import {MainFunctionsCompletionProvider} from './completions/MainFunctionsCompletionProvider';
 import {SymbolProvider} from './completions/SymbolProvider';
 import {VariableDefinitionProvider} from './definition/VariableDefinitionProvider';
-import {AvailableClassesMap, AvailableGenericClassesMap} from './classes/AvailableClasses';
+import {buildAvailableClasses} from './classes/AvailableClasses';
 import {ACLManager} from './antlr4ts/ACLManager';
 import {DiagnosticManager} from './diagnostic/DiagnosticManager';
 import {DocumentTreeProvider} from './utils/DocumentTreeProvider';
@@ -20,8 +20,10 @@ export let extensionContext: vscode.ExtensionContext;
 export async function activate(context: vscode.ExtensionContext) {
     extensionContext = context;
 
+    const { classes, genericClasses } = buildAvailableClasses(context);
+
     const aclManager = new ACLManager();
-    const documentTreeProvider = new DocumentTreeProvider(aclManager, AvailableClassesMap, AvailableGenericClassesMap);
+    const documentTreeProvider = new DocumentTreeProvider(aclManager, classes, genericClasses);
     const keywordsProvider = new KeywordCompletionProvider(documentTreeProvider);
     const variablesProvider = new VariableCompletionProvider(documentTreeProvider);
     const formatter = new ACLFormatter();
