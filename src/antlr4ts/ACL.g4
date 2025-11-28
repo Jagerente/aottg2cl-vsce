@@ -41,6 +41,7 @@ PLUS: '+';
 MINUS: '-';
 MULTIPLY: '*';
 DIVIDE: '/';
+MODULO: '%';
 
 PLUS_ASSIGN: '+=';
 MINUS_ASSIGN: '-=';
@@ -143,11 +144,11 @@ additiveExpression
     ;
 
 multiplicativeExpression
-    : unaryExpression ((MULTIPLY | DIVIDE) unaryExpression)*
+    : unaryExpression ((MULTIPLY | DIVIDE | MODULO) unaryExpression)*
     ;
 
 unaryExpression
-    : (NOT | MINUS)? postfixExpression
+    : (NOT | MINUS | PLUS)? postfixExpression
     ;
 
 postfixExpression

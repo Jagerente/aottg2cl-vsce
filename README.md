@@ -175,3 +175,16 @@ npm install -g vsce
 npm i
 npm run build
 ```
+
+## Antlr Generation
+
+### Prerequirements
+
+- JDK installed
+- JDK bin directory added to your PATH (so that the java command is available)
+
+### Run
+
+```
+npm run antlr4ts
+```
