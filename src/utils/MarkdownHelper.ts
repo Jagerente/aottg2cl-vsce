@@ -22,7 +22,7 @@ export function createFieldMarkdown(fieldDef: IField): MarkdownString {
     const m2 = fieldDef.readonly ? ' readonly' : '';
 
     const m3 = `(${m1}${m2} field) ${fieldDef.parent.name}.${fieldDef.label} ${CodeContextUtils.typeRefToString(fieldDef.type)}`;
-    let m4 = wrapLang(m3, "csharp");
+    let m4 = wrapLang(m3, "acl");
     if (fieldDef.description !== "") {
         m4 += `${horizontalLine} ${fieldDef.description}`;
     }

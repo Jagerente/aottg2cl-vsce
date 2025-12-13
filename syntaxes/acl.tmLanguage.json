@@ -21,6 +21,9 @@
             "include": "#types"
         },
         {
+            "include": "#generic-types"
+        },
+        {
             "include": "#functions"
         },
 		{
@@ -28,6 +31,12 @@
 		},
 		{
 			"include": "#method-calls"
+		},
+		{
+			"include": "#method-result-member-access"
+		},
+		{
+			"include": "#class-member-access"
 		},
         {
             "include": "#variables"
@@ -158,13 +167,69 @@
             "patterns": [
                 {
                     "name": "meta.method-call.acl",
-                    "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+                    "match": "\\b([A-Z][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.class.acl"
+                        },
+                        "2": {
+                            "name": "entity.name.function.acl"
+                        }
+                    }
+                },
+                {
+                    "name": "meta.method-call.acl",
+                    "match": "\\b([a-z_][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
                     "captures": {
                         "1": {
                             "name": "variable.other.object.acl"
                         },
                         "2": {
                             "name": "entity.name.function.acl"
+                        }
+                    }
+                }
+            ]
+        },
+        "class-member-access": {
+            "patterns": [
+                {
+                    "name": "meta.class-member-access.acl",
+                    "match": "\\b([A-Z][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.class.acl"
+                        },
+                        "2": {
+                            "name": "variable.other.member.acl"
+                        }
+                    }
+                }
+            ]
+        },
+        "method-result-member-access": {
+            "patterns": [
+                {
+                    "name": "meta.method-result-member-access.acl",
+                    "match": "\\)\\.([A-Z][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+                    "captures": {
+                        "1": {
+                            "name": "variable.other.object.acl"
+                        },
+                        "2": {
+                            "name": "entity.name.function.acl"
+                        }
+                    }
+                },
+                {
+                    "name": "meta.method-result-member-access.acl",
+                    "match": "\\)\\.([A-Z][A-Za-z0-9_]*)\\.([A-Za-z_][A-Za-z0-9_]*)",
+                    "captures": {
+                        "1": {
+                            "name": "variable.other.object.acl"
+                        },
+                        "2": {
+                            "name": "variable.other.member.acl"
                         }
                     }
                 }
@@ -186,7 +251,28 @@
             "patterns": [
                 {
                     "name": "support.type.acl",
-                    "match": "\\b(Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|Dict|List|Range|LineCastHitResult)\\b"
+                    "match": "\\b(Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|Dict|List|Range|LineCastHitResult|int|float|string|bool|void|any)\\b"
+                }
+            ]
+        },
+        "generic-types": {
+            "patterns": [
+                {
+                    "name": "meta.generic-type.acl",
+                    "begin": "<",
+                    "end": ">",
+                    "patterns": [
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "name": "entity.name.type.class.acl",
+                            "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
+                        },
+                        {
+                            "include": "#generic-types"
+                        }
+                    ]
                 }
             ]
         }
