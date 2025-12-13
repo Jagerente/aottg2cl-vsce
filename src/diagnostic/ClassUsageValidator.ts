@@ -17,6 +17,10 @@ export class ClassUsageValidator implements IValidator {
     ) {
     }
 
+    private isCallbackType(type: TypeReference): boolean {
+        return type.name === 'any' || type.name === 'void' || type.name === 'function';
+    }
+
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         if (!Settings.showClassUsageDiagnostics) {
             return [];
@@ -50,6 +54,24 @@ export class ClassUsageValidator implements IValidator {
                 const className = firstLink.text.split('(')[0];
                 currentClass = this.documentTreeProvider.findClassByName(document, className);
                 if (!currentClass) {
+                    const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
+                    if (currentMethod) {
+                        const local = this.documentTreeProvider.findAvailableLocalVariableByName(currentMethod, className, true, position);
+                        let foundType: TypeReference | undefined;
+                        if (local) {
+                            foundType = local.type;
+                        }
+                        if (!foundType && currentMethod.parameters) {
+                            const param = currentMethod.parameters.find(p => p.name === className);
+                            if (param) {
+                                foundType = param.type;
+                            }
+                        }
+                        if (foundType && this.isCallbackType(foundType)) {
+                            continue;
+                        }
+                    }
+                    
                     diagnostics.push(
                         this.createDiagnostic(firstLink, `Class definition for '${className}' not found.`)
                     );
@@ -94,7 +116,10 @@ export class ClassUsageValidator implements IValidator {
                     }
 
                     if (foundType) {
-                        if (foundType.name === 'any') {
+                        if (this.isCallbackType(foundType)) {
+                            if (chain.length > 1 && chain[1].isMethodCall) {
+                                continue;
+                            }
                             continue;
                         }
 
@@ -147,7 +172,48 @@ export class ClassUsageValidator implements IValidator {
                         isStatic
                     );
                     if (!method) {
-                        let msg = `${isStatic ? 'Static' : 'Instance'} method '${methodName}' with ${link.methodArguments!.length} does not exist on type '${currentClass.name}'.`;
+                        const field = FindFieldInClassHierarchy(
+                            currentClass,
+                            methodName,
+                            !isStatic,
+                            isStatic,
+                            true,
+                            true
+                        );
+                        if (field && this.isCallbackType(field.type)) {
+                            currentReturnType = { name: 'any', typeArguments: [] };
+                            currentClass = undefined;
+                            isStatic = false;
+                            selfCast = false;
+                            continue;
+                        }
+                        
+                        if (i > 0 && !chain[i - 1].isMethodCall) {
+                            const prevLink = chain[i - 1];
+                            const prevMethod = this.documentTreeProvider.getCurrentMethod(document, position);
+                            if (prevMethod) {
+                                const prevLocal = this.documentTreeProvider.findAvailableLocalVariableByName(prevMethod, prevLink.text, true, position);
+                                let prevType: TypeReference | undefined;
+                                if (prevLocal) {
+                                    prevType = prevLocal.type;
+                                }
+                                if (!prevType && prevMethod.parameters) {
+                                    const prevParam = prevMethod.parameters.find(p => p.name === prevLink.text);
+                                    if (prevParam) {
+                                        prevType = prevParam.type;
+                                    }
+                                }
+                                if (prevType && this.isCallbackType(prevType)) {
+                                    currentReturnType = { name: 'any', typeArguments: [] };
+                                    currentClass = undefined;
+                                    isStatic = false;
+                                    selfCast = false;
+                                    continue;
+                                }
+                            }
+                        }
+                        
+                        let msg = `${isStatic ? 'Static' : 'Instance'} method '${methodName}' with ${link.methodArguments!.length} arguments does not exist on type '${currentClass.name}'.`;
                         let severity = vscode.DiagnosticSeverity.Error;
                         if (['Object', 'Character', 'Component'].includes(currentClass.name)) {
                             msg += `\nType '${currentClass.name}' is a base class; resolution may be imprecise.`;
@@ -161,28 +227,75 @@ export class ClassUsageValidator implements IValidator {
                     }
                     currentReturnType = method.returnType;
                 } else {
-                    const field = FindFieldInClassHierarchy(
+                    const method = FindMethodInClassHierarchy(
                         currentClass,
                         link.text,
+                        -1,
                         !isStatic,
-                        isStatic,
-                        true,
-                        true
+                        isStatic
                     );
-                    if (!field) {
-                        let msg = `${isStatic ? 'Static' : 'Instance'} field '${link.text}' does not exist on type '${currentClass.name}'.`;
-                        let severity = vscode.DiagnosticSeverity.Error;
-                        if (['Object', 'Character', 'Component'].includes(currentClass.name)) {
-                            msg += `\nType '${currentClass.name}' is a base class; resolution may be imprecise.`;
-                            severity = vscode.DiagnosticSeverity.Warning;
+                    
+                    if (method) {
+                        const isLastLink = i === chain.length - 1;
+                        
+                        if (!isLastLink) {
+                            const nextLink = chain[i + 1];
+                            diagnostics.push(
+                                this.createDiagnostic(
+                                    nextLink,
+                                    `Cannot access '${nextLink.text}' on method '${link.text}' without calling it.`,
+                                    vscode.DiagnosticSeverity.Error
+                                )
+                            );
+                            
+                            for (let j = i + 2; j < chain.length; j++) {
+                                const subsequentLink = chain[j];
+                                diagnostics.push(
+                                    this.createDiagnostic(
+                                        subsequentLink,
+                                        `This access is invalid because the previous access on method '${link.text}' failed.`,
+                                        vscode.DiagnosticSeverity.Warning
+                                    )
+                                );
+                            }
+                            
+                            broken = true;
+                            break;
                         }
-                        if (severity === vscode.DiagnosticSeverity.Error || Settings.showUnresolvedMemberWarnings) {
-                            diagnostics.push(this.createDiagnostic(link, msg, severity));
+
+                        currentReturnType = method.returnType;
+                    } else {
+                        const field = FindFieldInClassHierarchy(
+                            currentClass,
+                            link.text,
+                            !isStatic,
+                            isStatic,
+                            true,
+                            true
+                        );
+                        if (!field) {
+                            let msg = `${isStatic ? 'Static' : 'Instance'} field '${link.text}' does not exist on type '${currentClass.name}'.`;
+                            let severity = vscode.DiagnosticSeverity.Error;
+                            if (['Object', 'Character', 'Component'].includes(currentClass.name)) {
+                                msg += `\nType '${currentClass.name}' is a base class; resolution may be imprecise.`;
+                                severity = vscode.DiagnosticSeverity.Warning;
+                            }
+                            if (severity === vscode.DiagnosticSeverity.Error || Settings.showUnresolvedMemberWarnings) {
+                                diagnostics.push(this.createDiagnostic(link, msg, severity));
+                            }
+                            broken = true;
+                            break;
                         }
-                        broken = true;
-                        break;
+                        currentReturnType = field.type;
+                        
+                        if (i < chain.length - 1 && chain[i + 1].isMethodCall && this.isCallbackType(field.type)) {
+                            currentReturnType = { name: 'any', typeArguments: [] };
+                            currentClass = undefined;
+                            isStatic = false;
+                            selfCast = false;
+                            continue;
+                        }
                     }
-                    currentReturnType = field.type;
                 }
                 currentClass = undefined;
 
