@@ -280,7 +280,16 @@ export class JsonClassLoader {
     }
 
     private getGenericInstanceKey(genericName: string, typeArgs: TypeReference[]): string {
-        return `${genericName}<${typeArgs.map(t => t.name).join(',')}>`;
+        const typeArgsString = typeArgs.map(t => this.getTypeReferenceKey(t)).join(',');
+        return `${genericName}<${typeArgsString}>`;
+    }
+
+    private getTypeReferenceKey(typeRef: TypeReference): string {
+        if (typeRef.typeArguments.length === 0) {
+            return typeRef.name;
+        }
+        const argsString = typeRef.typeArguments.map(arg => this.getTypeReferenceKey(arg)).join(',');
+        return `${typeRef.name}<${argsString}>`;
     }
 
     private instantiateGeneric(
@@ -306,7 +315,7 @@ export class JsonClassLoader {
 
         const inst: IClass = {
             kind: genericClass.kind,
-            name: `${genericClass.name}<${typeArgs.map(t => t.name).join(',')}>`,
+            name: `${genericClass.name}<${typeArgs.map(t => this.getTypeReferenceKey(t)).join(',')}>`,
             description: genericClass.description,
             instanceFields: [],
             instanceMethods: [],

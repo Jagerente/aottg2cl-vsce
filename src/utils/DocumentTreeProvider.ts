@@ -159,15 +159,31 @@ export class DocumentTreeProvider {
             if (!generic) {
                 return undefined;
             }
-            const inst = generic.instantiate(typeRef.typeArguments);
-
-            this.getParsedData(document)?.allAvailableClasses.push(inst);
-            return inst;
+            
+            return generic.instantiate(typeRef.typeArguments);
         }
 
-        const all = this.getParsedData(document)?.allAvailableClasses
-            ?? Array.from(this.globalClasses.values());
-        return all.find(c => c.name === typeRef.name);
+        const parsedData = this.getParsedData(document);
+        if (parsedData) {
+            const userDefined = parsedData.userDefinedClasses.find(c => c.name === typeRef.name);
+            if (userDefined) {
+                return userDefined;
+            }
+            
+            const imported = parsedData.importedClasses.get(typeRef.name);
+            if (imported) {
+                return imported;
+            }
+            
+            const global = this.globalClasses.get(typeRef.name);
+            if (global) {
+                return global;
+            }
+        } else {
+            return this.globalClasses.get(typeRef.name);
+        }
+        
+        return undefined;
     }
 
     public getCurrentDeclaringMethod(document: vscode.TextDocument, position: vscode.Position): IMethod | IConstructor | undefined {

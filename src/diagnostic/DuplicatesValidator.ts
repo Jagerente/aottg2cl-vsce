@@ -11,10 +11,12 @@ export class DuplicatesValidator {
 
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         const diagnostics: vscode.Diagnostic[] = [];
-        const classes = this.documentTreeProvider.getAllAvailableClasses(document);
+        const allClasses = this.documentTreeProvider.getAllAvailableClasses(document);
+        const globalClassesMap = this.documentTreeProvider.getGlobalClassesMap();
+        const userDefinedClasses = this.documentTreeProvider.getUserDefinedClasses(document);
 
         const classNames = new Map<string, IClass[]>();
-        classes.forEach((classDef) => {
+        allClasses.forEach((classDef) => {
             if (!classNames.has(classDef.name)) {
                 classNames.set(classDef.name, []);
             }
@@ -22,22 +24,44 @@ export class DuplicatesValidator {
         });
 
         classNames.forEach((classDefs, className) => {
-            if (classDefs.length > 1) {
-                const currentClasses = classDefs.filter(cls => cls.sourceUri?.fsPath === document.uri.fsPath);
-                if (currentClasses.length > 0) {
-                    currentClasses.forEach((classDef) => {
+            const globalClasses = classDefs.filter(cls => globalClassesMap.has(cls.name) && !cls.sourceUri);
+            const userDefinedClassesWithName = classDefs.filter(cls => !!cls.sourceUri);
+            
+            const currentClasses = classDefs.filter(cls => cls.sourceUri?.fsPath === document.uri.fsPath);
+            
+            if (currentClasses.length === 0) {
+                return;
+            }
+
+            if (globalClasses.length === 1 && userDefinedClassesWithName.length === 1) {
+                currentClasses.forEach((classDef) => {
+                    if (classDef.sourceUri && classDef.declarationRange) {
                         const diagnostic = new vscode.Diagnostic(
-                            classDef.declarationRange!,
-                            `Duplicate class declaration '${className}' detected (exists in ${classDefs.length} definitions).`,
+                            classDef.declarationRange,
+                            `User defined class '${className}' overrides global class.`,
+                            vscode.DiagnosticSeverity.Warning
+                        );
+                        diagnostics.push(diagnostic);
+                    }
+                });
+            }
+
+            if (userDefinedClassesWithName.length > 1) {
+                currentClasses.forEach((classDef) => {
+                    if (classDef.sourceUri && classDef.declarationRange) {
+                        const diagnostic = new vscode.Diagnostic(
+                            classDef.declarationRange,
+                            `Duplicate class declaration '${className}' detected (exists in ${userDefinedClassesWithName.length} user defined definitions).`,
                             vscode.DiagnosticSeverity.Error
                         );
                         diagnostics.push(diagnostic);
-                    });
-                }
+                    }
+                });
             }
         });
 
-        classes.forEach((classDef) => {
+        const currentDocumentClasses = userDefinedClasses.filter(cls => cls.sourceUri?.fsPath === document.uri.fsPath);
+        currentDocumentClasses.forEach((classDef) => {
             const methodSignatures = new Map<string, IMethod[]>();
             const fieldNames = new Map<string, IField[]>();
 
