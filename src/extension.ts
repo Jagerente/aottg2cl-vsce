@@ -96,6 +96,7 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidCloseTextDocument(doc => {
         if (doc.languageId === 'acl') {
             documentTreeProvider.clearDocument(doc);
+            diagnosticCollection.delete(doc.uri);
         }
     });
 }
