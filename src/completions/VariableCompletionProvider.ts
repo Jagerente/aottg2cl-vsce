@@ -28,11 +28,25 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
     }
 
     public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
-        const currentClassDef = this.documentTreeProvider.getCurrentClass(document, position);
-        const currentDeclaringMethod = this.documentTreeProvider.getCurrentDeclaringMethod(document, position);
-        const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
+        if (this.documentTreeProvider.isInsideClassDeclaration(document, position)) {
+            return [];
+        }
 
-        if (!currentClassDef || currentDeclaringMethod && !currentMethod) {
+        if (this.documentTreeProvider.isInsideMethodDeclaration(document, position)) {
+            return [];
+        }
+
+        const currentClassDef = this.documentTreeProvider.getCurrentClass(document, position);
+        if (!currentClassDef) {
+            return [];
+        }
+
+        if (this.documentTreeProvider.getCurrentDeclaringMethod(document, position)) {
+            return [];
+        }
+
+        const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
+        if (!currentMethod) {
             return [];
         }
 

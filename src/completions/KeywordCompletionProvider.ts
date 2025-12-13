@@ -58,22 +58,17 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
 
     public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
         const items: vscode.CompletionItem[] = [];
-        const currentClass = this.documentTreeProvider.getCurrentClass(document, position);
-        const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
-
-        const isInsideLoop = this.documentTreeProvider.isInsideLoopBody(document, position);
-        const isInsideLoopCondition = this.documentTreeProvider.isInsideLoopCondition(document, position);
-        const canSuggestElif = this.documentTreeProvider.canSuggestElif(document, position);
+        
+        const isInsideClassDeclaration = this.documentTreeProvider.isInsideClassDeclaration(document, position);
+        const isInsideMethodDeclaration = this.documentTreeProvider.isInsideMethodDeclaration(document, position);
 
         const line = document.lineAt(position).text;
         const textBefore = line.slice(0, position.character);
         const textAfter = line.slice(position.character);
         const hasRightText = /\S/.test(textAfter);
         const preferSnippet = !hasRightText;
-
         const declMatch = textBefore.match(/\b(class|component|extension|cutscene|function|coroutine)\s*$/);
         const skipLabel = declMatch ? declMatch[1] : undefined;
-
         const wordRange = document.getWordRangeAtPosition(position, /[A-Za-z_]\w*/);
 
         const makePlain = (label: string) => {
@@ -97,50 +92,65 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
             return item;
         };
 
-        if (!currentClass && skipLabel !== 'class' && skipLabel !== 'component' && skipLabel !== 'extension' && skipLabel !== 'cutscene') {
-            ['class', 'component', 'extension', 'cutscene'].forEach(label => {
-                items.push(makePlain(label));
-                const kw = this.keywords.find(k => k.label === label);
-                if (kw) {
-                    items.push(makeSnippet(kw));
-                }
-            });
-        } else if (currentClass && !currentMethod && skipLabel !== 'function' && skipLabel !== 'coroutine') {
-            ['function', 'coroutine'].forEach(label => {
-                items.push(makePlain(label));
-                const kw = this.keywords.find(k => k.label === label);
-                if (kw) {
-                    items.push(makeSnippet(kw));
-                }
-            });
-        } else if (currentMethod && !isInsideLoopCondition) {
-            items.push(makePlain('self'));
-            ['if', 'for', 'while', 'return'].forEach(label => {
-                items.push(makePlain(label));
-                const kw = this.keywords.find(k => k.label === label);
-                if (kw) {
-                    items.push(makeSnippet(kw));
-                }
-            });
-            if (canSuggestElif) {
-                ['else', 'elif'].forEach(label => {
+        if (!isInsideClassDeclaration && skipLabel !== 'class' && skipLabel !== 'component' && skipLabel !== 'extension' && skipLabel !== 'cutscene') {
+            const currentClass = this.documentTreeProvider.getCurrentClass(document, position);
+            if (!currentClass) {
+                ['class', 'component', 'extension', 'cutscene'].forEach(label => {
                     items.push(makePlain(label));
                     const kw = this.keywords.find(k => k.label === label);
                     if (kw) {
                         items.push(makeSnippet(kw));
                     }
                 });
+                return items;
             }
-        }
 
-        if (isInsideLoop && !isInsideLoopCondition) {
-            [/*'break',*/ 'continue'].forEach(label => {
-                items.push(makePlain(label));
-                const kw = this.keywords.find(k => k.label === label);
-                if (kw) {
-                    items.push(makeSnippet(kw));
+            if (!isInsideMethodDeclaration && skipLabel !== 'function' && skipLabel !== 'coroutine') {
+                const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
+                if (!currentMethod) {
+                    ['function', 'coroutine'].forEach(label => {
+                        items.push(makePlain(label));
+                        const kw = this.keywords.find(k => k.label === label);
+                        if (kw) {
+                            items.push(makeSnippet(kw));
+                        }
+                    });
+                    return items;
                 }
-            });
+
+                const isInsideLoopCondition = this.documentTreeProvider.isInsideLoopCondition(document, position);
+                if (!isInsideLoopCondition) {
+                    items.push(makePlain('self'));
+                    ['if', 'for', 'while', 'return'].forEach(label => {
+                        items.push(makePlain(label));
+                        const kw = this.keywords.find(k => k.label === label);
+                        if (kw) {
+                            items.push(makeSnippet(kw));
+                        }
+                    });
+                    const canSuggestElif = this.documentTreeProvider.canSuggestElif(document, position);
+                    if (canSuggestElif) {
+                        ['else', 'elif'].forEach(label => {
+                            items.push(makePlain(label));
+                            const kw = this.keywords.find(k => k.label === label);
+                            if (kw) {
+                                items.push(makeSnippet(kw));
+                            }
+                        });
+                    }
+                }
+
+                const isInsideLoop = this.documentTreeProvider.isInsideLoopBody(document, position);
+                if (isInsideLoop && !isInsideLoopCondition) {
+                    [/*'break',*/ 'continue'].forEach(label => {
+                        items.push(makePlain(label));
+                        const kw = this.keywords.find(k => k.label === label);
+                        if (kw) {
+                            items.push(makeSnippet(kw));
+                        }
+                    });
+                }
+            }
         }
 
         return items;

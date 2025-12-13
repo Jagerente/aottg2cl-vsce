@@ -491,8 +491,9 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     private getClassDeclarationRange(ctx: ClassDeclContext): vscode.Range {
         const startLine = ctx.start!.line - 1;
         const startChar = ctx.start!.charPositionInLine;
-        const endLine = ctx.ID().symbol.line - 1;
-        const endChar = ctx.ID().symbol.charPositionInLine + ctx.ID().symbol.text!.length;
+        const lbraceSymbol = ctx.LBRACE().symbol;
+        const endLine = lbraceSymbol.line - 1;
+        const endChar = lbraceSymbol.charPositionInLine;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -500,10 +501,11 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     }
 
     private getClassBodyRange(ctx: ClassDeclContext): vscode.Range {
-        const startLine = ctx.LBRACE().symbol.line;
-        const startChar = ctx.LBRACE().symbol.charPositionInLine;
-        const endLine = ctx.RBRACE().symbol.line;
-        const endChar = ctx.RBRACE().symbol.charPositionInLine;
+        const startLine = ctx.LBRACE().symbol.line - 1;
+        const startChar = ctx.LBRACE().symbol.charPositionInLine + 1;
+        const rbraceSymbol = ctx.RBRACE().symbol;
+        const endLine = rbraceSymbol.line - 1;
+        const endChar = rbraceSymbol.charPositionInLine;
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -536,9 +538,9 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         const startLine = keywordToken.line - 1;
         const startChar = keywordToken.charPositionInLine;
 
-        const rparen = ctx.RPAREN().symbol;
-        const endLine = rparen.line - 1;
-        const endChar = rparen.charPositionInLine + 1;
+        const blockStartSymbol = ctx.block().start!;
+        const endLine = blockStartSymbol.line - 1;
+        const endChar = blockStartSymbol.charPositionInLine;
 
         return new vscode.Range(
             new vscode.Position(startLine, startChar),

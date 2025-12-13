@@ -142,6 +142,32 @@ export class DocumentTreeProvider {
         return undefined;
     }
 
+    public isInsideClassDeclaration(document: vscode.TextDocument, position: vscode.Position): boolean {
+        for (const classDef of this.getUserDefinedClasses(document)) {
+            if (classDef.declarationRange?.contains(position)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public isInsideMethodDeclaration(document: vscode.TextDocument, position: vscode.Position): boolean {
+        for (const classDef of this.getUserDefinedClasses(document)) {
+            if (classDef.instanceMethods.some(method => method.declarationRange?.contains(position)) || classDef.staticMethods.some(method => method.declarationRange?.contains(position)) || classDef.constructors?.some(ctor => ctor.declarationRange?.contains(position))) {
+                return true;
+            }
+
+            if (classDef.constructors?.some(ctor => ctor.declarationRange?.contains(position))) {
+                return true;
+            }
+
+            if (classDef.staticMethods.some(method => method.declarationRange?.contains(position))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public findClassByName(
         document: vscode.TextDocument | string,
         rawName: string
