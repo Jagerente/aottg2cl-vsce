@@ -17,12 +17,14 @@ type ParsedDocumentData = {
     importedClasses: Map<string, IClass>;
     allAvailableClasses: IClass[];
     chains: IChainNode[][];
+    chainRanges: vscode.Range[];
     loopNodes: ILoopNode[];
     conditionNodes: IConditionNode[];
 };
 
 export class DocumentTreeProvider {
     private parsedDocuments = new Map<string, ParsedDocumentData>();
+    private documentVersions = new Map<string, number>();
 
     constructor(
         private aclManager: ACLManager,
@@ -35,6 +37,12 @@ export class DocumentTreeProvider {
 
     public async refetchUserDefinedClasses(document: vscode.TextDocument): Promise<void> {
         const uri = document.uri.toString();
+        const currentVersion = document.version;
+        const cachedVersion = this.documentVersions.get(uri);
+
+        if (cachedVersion !== undefined && cachedVersion === currentVersion) {
+            return;
+        }
 
         await this.aclManager.refetchWithImports(document);
         const userDefinedClasses = this.aclManager.getClasses();
@@ -42,6 +50,23 @@ export class DocumentTreeProvider {
         const chains = this.aclManager.getChains();
         const loopNodes = this.aclManager.getLoopNodes();
         const conditionNodes = this.aclManager.getConditionNodes();
+
+        const chainRanges = chains.map(chain => {
+            if (chain.length === 0) {
+                return new vscode.Range(0, 0, 0, 0);
+            }
+            
+            const firstNode = chain[0];
+            const lastNode = chain[chain.length - 1];
+            
+            const startPos = new vscode.Position(firstNode.startLine, firstNode.startColumn);
+            const endPos = new vscode.Position(
+                lastNode.startLine,
+                lastNode.startColumn + lastNode.text.length
+            );
+            
+            return new vscode.Range(startPos, endPos);
+        });
 
         const allAvailableClasses = [
             ...Array.from(this.globalClasses.values()),
@@ -54,6 +79,7 @@ export class DocumentTreeProvider {
             importedClasses,
             allAvailableClasses,
             chains,
+            chainRanges,
             loopNodes,
             conditionNodes
         });
@@ -107,10 +133,14 @@ export class DocumentTreeProvider {
                 }
             }
         }
+
+        this.documentVersions.set(uri, currentVersion);
     }
 
     public clearDocument(document: vscode.TextDocument): void {
-        this.parsedDocuments.delete(document.uri.toString());
+        const uri = document.uri.toString();
+        this.parsedDocuments.delete(uri);
+        this.documentVersions.delete(uri);
     }
 
     private getParsedData(document: vscode.TextDocument | string): ParsedDocumentData | undefined {
@@ -282,6 +312,11 @@ export class DocumentTreeProvider {
 
     public getChains(document: vscode.TextDocument): IChainNode[][] {
         return this.getParsedData(document)?.chains ?? [];
+    }
+
+    public isInsideChainNode(document: vscode.TextDocument, position: vscode.Position): boolean {
+        const chainRanges = this.getParsedData(document)?.chainRanges ?? [];
+        return chainRanges.some(range => range.contains(position));
     }
 
     public getLoopNodes(document: vscode.TextDocument): ILoopNode[] {

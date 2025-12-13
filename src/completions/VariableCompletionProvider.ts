@@ -13,65 +13,38 @@ import {
     IParameter,
     IVariable
 } from '../classes/IClass';
-
+import { CompletionContext } from './CompletionContext';
 import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
 
 const PRIORITY_STATIC = '0';
 const PRIORITY_CONSTRUCTOR = '1';
 const PRIORITY_VARIABLE = '2';
 
-export class VariableCompletionProvider implements vscode.CompletionItemProvider, vscode.HoverProvider, vscode.SignatureHelpProvider {
-    private documentTreeProvider: DocumentTreeProvider;
-
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.documentTreeProvider = documentTreeProvider;
-    }
-
-    public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
-        if (this.documentTreeProvider.isInsideClassDeclaration(document, position)) {
+export class VariableCompletionProvider {
+    public provideCompletions(context: CompletionContext): vscode.CompletionItem[] {
+        if (context.isInsideClassDeclaration || context.isInsideMethodDeclaration) {
             return [];
         }
 
-        if (this.documentTreeProvider.isInsideMethodDeclaration(document, position)) {
+        if (!context.currentClass || context.currentDeclaringMethod) {
             return [];
         }
 
-        const currentClassDef = this.documentTreeProvider.getCurrentClass(document, position);
-        if (!currentClassDef) {
-            return [];
-        }
-
-        if (this.documentTreeProvider.getCurrentDeclaringMethod(document, position)) {
-            return [];
-        }
-
-        const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
-        if (!currentMethod) {
-            return [];
-        }
-
-        const lineText = document.lineAt(position).text;
-        let textBeforeCursor = lineText.substring(0, position.character);
-        const textAfterCursor = lineText.substring(position.character);
-        const nextIsParen = /^\s*\(/.test(textAfterCursor);
-
-        const callChainString = CodeContextUtils.parseCallChain(textBeforeCursor);
+        const { document, position, textBeforeCursor, callChainString, callChainArray, wordRange, nextIsParen, currentClass: currentClassDef, currentMethod } = context;
 
         let lastDot = callChainString.lastIndexOf('.');
         const afterDot = lastDot === -1 ? '' : callChainString.slice(lastDot + 1).trim();
         const afterDotBeforeCursor = callChainString.slice(lastDot + 1, position.character).trim();
 
         const textBeforeDot = callChainString.slice(0, lastDot + 1).trim();
+        const callChainArrayForResolve = CodeContextUtils.splitCallChain(textBeforeDot);
 
-        const callChainArray = CodeContextUtils.splitCallChain(textBeforeDot);
-        const wordRange = document.getWordRangeAtPosition(position, /[\w$]+/);
-
-        if (callChainArray.length > 0) {
+        if (callChainArrayForResolve.length > 0) {
             const resolvedType = CodeContextUtils.resolveChainType(
                 document,
                 position,
-                this.documentTreeProvider,
-                callChainArray,
+                context.documentTreeProvider,
+                callChainArrayForResolve,
                 currentClassDef,
                 currentMethod
             );
@@ -80,19 +53,19 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
                 return [];
             }
 
-            const classDef = this.documentTreeProvider.findClassByReference(document, resolvedType);
+            const classDef = context.documentTreeProvider.findClassByReference(document, resolvedType);
             if (!classDef) {
                 return [];
             }
 
             const includePrivates = classDef.name === currentClassDef?.name;
-            const staticContext = callChainArray[0] !== 'self' && callChainArray.length === 1 && this.documentTreeProvider.findClassByName(document, callChainArray[0]) !== undefined;
+            const staticContext = callChainArrayForResolve[0] !== 'self' && callChainArrayForResolve.length === 1 && context.documentTreeProvider.findClassByName(document, callChainArrayForResolve[0]) !== undefined;
 
             let completions = this.getFieldsAndMethodsCompletions(
                 classDef,
                 includePrivates,
                 !staticContext,
-                staticContext || callChainArray[0] === 'self' && callChainArray.length === 1,
+                staticContext || callChainArrayForResolve[0] === 'self' && callChainArrayForResolve.length === 1,
                 nextIsParen,
                 wordRange
             );
@@ -102,7 +75,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             return completions;
         }
 
-        return this.getVarsAndClassesCompletions(document, position, wordRange, currentMethod);
+        return this.getVarsAndClassesCompletions(context);
     }
 
     private getFieldsAndMethodsCompletions(
@@ -136,25 +109,8 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             });
 
             classDef.instanceMethods.forEach(method => {
-                const item = new vscode.CompletionItem(method.label, vscode.CompletionItemKind.Method);
-                item.detail = `${this.constructMethodSignature(method)}: ${CodeContextUtils.typeRefToString(method.returnType)}`;
-                item.documentation = new vscode.MarkdownString(method.description);
-                if (wordRange) {
-                    item.range = wordRange;
-                }
-
-                if (nextIsParen) {
-                    item.insertText = new vscode.SnippetString(method.label);
-                } else if (Settings.disableAutoParameters) {
-                    item.insertText = new vscode.SnippetString(`${method.label}($1)`);
-                } else {
-                    const snippetParams = method.parameters.map((param, index) => {
-                        const placeholder = `\${${index + 1}:${param.name}}`;
-                        return param.isVariadic ? `...${placeholder}` : placeholder;
-                    }).join(', ');
-                    item.insertText = new vscode.SnippetString(`${method.label}(${snippetParams})`);
-                }
-                items.push(item);
+                const completions = this.createMethodCompletions(method, nextIsParen, wordRange);
+                completions.forEach(item => items.push(item));
             });
         }
 
@@ -174,25 +130,8 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             });
 
             classDef.staticMethods.forEach(method => {
-                const item = new vscode.CompletionItem(method.label, vscode.CompletionItemKind.Function);
-                item.detail = `${this.constructMethodSignature(method)}: ${CodeContextUtils.typeRefToString(method.returnType)}`;
-                item.documentation = new vscode.MarkdownString(method.description);
-                if (wordRange) {
-                    item.range = wordRange;
-                }
-
-                if (nextIsParen) {
-                    item.insertText = new vscode.SnippetString(method.label);
-                } else if (Settings.disableAutoParameters) {
-                    item.insertText = new vscode.SnippetString(`${method.label}($1)`);
-                } else {
-                    const snippetParams = method.parameters.map((param, index) => {
-                        const placeholder = `\${${index + 1}:${param.name}}`;
-                        return param.isVariadic ? `...${placeholder}` : placeholder;
-                    }).join(', ');
-                    item.insertText = new vscode.SnippetString(`${method.label}(${snippetParams})`);
-                }
-                items.push(item);
+                const completions = this.createMethodCompletions(method, nextIsParen, wordRange, vscode.CompletionItemKind.Function);
+                completions.forEach(item => items.push(item));
             });
         }
 
@@ -201,14 +140,12 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
 
 
     private getVarsAndClassesCompletions(
-        document: vscode.TextDocument,
-        position: vscode.Position,
-        wordRange: vscode.Range | undefined,
-        currentMethod: IMethod | IConstructor | undefined
+        context: CompletionContext
     ): vscode.CompletionItem[] {
+        const { document, position, wordRange, currentMethod, documentTreeProvider } = context;
         const items: vscode.CompletionItem[] = [];
 
-        this.documentTreeProvider.getAllAvailableClasses(document).forEach(classDef => {
+        documentTreeProvider.getAllAvailableClasses(document).forEach(classDef => {
             if (classDef.hidden) {
                 return;
             }
@@ -230,7 +167,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             items.push(classItem);
         });
 
-        this.documentTreeProvider.getAllAvailableClasses(document).forEach(classDef => {
+        documentTreeProvider.getAllAvailableClasses(document).forEach(classDef => {
             if (classDef.hidden) {
                 return;
             }
@@ -275,7 +212,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         if (currentMethod) {
             const seenNames = new Set<string>();
 
-            for (const details of this.documentTreeProvider.iterateAvailableLocalVariables(
+            for (const details of documentTreeProvider.iterateAvailableLocalVariables(
                 currentMethod!,
                 true,
                 position
@@ -314,7 +251,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         return items;
     }
 
-    public provideHover(document: vscode.TextDocument, position: vscode.Position): vscode.Hover | undefined {
+    public provideHover(document: vscode.TextDocument, position: vscode.Position, documentTreeProvider: DocumentTreeProvider): vscode.Hover | undefined {
         const lineText = document.lineAt(position).text;
         const wordRange = document.getWordRangeAtPosition(position);
         const word = wordRange ? document.getText(wordRange) : null;
@@ -330,9 +267,9 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         const callChainString = CodeContextUtils.parseCallChain(fullLineBeforeWordEnd);
         const callChainArray = CodeContextUtils.splitCallChain(callChainString);
 
-        const currentClass = this.documentTreeProvider.getCurrentClass(document, position);
+        const currentClass = documentTreeProvider.getCurrentClass(document, position);
 
-        const currentField = this.documentTreeProvider.getCurrentFieldDeclaration(document, position);
+        const currentField = documentTreeProvider.getCurrentFieldDeclaration(document, position);
         if (currentField) {
             if (word === currentField.label) {
                 const hoverContent = markdown.createFieldMarkdown(currentField);
@@ -340,7 +277,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             }
         }
 
-        const currentDeclarationMethod = this.documentTreeProvider.getCurrentDeclaringMethod(document, position);
+        const currentDeclarationMethod = documentTreeProvider.getCurrentDeclaringMethod(document, position);
         if (currentDeclarationMethod) {
             const isMethod = 'label' in currentDeclarationMethod;
             const methodName = isMethod ? currentDeclarationMethod.label : 'Init';
@@ -367,10 +304,10 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             }
         }
 
-        const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
+        const currentMethod = documentTreeProvider.getCurrentMethod(document, position);
 
         if (currentMethod && callChainArray.length > 1) {
-            const resolvedType = CodeContextUtils.resolveChainFinalPart(document, position, this.documentTreeProvider, callChainArray, currentClass, currentMethod);
+            const resolvedType = CodeContextUtils.resolveChainFinalPart(document, position, documentTreeProvider, callChainArray, currentClass, currentMethod);
 
             if (resolvedType) {
                 let hoverContent: vscode.MarkdownString;
@@ -395,7 +332,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         }
 
         if (currentMethod) {
-            const local = this.documentTreeProvider.findAvailableLocalVariableByName(currentMethod, word, true, position);;
+            const local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, word, true, position);;
             if (local) {
                 return new vscode.Hover(
                     markdown.createVariableMarkdown(local),
@@ -412,7 +349,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             }
         }
 
-        const classDef = this.documentTreeProvider.findClassByName(document, word);
+        const classDef = documentTreeProvider.findClassByName(document, word);
         if (classDef) {
             return new vscode.Hover(markdown.createClassMarkdown(classDef), wordRange);
         }
@@ -429,7 +366,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
             }
         }
 
-        const methodDef = this.findMethodByNameFromAllClasses(document, word);
+        const methodDef = this.findMethodByNameFromAllClasses(document, word, documentTreeProvider);
         if (methodDef) {
             return new vscode.Hover(markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef)), wordRange);
         }
@@ -437,7 +374,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         return undefined;
     }
 
-    public provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position): vscode.SignatureHelp | undefined {
+    public provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, documentTreeProvider: DocumentTreeProvider): vscode.SignatureHelp | undefined {
         const lineText = document.lineAt(position.line).text;
         const openParenIndex = lineText.lastIndexOf('(', position.character);
 
@@ -455,7 +392,7 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         const argumentText = lineText.substring(openParenIndex + 1, position.character);
         const providedArgumentsCount = this.countArguments(argumentText);
 
-        let classDef = this.documentTreeProvider.findClassByName(document, identifierChain[0]);
+        let classDef = documentTreeProvider.findClassByName(document, identifierChain[0]);
         if (identifierChain.length === 1 && classDef) {
             if (classDef && classDef.constructors && classDef.constructors.length > 0) {
                 const signatureHelp = new vscode.SignatureHelp();
@@ -479,16 +416,16 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         const resolvedType = CodeContextUtils.resolveChainType(
             document,
             position,
-            this.documentTreeProvider,
+            documentTreeProvider,
             identifierChain.slice(0, -1),
-            this.documentTreeProvider.getCurrentClass(document, position),
-            this.documentTreeProvider.getCurrentMethod(document, position)
+            documentTreeProvider.getCurrentClass(document, position),
+            documentTreeProvider.getCurrentMethod(document, position)
         );
         if (!resolvedType) {
             return undefined;
         }
 
-        classDef = this.documentTreeProvider.findClassByReference(document, resolvedType);
+        classDef = documentTreeProvider.findClassByReference(document, resolvedType);
         if (!classDef) {
             return undefined;
         }
@@ -577,14 +514,77 @@ export class VariableCompletionProvider implements vscode.CompletionItemProvider
         return undefined;
     }
 
-    private findMethodByNameFromAllClasses(document: vscode.TextDocument, methodName: string): IMethod | undefined {
-        this.documentTreeProvider.getAllAvailableClasses(document).forEach((classDef) => {
+    private findMethodByNameFromAllClasses(document: vscode.TextDocument, methodName: string, documentTreeProvider: DocumentTreeProvider): IMethod | undefined {
+        for (const classDef of documentTreeProvider.getAllAvailableClasses(document)) {
             const method = this.findMethodByName(classDef, methodName);
             if (method) {
                 return method;
             }
-        });
+        }
         return undefined;
+    }
+
+    private createMethodCompletions(
+        method: IMethod,
+        nextIsParen: boolean,
+        wordRange: vscode.Range | undefined,
+        kind: vscode.CompletionItemKind = vscode.CompletionItemKind.Method
+    ): vscode.CompletionItem[] {
+        const completions: vscode.CompletionItem[] = [];
+        
+        const requiredParams = method.parameters.filter(p => !p.isOptional && !p.isVariadic);
+        const optionalParams = method.parameters.filter(p => p.isOptional && !p.isVariadic);
+        const variadicParams = method.parameters.filter(p => p.isVariadic);
+        
+        const variantCount = 1 + optionalParams.length + (variadicParams.length > 0 ? 1 : 0);
+        
+        for (let variant = 0; variant < variantCount; variant++) {
+            const paramsToInclude: IParameter[] = [...requiredParams];
+            
+            if (variant > 0) {
+                const optionalCount = Math.min(variant, optionalParams.length);
+                paramsToInclude.push(...optionalParams.slice(0, optionalCount));
+            }
+            
+            if (variadicParams.length > 0 && variant === variantCount - 1) {
+                paramsToInclude.push(...variadicParams);
+            }
+            
+            const item = new vscode.CompletionItem(method.label, kind);
+            
+            const signatureParams = paramsToInclude.map((param) => {
+                const optionalFlag = param.isOptional ? '?' : '';
+                const variadicFlag = param.isVariadic ? '...' : '';
+                return `${variadicFlag}${param.name}${optionalFlag}: ${CodeContextUtils.typeRefToString(param.type)}`;
+            });
+            const paramsString = signatureParams.join(', ');
+            item.detail = `(${paramsString}): ${CodeContextUtils.typeRefToString(method.returnType)}`;
+            
+            if (variantCount > 1) {
+                item.detail += ` [${variant + 1}/${variantCount}]`;
+            }
+            
+            item.documentation = new vscode.MarkdownString(method.description);
+            if (wordRange) {
+                item.range = wordRange;
+            }
+
+            if (nextIsParen) {
+                item.insertText = new vscode.SnippetString(method.label);
+            } else if (Settings.disableAutoParameters) {
+                item.insertText = new vscode.SnippetString(`${method.label}($1)`);
+            } else {
+                const snippetParams = paramsToInclude.map((param, index) => {
+                    const placeholder = `\${${index + 1}:${param.name}}`;
+                    return param.isVariadic ? `...${placeholder}` : placeholder;
+                }).join(', ');
+                item.insertText = new vscode.SnippetString(`${method.label}(${snippetParams})`);
+            }
+            
+            completions.push(item);
+        }
+        
+        return completions;
     }
 
     private constructMethodSignature(method: IMethod | IConstructor): string {

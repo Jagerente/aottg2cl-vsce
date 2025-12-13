@@ -119,8 +119,11 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                                 .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
                             const m = raw.match(/@type\s+(.+)/);
                             if (m) {
-                                paramType = CodeContextUtils.parseTypeReference(m[1]);
-                                break;
+                                const typeStr = this.extractTypeFromAnnotation(m[1]);
+                                if (typeStr) {
+                                    paramType = CodeContextUtils.parseTypeReference(typeStr);
+                                    break;
+                                }
                             }
                         }
                     } else if (ctx.annotation()?.length) {
@@ -129,8 +132,11 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                                 .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
                             const m = raw.match(new RegExp(`@param\\s+${paramName}\\s+(.+)`));
                             if (m) {
-                                paramType = CodeContextUtils.parseTypeReference(m[1]);
-                                break;
+                                const typeStr = this.extractTypeFromAnnotation(m[1]);
+                                if (typeStr) {
+                                    paramType = CodeContextUtils.parseTypeReference(typeStr);
+                                    break;
+                                }
                             }
                         }
                     } else {
@@ -162,8 +168,11 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                         .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
                     const m = raw.match(/@return\s+(.+)/);
                     if (m) {
-                        returnType = CodeContextUtils.parseTypeReference(m[1]);
-                        break;
+                        const typeStr = this.extractTypeFromAnnotation(m[1]);
+                        if (typeStr) {
+                            returnType = CodeContextUtils.parseTypeReference(typeStr);
+                            break;
+                        }
                     }
                 }
             } else {
@@ -226,8 +235,11 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                                     .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
                                 const m = raw.match(/@type\s+(.+)/);
                                 if (m) {
-                                    varType = CodeContextUtils.parseTypeReference(m[1]);
-                                    break;
+                                    const typeStr = this.extractTypeFromAnnotation(m[1]);
+                                    if (typeStr) {
+                                        varType = CodeContextUtils.parseTypeReference(typeStr);
+                                        break;
+                                    }
                                 }
                             }
                         } else {
@@ -262,17 +274,20 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             const valueText = ctx.expression()?.text.trim() ?? '';
             let fieldType: TypeReference = {name: 'any', typeArguments: []};
             const annotations = ctx.annotation();
-            if (annotations?.length) {
-                for (const ann of annotations) {
-                    const raw = (ann.ANNOTATION_COMMENT()?.text ?? ann.ANNOTATION_BLOCK_COMMENT()?.text)!
-                        .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
-                    const m = raw.match(/@type\s+(.+)/);
-                    if (m) {
-                        fieldType = CodeContextUtils.parseTypeReference(m[1]);
-                        break;
-                    }
-                }
-            } else {
+                    if (annotations?.length) {
+                        for (const ann of annotations) {
+                            const raw = (ann.ANNOTATION_COMMENT()?.text ?? ann.ANNOTATION_BLOCK_COMMENT()?.text)!
+                                .replace(/(^#\s*|\/\*|\*\/)/g, '').trim();
+                            const m = raw.match(/@type\s+(.+)/);
+                            if (m) {
+                                const typeStr = this.extractTypeFromAnnotation(m[1]);
+                                if (typeStr) {
+                                    fieldType = CodeContextUtils.parseTypeReference(typeStr);
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
                 fieldType = CodeContextUtils.parseTypeReferenceFallback(valueText, 'any');
             }
 
@@ -653,5 +668,50 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             new vscode.Position(blockEndLine, blockEndChar),
             new vscode.Position(nextStatementStartLine, nextStatementStartChar)
         );
+    }
+
+    private extractTypeFromAnnotation(text: string): string | null {
+        text = text.trim();
+        if (!text) {
+            return null;
+        }
+
+        const identifierMatch = text.match(/^(\w+)/);
+        if (!identifierMatch) {
+            return null;
+        }
+
+        let result = identifierMatch[1];
+        let pos = identifierMatch[0].length;
+
+        while (pos < text.length && /\s/.test(text[pos])) {
+            pos++;
+        }
+
+        if (pos < text.length && text[pos] === '<') {
+            let depth = 0;
+            let start = pos;
+
+            while (pos < text.length) {
+                const char = text[pos];
+                if (char === '<') {
+                    depth++;
+                } else if (char === '>') {
+                    depth--;
+                    if (depth === 0) {
+                        result += text.substring(start, pos + 1);
+                        pos++;
+                        break;
+                    }
+                }
+                pos++;
+            }
+
+            if (depth > 0) {
+                result += text.substring(start);
+            }
+        }
+
+        return result.trim();
     }
 }

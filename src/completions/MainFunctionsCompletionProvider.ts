@@ -1,14 +1,9 @@
 import * as vscode from 'vscode';
 import { CodeContextUtils } from '../utils/CodeContextUtils';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
+import { CompletionContext } from './CompletionContext';
 import { ClassKinds } from '../classes/IClass';
 
-export class MainFunctionsCompletionProvider implements vscode.CompletionItemProvider {
-    private documentTreeProvider: DocumentTreeProvider;
-
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.documentTreeProvider = documentTreeProvider;
-    }
+export class MainFunctionsCompletionProvider {
 
     private reservedFunctions = [
         { parent: this, label: 'Init', snippet: 'Init()\n{\n\t$0\n}', description: 'Called upon class creation' },
@@ -41,17 +36,15 @@ export class MainFunctionsCompletionProvider implements vscode.CompletionItemPro
         { parent: this, label: 'OnNetworkMessage', snippet: 'OnNetworkMessage(sender, message)\n{\n\t$0\n}', description: 'Called upon receiving a self.NetworkView.SendMessage call.' }
     ];
 
-    public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
-        const currentClass = this.documentTreeProvider.getCurrentClass(document, position);
+    public provideCompletions(context: CompletionContext): vscode.CompletionItem[] {
+        const currentClass = context.currentClass;
         const isInsideClass = currentClass?.kind === ClassKinds.CLASS;
         const isInsideComponent = currentClass?.kind === ClassKinds.COMPONENT;
         const isInsideCutscene = currentClass?.kind === ClassKinds.CUTSCENE;
 
-        const line = document.lineAt(position).text;
-        const textAfter = line.slice(position.character);
-        const hasRightText = /\S/.test(textAfter);
+        const { textAfterCursor, wordRange } = context;
+        const hasRightText = /\S/.test(textAfterCursor);
         const preferSnippet = !hasRightText;
-        const wordRange = document.getWordRangeAtPosition(position, /[A-Za-z_]\w*/);
 
         const makePlain = (label: string, detail: string) => {
             const item = new vscode.CompletionItem(label, vscode.CompletionItemKind.Function);
@@ -74,7 +67,7 @@ export class MainFunctionsCompletionProvider implements vscode.CompletionItemPro
         const items: vscode.CompletionItem[] = [];
 
         if (isInsideComponent || currentClass?.name === 'Main') {
-            if (CodeContextUtils.isDeclaringFunction(document, position)) {
+            if (CodeContextUtils.isDeclaringFunction(context.document, context.position)) {
                 this.reservedFunctions.forEach(fn => {
                     items.push(makePlain(fn.label, 'Reserved function'));
                     items.push(makeSnippet(fn, 'Reserved function'));
@@ -87,13 +80,13 @@ export class MainFunctionsCompletionProvider implements vscode.CompletionItemPro
                 }
             }
         } else if (isInsideClass) {
-            if (CodeContextUtils.isDeclaringFunction(document, position)) {
+            if (CodeContextUtils.isDeclaringFunction(context.document, context.position)) {
                 const initFn = this.reservedFunctions.find(fn => fn.label === 'Init')!;
                 items.push(makePlain(initFn.label, 'Constructor'));
                 items.push(makeSnippet(initFn, 'Constructor'));
             }
         } else if (isInsideCutscene) {
-            if (CodeContextUtils.isDeclaringCoroutine(document, position)) {
+            if (CodeContextUtils.isDeclaringCoroutine(context.document, context.position)) {
                 items.push(makePlain('Start', 'Cutscene entry point'));
                 items.push(makeSnippet({ label: 'Start', snippet: 'Start()\n{\n\t$0\n}', description: 'Cutscene entry point' }, 'Cutscene entry point'));
             }

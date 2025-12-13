@@ -2,6 +2,9 @@ import * as vscode from 'vscode';
 import {KeywordCompletionProvider} from './completions/KeywordCompletionProvider';
 import {VariableCompletionProvider} from './completions/VariableCompletionProvider';
 import {MainFunctionsCompletionProvider} from './completions/MainFunctionsCompletionProvider';
+import {CompletionOrchestrator} from './completions/CompletionOrchestrator';
+import {HoverOrchestrator} from './completions/HoverOrchestrator';
+import {SignatureHelpOrchestrator} from './completions/SignatureHelpOrchestrator';
 import {SymbolProvider} from './completions/SymbolProvider';
 import {VariableDefinitionProvider} from './definition/VariableDefinitionProvider';
 import {buildAvailableClasses} from './classes/AvailableClasses';
@@ -24,22 +27,37 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const aclManager = new ACLManager();
     const documentTreeProvider = new DocumentTreeProvider(aclManager, classes, genericClasses);
-    const keywordsProvider = new KeywordCompletionProvider(documentTreeProvider);
-    const variablesProvider = new VariableCompletionProvider(documentTreeProvider);
-    const formatter = new ACLFormatter();
+    
+    const keywordsProvider = new KeywordCompletionProvider();
+    const variablesProvider = new VariableCompletionProvider();
+    const callbacksProvider = new MainFunctionsCompletionProvider();
+    
+    const completionOrchestrator = new CompletionOrchestrator(
+        documentTreeProvider,
+        variablesProvider,
+        keywordsProvider,
+        callbacksProvider
+    );
+    const hoverOrchestrator = new HoverOrchestrator(
+        documentTreeProvider,
+        variablesProvider,
+        keywordsProvider
+    );
+    const signatureHelpOrchestrator = new SignatureHelpOrchestrator(
+        documentTreeProvider,
+        variablesProvider
+    );
 
-    const callbacksProvider = new MainFunctionsCompletionProvider(documentTreeProvider);
+    const formatter = new ACLFormatter();
     const variableDefinitionProvider = new VariableDefinitionProvider(documentTreeProvider);
     const diagnosticCollection = vscode.languages.createDiagnosticCollection('acl');
     const diagnosticManager = new DiagnosticManager(diagnosticCollection, aclManager, documentTreeProvider);
     const symbolProvider = new SymbolProvider(documentTreeProvider);
+    
     context.subscriptions.push(
-        vscode.languages.registerCompletionItemProvider({language: 'acl'}, variablesProvider, ' ', '.'),
-        vscode.languages.registerCompletionItemProvider({language: 'acl'}, keywordsProvider, ' '),
-        vscode.languages.registerCompletionItemProvider({language: 'acl'}, callbacksProvider, ' '),
-        vscode.languages.registerHoverProvider({language: 'acl'}, variablesProvider),
-        vscode.languages.registerHoverProvider({language: 'acl'}, keywordsProvider),
-        vscode.languages.registerSignatureHelpProvider({language: 'acl'}, variablesProvider, '(', ',', ' '),
+        vscode.languages.registerCompletionItemProvider({language: 'acl'}, completionOrchestrator, ' ', '.'),
+        vscode.languages.registerHoverProvider({language: 'acl'}, hoverOrchestrator),
+        vscode.languages.registerSignatureHelpProvider({language: 'acl'}, signatureHelpOrchestrator, '(', ',', ' '),
         vscode.languages.registerDefinitionProvider({language: 'acl'}, variableDefinitionProvider),
         vscode.languages.registerDocumentFormattingEditProvider({language: 'acl'}, formatter),
         diagnosticCollection,
