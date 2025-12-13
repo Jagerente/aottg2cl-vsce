@@ -84,13 +84,17 @@ export async function activate(context: vscode.ExtensionContext) {
             await refetchDocumentData(editor.document);
         }
     });
-    vscode.window.onDidChangeWindowState(event => {
+    vscode.window.onDidChangeWindowState(async event => {
         if (event.focused) {
-            vscode.workspace.textDocuments.forEach(async document => {
-                if (document.languageId === 'acl') {
+            const activeEditor = vscode.window.activeTextEditor;
+            if (activeEditor && activeEditor.document.languageId === 'acl') {
+                await refetchDocumentData(activeEditor.document);
+            }
+            for (const document of vscode.workspace.textDocuments) {
+                if (document.languageId === 'acl' && document !== activeEditor?.document) {
                     await refetchDocumentData(document);
                 }
-            });
+            }
         }
     });
     vscode.workspace.onDidCloseTextDocument(doc => {
