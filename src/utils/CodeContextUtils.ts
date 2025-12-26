@@ -23,6 +23,14 @@ export class CodeContextUtils {
         return line.trim().startsWith('coroutine');
     }
 
+    public static isDeclaringVariable(document: vscode.TextDocument, position: vscode.Position): boolean {
+        const line = document.lineAt(position).text;
+        const textBeforePosition = line.substring(0, position.character);
+        
+        const pattern = /^[\s]*([A-Za-z_]\w*)[\s]*=.*$/;
+        return pattern.test(textBeforePosition);
+    }
+
     public static parseCallChain(input: string): string {
         let methodChain = '';
         let bracesDepth = 0;

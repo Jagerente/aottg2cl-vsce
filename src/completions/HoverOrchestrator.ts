@@ -14,6 +14,10 @@ export class HoverOrchestrator implements vscode.HoverProvider {
         document: vscode.TextDocument,
         position: vscode.Position
     ): vscode.ProviderResult<vscode.Hover> {
+        if (this.documentTreeProvider.isInsideString(document, position) || this.documentTreeProvider.isInsideComment(document, position)) {
+            return undefined;
+        }
+
         const keywordHover = this.keywordProvider.provideHover(document, position);
         if (keywordHover) {
             return keywordHover;

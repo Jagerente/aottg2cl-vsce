@@ -13,7 +13,8 @@ import {
     ElseStatementContext,
     PrimaryExpressionContext,
     PostfixOperatorContext,
-    ParamContext
+    ParamContext,
+    LiteralContext
 } from './ACLParser';
 import {
     IClass,
@@ -42,6 +43,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     public chains: IChainNode[][] = [];
     public loopNodes: ILoopNode[] = [];
     public conditionNodes: IConditionNode[] = [];
+    public stringRanges: vscode.Range[] = [];
 
     public visitClassDecl = (ctx: ClassDeclContext): void => {
         this.currentMethod = null;
@@ -140,7 +142,8 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                                     const typeStr = this.extractTypeFromAnnotation(rest);
                                     if (typeStr) {
                                         paramType = CodeContextUtils.parseTypeReference(typeStr);
-                                        const descMatch = rest.match(/^[\w<>\[\]]+\s+-\s*(.+)/);
+                                        const escapedType = typeStr.replace(/[<>\[\](){}.*+?^$|\\]/g, '\\$&');
+                                        const descMatch = rest.match(new RegExp(`^${escapedType}\\s+(.+)$`));
                                         if (descMatch) {
                                             paramDescription = descMatch[1].trim();
                                         }
@@ -181,9 +184,15 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                     for (const line of lines) {
                         const returnMatch = line.match(/@return\s+(.+)/);
                         if (returnMatch) {
-                            const typeStr = this.extractTypeFromAnnotation(returnMatch[1]);
+                            const rest = returnMatch[1];
+                            const typeStr = this.extractTypeFromAnnotation(rest);
                             if (typeStr) {
                                 returnType = CodeContextUtils.parseTypeReference(typeStr);
+                                const escapedType = typeStr.replace(/[<>\[\](){}.*+?^$|\\]/g, '\\$&');
+                                const descMatch = rest.match(new RegExp(`^${escapedType}\\s+(.+)$`));
+                                if (descMatch) {
+                                    description = descMatch[1].trim();
+                                }
                                 break;
                             }
                         }
@@ -294,6 +303,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
             const valueText = ctx.expression()?.text.trim() ?? '';
             let fieldType: TypeReference = {name: 'any', typeArguments: []};
+            let fieldDescription = '';
             const annotations = ctx.annotation();
                     if (annotations?.length) {
                         for (const ann of annotations) {
@@ -301,9 +311,15 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                             for (const line of lines) {
                                 const m = line.match(/@type\s+(.+)/);
                                 if (m) {
-                                    const typeStr = this.extractTypeFromAnnotation(m[1]);
+                                    const rest = m[1];
+                                    const typeStr = this.extractTypeFromAnnotation(rest);
                                     if (typeStr) {
                                         fieldType = CodeContextUtils.parseTypeReference(typeStr);
+                                        const escapedType = typeStr.replace(/[<>\[\](){}.*+?^$|\\]/g, '\\$&');
+                                        const descMatch = rest.match(new RegExp(`^${escapedType}\\s+(.+)$`));
+                                        if (descMatch) {
+                                            fieldDescription = descMatch[1].trim();
+                                        }
                                         break;
                                     }
                                 }
@@ -321,7 +337,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 parent: this.currentClass,
                 label: fieldName,
                 type: fieldType,
-                description: '',
+                description: fieldDescription,
                 private: ctx.PRIVATE() !== undefined,
                 declarationRange,
                 readonly: false
@@ -380,6 +396,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 isMethodCall: false,
             });
         } else if (ctx.literal()) {
+            this.visit(ctx.literal()!);
         } else if (ctx.LPAREN() && ctx.expression()) {
             this.visit(ctx.expression()!);
         }
@@ -526,6 +543,30 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
     public getParsedConditionNodes(): IConditionNode[] {
         return this.conditionNodes;
+    }
+
+    public visitLiteral = (ctx: LiteralContext): void => {
+        if (ctx.STRING()) {
+            const stringToken = ctx.STRING()!;
+            const startLine = stringToken.symbol.line - 1;
+            const startColumn = stringToken.symbol.charPositionInLine;
+            
+            const stopToken = ctx.stop!;
+            const endLine = stopToken.line - 1;
+            const endColumn = stopToken.charPositionInLine + (stopToken.text?.length ?? 0);
+            
+            this.stringRanges.push(
+                new vscode.Range(
+                    new vscode.Position(startLine, startColumn),
+                    new vscode.Position(endLine, endColumn)
+                )
+            );
+        }
+        this.visitChildren(ctx);
+    };
+
+    public getParsedStringRanges(): vscode.Range[] {
+        return this.stringRanges;
     }
 
     private getClassDeclarationRange(ctx: ClassDeclContext): vscode.Range {

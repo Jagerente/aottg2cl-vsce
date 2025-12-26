@@ -12,6 +12,9 @@ export class SignatureHelpOrchestrator implements vscode.SignatureHelpProvider {
         document: vscode.TextDocument,
         position: vscode.Position
     ): vscode.ProviderResult<vscode.SignatureHelp> {
+        if (this.documentTreeProvider.isInsideString(document, position) || this.documentTreeProvider.isInsideComment(document, position)) {
+            return undefined;
+        }
         return this.variableProvider.provideSignatureHelp(document, position, this.documentTreeProvider);
     }
 }

@@ -163,7 +163,7 @@
         },
         {
           "name": "storage.type.function.acl",
-          "match": "\\b(function|coroutine)\\b"
+          "match": "\\b(function|coroutine|constructor)\\b"
         }
       ]
     },
@@ -176,7 +176,15 @@
         {
           "name": "constant.language.null.acl",
           "match": "\\bnull\\b"
-        }
+        },
+        {
+          "name": "storage.modifier.acl",
+          "match": "\\b(public|private|readonly)\\b"
+        },
+        {
+          "name": "storage.type.acl",
+          "match": "\\bfield\\b"
+        }        
       ]
     },
     "class-definitions": {

@@ -4,6 +4,7 @@ import { CodeContextUtils } from '../utils/CodeContextUtils';
 import { Settings } from '../config/settings';
 import {
     ClassKinds,
+    FindConstructorInClassHierarchy,
     FindFieldInClassHierarchy,
     FindMethodInClassHierarchy,
     IClass,
@@ -347,11 +348,80 @@ export class VariableCompletionProvider {
                     wordRange
                 );
             }
+
+            if (callChainArray.length === 1 && callChainArray[0] === "self") {
+                const textAfterSelf = lineText.substring(wordRange!.end.character);
+                if (textAfterSelf.startsWith(".")) {
+                    const afterDot = textAfterSelf.substring(1).trim();
+                    const nextWordMatch = afterDot.match(/^([A-Za-z_][A-Za-z0-9_]*)/);
+                    if (nextWordMatch) {
+                        const nextWord = nextWordMatch[1];
+
+                        const extendedText = fullLineBeforeWordEnd + "." + nextWord;
+                        const extendedCallChainString = CodeContextUtils.parseCallChain(extendedText);
+                        const extendedCallChainArray = CodeContextUtils.splitCallChain(extendedCallChainString);
+                        
+                        if (extendedCallChainArray.length > 1 && extendedCallChainArray[0] === "self") {
+                            const resolvedType = CodeContextUtils.resolveChainFinalPart(document, position, documentTreeProvider, extendedCallChainArray, currentClass, currentMethod);
+                            
+                            if (resolvedType) {
+                                let hoverContent: vscode.MarkdownString;
+                                if ('kind' in resolvedType && 'name' in resolvedType) {
+                                    const classDef = resolvedType as IClass;
+                                    hoverContent = markdown.createClassMarkdown(classDef);
+                                } else if ('parameters' in resolvedType && 'returnType' in resolvedType) {
+                                    const methodDef = resolvedType as IMethod;
+                                    hoverContent = markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef));
+                                } else if ('label' in resolvedType && 'type' in resolvedType) {
+                                    const fieldDef = resolvedType as IField;
+                                    hoverContent = markdown.createFieldMarkdown(fieldDef);
+                                } else if ('name' in resolvedType && 'type' in resolvedType) {
+                                    const variableDef = resolvedType as IVariable;
+                                    hoverContent = markdown.createVariableMarkdown(variableDef);
+                                } else {
+                                    hoverContent = new vscode.MarkdownString(`Unknown type`);
+                                }
+                                
+                                return new vscode.Hover(hoverContent, wordRange);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         const classDef = documentTreeProvider.findClassByName(document, word);
         if (classDef) {
-            return new vscode.Hover(markdown.createClassMarkdown(classDef), wordRange);
+            if (charAfterWord !== '(') {
+                return new vscode.Hover(markdown.createClassMarkdown(classDef), wordRange);
+            }
+            if (classDef.constructors && classDef.constructors.length > 0) {
+                const chains = documentTreeProvider.getChains(document);
+                let argCount = -1;
+                
+                for (const chain of chains) {
+                    const firstLink = chain[0];
+                    if (firstLink.isMethodCall && firstLink.text.split('(')[0] === word) {
+                        const linkEndColumn = firstLink.startColumn + firstLink.text.length;
+                        
+                        if (position.line === firstLink.startLine && 
+                            position.character >= firstLink.startColumn && 
+                            position.character <= linkEndColumn) {
+                            if (firstLink.methodArguments) {
+                                argCount = firstLink.methodArguments.length;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                const ctor = FindConstructorInClassHierarchy(classDef, argCount);
+                if (ctor) {
+                    return new vscode.Hover(markdown.createConstructorMarkdown(ctor, this.constructMethodSignature(ctor)), wordRange);
+                }
+
+                return new vscode.Hover(markdown.createConstructorMarkdown(classDef.constructors[0], this.constructMethodSignature(classDef.constructors[0])), wordRange);
+            }
         }
 
         if (currentClass) {

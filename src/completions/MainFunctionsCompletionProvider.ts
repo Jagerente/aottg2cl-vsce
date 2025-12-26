@@ -55,7 +55,7 @@ export class MainFunctionsCompletionProvider {
             return item;
         };
         const makeSnippet = (fn: { label: string; snippet: string; description: string }, detail: string) => {
-            const item = new vscode.CompletionItem(fn.label, vscode.CompletionItemKind.Function);
+            const item = new vscode.CompletionItem(fn.label, vscode.CompletionItemKind.Snippet);
             item.detail = detail;
             item.insertText = new vscode.SnippetString(fn.snippet);
             item.documentation = new vscode.MarkdownString(fn.description);

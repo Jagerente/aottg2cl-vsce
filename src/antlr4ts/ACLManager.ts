@@ -4,7 +4,7 @@ import { ACLLexer } from './ACLLexer';
 import { ACLParser } from './ACLParser';
 import { LexerErrorListener, ParserErrorListener } from './ACLErrorListener';
 import { IError as IError } from '../classes/IClass';
-import { CharStreams, CommonTokenStream } from 'antlr4ts';
+import { CharStreams, CommonTokenStream, Token } from 'antlr4ts';
 import { ClassesParserVisitor } from './ClassesParserVisitor';
 import * as fs from 'fs/promises';
 import { buildImportChain } from '../utils/DependencyChain';
@@ -15,6 +15,8 @@ export class ACLManager {
     private chains: IChainNode[][] = [];
     private loopNodes: ILoopNode[] = [];
     private conditionNodes: IConditionNode[] = [];
+    private stringRanges: vscode.Range[] = [];
+    private commentRanges: vscode.Range[] = [];
     private errors: IError[] = [];
 
     private lexerErrorListener = new LexerErrorListener();
@@ -69,6 +71,10 @@ export class ACLManager {
         this.chains = visitor.getParsedChains();
         this.loopNodes = visitor.getParsedLoopNodes();
         this.conditionNodes = visitor.getParsedConditionNodes();
+        this.stringRanges = visitor.getParsedStringRanges();
+        
+        this.commentRanges = this.extractCommentRanges(tokenStream);
+        
         this.errors = this.lexerErrorListener.errors.concat(this.parserErrorListener.errors);
     }
 
@@ -145,6 +151,8 @@ export class ACLManager {
         this.chains = [];
         this.loopNodes = [];
         this.conditionNodes = [];
+        this.stringRanges = [];
+        this.commentRanges = [];
         this.errors = [];
         this.lexerErrorListener.flush();
         this.parserErrorListener.flush();
@@ -170,8 +178,56 @@ export class ACLManager {
         return this.conditionNodes;
     }
 
+    public getStringRanges(): vscode.Range[] {
+        return this.stringRanges;
+    }
+
+    public getCommentRanges(): vscode.Range[] {
+        return this.commentRanges;
+    }
+
     public getErrors(): IError[] {
         return this.errors;
+    }
+
+    private extractCommentRanges(tokenStream: CommonTokenStream): vscode.Range[] {
+        const commentRanges: vscode.Range[] = [];
+        const tokens = tokenStream.getTokens();
+        
+        for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i];
+            if (token.type === ACLParser.LINE_COMMENT || token.type === ACLParser.BLOCK_COMMENT) {
+                const startLine = token.line - 1;
+                const startColumn = token.charPositionInLine;
+
+                const nextToken = i + 1 < tokens.length ? tokens[i + 1] : null;
+                let endLine: number;
+                let endColumn: number;
+                
+                if (nextToken && nextToken.type !== Token.EOF && nextToken.line === token.line) {
+                    endLine = nextToken.line - 1;
+                    endColumn = nextToken.charPositionInLine;
+                } else {
+                    const text = token.text ?? '';
+                    endLine = startLine;
+                    endColumn = startColumn + text.length;
+                }
+
+                if (token.type === ACLParser.LINE_COMMENT)
+                {
+                    endColumn = Infinity;
+                }
+                
+                commentRanges.push(
+                    new vscode.Range(
+                        new vscode.Position(startLine, startColumn),
+                        new vscode.Position(endLine, endColumn)
+                    )
+                );
+            }
+        }
+        
+        return commentRanges;
     }
 
     public getDiagnostics(): vscode.Diagnostic[] {

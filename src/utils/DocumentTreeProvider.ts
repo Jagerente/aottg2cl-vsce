@@ -20,6 +20,8 @@ type ParsedDocumentData = {
     chainRanges: vscode.Range[];
     loopNodes: ILoopNode[];
     conditionNodes: IConditionNode[];
+    stringRanges: vscode.Range[];
+    commentRanges: vscode.Range[];
 };
 
 export class DocumentTreeProvider {
@@ -50,6 +52,8 @@ export class DocumentTreeProvider {
         const chains = this.aclManager.getChains();
         const loopNodes = this.aclManager.getLoopNodes();
         const conditionNodes = this.aclManager.getConditionNodes();
+        const stringRanges = this.aclManager.getStringRanges();
+        const commentRanges = this.aclManager.getCommentRanges();
 
         const chainRanges = chains.map(chain => {
             if (chain.length === 0) {
@@ -81,7 +85,9 @@ export class DocumentTreeProvider {
             chains,
             chainRanges,
             loopNodes,
-            conditionNodes
+            conditionNodes,
+            stringRanges,
+            commentRanges
         });
 
         for (const classDef of userDefinedClasses) {
@@ -368,6 +374,16 @@ export class DocumentTreeProvider {
             }
         }
         return false;
+    }
+
+    public isInsideString(document: vscode.TextDocument, position: vscode.Position): boolean {
+        const stringRanges = this.getParsedData(document)?.stringRanges ?? [];
+        return stringRanges.some(range => range.contains(position));
+    }
+
+    public isInsideComment(document: vscode.TextDocument, position: vscode.Position): boolean {
+        const commentRanges = this.getParsedData(document)?.commentRanges ?? [];
+        return commentRanges.some(range => range.contains(position));
     }
 
     public findAvailableLocalVariableByName(

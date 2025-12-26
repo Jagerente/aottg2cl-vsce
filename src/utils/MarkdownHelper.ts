@@ -21,12 +21,29 @@ export function createFieldMarkdown(fieldDef: IField): MarkdownString {
     const m1 = fieldDef.private ? 'private' : 'public';
     const m2 = fieldDef.readonly ? ' readonly' : '';
 
-    const m3 = `(${m1}${m2} field) ${fieldDef.parent.name}.${fieldDef.label} ${CodeContextUtils.typeRefToString(fieldDef.type)}`;
+    const m3 = `(${m1}${m2} field) ${fieldDef.parent.name}.${fieldDef.label}: ${CodeContextUtils.typeRefToString(fieldDef.type)}`;
     let m4 = wrapLang(m3, "acl");
     if (fieldDef.description !== "") {
         m4 += `${horizontalLine} ${fieldDef.description}`;
     }
     return new MarkdownString(m4);
+}
+
+function formatParametersDescription(parameters: IParameter[]): string {
+    if (parameters.length === 0) {
+        return "";
+    }
+    
+    const paramsWithDescription = parameters.filter(param => param.description !== "");
+    if (paramsWithDescription.length === 0) {
+        return "";
+    }
+    
+    let result = `${horizontalLine}**Parameters:**\n\n`;
+    paramsWithDescription.forEach(param => {
+        result += `- \`${param.name}\`: ${param.description}\n`;
+    });
+    return result;
 }
 
 export function createMethodMarkdown(methodDef: IMethod, methodSignature: string): MarkdownString {
@@ -35,6 +52,9 @@ export function createMethodMarkdown(methodDef: IMethod, methodSignature: string
     if (methodDef.description !== "") {
         md += `${horizontalLine} ${methodDef.description}`;
     }
+
+    md += formatParametersDescription(methodDef.parameters);
+
     return new MarkdownString(md);
 }
 
@@ -43,6 +63,9 @@ export function createConstructorMarkdown(constructorDef: IConstructor, methodSi
     if (constructorDef.description !== "") {
         md += `${horizontalLine} ${constructorDef.description}`;
     }
+
+    md += formatParametersDescription(constructorDef.parameters);
+
     return new MarkdownString(md);
 }
 
