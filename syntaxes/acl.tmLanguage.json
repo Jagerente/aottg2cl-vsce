@@ -48,7 +48,7 @@
         },
         {
           "name": "meta.annotation.param.acl",
-          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+\\b(int|float|string|bool|any)\\b(?:\\s+(.*))?$",
+          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+\\b(int|float|string|bool|any)\\b(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "variable.parameter.acl" },
@@ -58,7 +58,7 @@
         },
         {
           "name": "meta.annotation.param.acl",
-          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+\\b(function|coroutine)\\b(?:\\s+(.*))?$",
+          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+\\b(function|coroutine)\\b(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "variable.parameter.acl" },
@@ -68,7 +68,7 @@
         },
         {
           "name": "meta.annotation.param.acl",
-          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+((?:Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|LineCastHitResult)(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*))?$",
+          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+((?:Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|LineCastHitResult)(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "variable.parameter.acl" },
@@ -78,7 +78,7 @@
         },
         {
           "name": "meta.annotation.param.acl",
-          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+((?:List|Dict|Set)\\s*<[^<>]*>)\\s*(?:\\s+(.*))?$",
+          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+((?:List|Dict|Set)\\s*<[^<>]*>)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "variable.parameter.acl" },
@@ -88,7 +88,7 @@
         },
         {
           "name": "meta.annotation.param.acl",
-          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+([A-Za-z_][A-Za-z0-9_]*(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*))?$",
+          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+([A-Za-z_][A-Za-z0-9_]*(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "variable.parameter.acl" },
@@ -98,7 +98,7 @@
         },
         {
           "name": "meta.annotation.typeish.acl",
-          "match": "\\s*(@type|@return|@var)\\s+\\b(int|float|string|bool|any)\\b(?:\\s+(.*))?$",
+          "match": "\\s*(@type|@return|@var)\\s+\\b(int|float|string|bool|any)\\b(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "support.type.builtin.acl" },
@@ -107,7 +107,7 @@
         },
         {
           "name": "meta.annotation.typeish.acl",
-          "match": "\\s*(@type|@return|@var)\\s+\\b(function|coroutine)\\b(?:\\s+(.*))?$",
+          "match": "\\s*(@type|@return|@var)\\s+\\b(function|coroutine)\\b(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "storage.type.function.acl" },
@@ -116,7 +116,7 @@
         },
         {
           "name": "meta.annotation.typeish.acl",
-          "match": "\\s*(@type|@return|@var)\\s+((?:Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|LineCastHitResult)(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*))?$",
+          "match": "\\s*(@type|@return|@var)\\s+((?:Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|LineCastHitResult)(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "support.type.acl" },
@@ -125,7 +125,7 @@
         },
         {
           "name": "meta.annotation.typeish.acl",
-          "match": "\\s*(@type|@return|@var)\\s+((?:List|Dict|Set)\\s*<[^<>]*>)\\s*(?:\\s+(.*))?$",
+          "match": "\\s*(@type|@return|@var)\\s+((?:List|Dict|Set)\\s*<[^<>]*>)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "entity.name.type.class.acl" },
@@ -134,7 +134,7 @@
         },
         {
           "name": "meta.annotation.typeish.acl",
-          "match": "\\s*(@type|@return|@var)\\s+([A-Za-z_][A-Za-z0-9_]*(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*))?$",
+          "match": "\\s*(@type|@return|@var)\\s+([A-Za-z_][A-Za-z0-9_]*(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "entity.name.type.class.acl" },
@@ -143,7 +143,7 @@
         },
         {
           "name": "meta.annotation.unknown.acl",
-          "match": "\\s*(@\\w+)\\b(.*)$",
+          "match": "\\s*(@\\w+)\\b(.*?)(?=\\s*\\*/|$)",
           "captures": {
             "1": { "name": "storage.type.annotation.acl" },
             "2": { "name": "comment.line.description.acl" }
