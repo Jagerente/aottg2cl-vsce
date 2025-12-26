@@ -67,10 +67,17 @@ RPAREN: ')';
 WS: [ \t\r\n]+ -> skip;
 
 ANNOTATION_COMMENT: '#' WS* '@' ~[\r\n]*;
-ANNOTATION_BLOCK_COMMENT: '/*' .*? '@' .*? '*/';
+fragment NOT_END_COMMENT
+    : ~'*'
+    | '*' ~'/'
+    ;
+
+ANNOTATION_BLOCK_COMMENT
+    : '/*' NOT_END_COMMENT* '@' NOT_END_COMMENT* '*/'
+    ;
 
 LINE_COMMENT: '#' ~[\r\n]* -> channel(HIDDEN);
-BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
+BLOCK_COMMENT: '/*' ( BLOCK_COMMENT | . )*? '*/'  -> skip ;
 
 program: (annotation* classDecl)*;
 
