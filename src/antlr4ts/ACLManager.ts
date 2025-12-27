@@ -8,6 +8,7 @@ import { CharStreams, CommonTokenStream, Token } from 'antlr4ts';
 import { ClassesParserVisitor } from './ClassesParserVisitor';
 import * as fs from 'fs/promises';
 import { buildImportChain } from '../utils/DependencyChain';
+import { DiagnosticCodes } from '../diagnostic/DiagnosticCodes';
 
 export class ACLManager {
     private classes: IClass[] = [];
@@ -253,6 +254,7 @@ export class ACLManager {
         );
 
         diagnostic.source = 'ANTLR Parser';
+        diagnostic.code = DiagnosticCodes.ANTLR_PARSER_ERROR;
 
         return diagnostic;
     }

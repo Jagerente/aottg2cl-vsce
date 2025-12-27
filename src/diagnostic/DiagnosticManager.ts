@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
 import {ACLManager} from '../antlr4ts/ACLManager';
 import {ANTLRValidator} from './ANTLRValidator';
-import {ClassUsageValidator} from './ClassUsageValidator';
 import {IncompleteMemberAccessValidator} from './IncompleteMemberAccessValidator';
 import {CutsceneValidator} from './CutsceneValidator';
 import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
 import {CtorValidator} from './CtorValidator';
 import {DuplicatesValidator} from './DuplicatesValidator';
+import {UserDefinedClassesValidator} from './UserDefinedClassesValidator';
+import { MemberAccessValidator } from './MemberAccessValidator';
 
 export class DiagnosticManager {
     private diagnosticCollection: vscode.DiagnosticCollection;
@@ -19,11 +20,15 @@ export class DiagnosticManager {
     ) {
         this.diagnosticCollection = diagnosticCollection;
         this.validators = this.validators.concat(new ANTLRValidator(aclManager));
-        this.validators = this.validators.concat(new ClassUsageValidator(documentTreeProvider));
+        this.validators = this.validators.concat(new MemberAccessValidator(documentTreeProvider));
         this.validators = this.validators.concat(new DuplicatesValidator(documentTreeProvider));
-        this.validators = this.validators.concat(new IncompleteMemberAccessValidator());
-        this.validators = this.validators.concat(new CutsceneValidator(documentTreeProvider));
-        this.validators = this.validators.concat(new CtorValidator(documentTreeProvider));
+        this.validators = this.validators.concat(new IncompleteMemberAccessValidator(documentTreeProvider));
+        
+        const userDefinedClassesValidator = new UserDefinedClassesValidator(documentTreeProvider);
+        userDefinedClassesValidator.registerValidator(new CtorValidator());
+        userDefinedClassesValidator.registerValidator(new CutsceneValidator());
+        
+        this.validators = this.validators.concat(userDefinedClassesValidator);
     }
 
     public validateDocument(document: vscode.TextDocument) {
