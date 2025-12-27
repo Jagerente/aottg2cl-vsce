@@ -193,29 +193,30 @@ export class ACLManager {
     private extractCommentRanges(tokenStream: CommonTokenStream): vscode.Range[] {
         const commentRanges: vscode.Range[] = [];
         const tokens = tokenStream.getTokens();
-        
+
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
+
             if (token.type === ACLParser.LINE_COMMENT || token.type === ACLParser.BLOCK_COMMENT) {
                 const startLine = token.line - 1;
                 const startColumn = token.charPositionInLine;
-
-                const nextToken = i + 1 < tokens.length ? tokens[i + 1] : null;
+                const text = token.text ?? '';
+                
                 let endLine: number;
                 let endColumn: number;
-                
-                if (nextToken && nextToken.type !== Token.EOF && nextToken.line === token.line) {
-                    endLine = nextToken.line - 1;
-                    endColumn = nextToken.charPositionInLine;
-                } else {
-                    const text = token.text ?? '';
-                    endLine = startLine;
-                    endColumn = startColumn + text.length;
-                }
 
-                if (token.type === ACLParser.LINE_COMMENT)
-                {
+                if (token.type === ACLParser.LINE_COMMENT) {
+                    endLine = startLine;
                     endColumn = Infinity;
+                } else {
+                    const lines = text.split(/\r\n|\r|\n/);
+                    if (lines.length === 1) {
+                        endLine = startLine;
+                        endColumn = startColumn + text.length;
+                    } else {
+                        endLine = startLine + lines.length - 1;
+                        endColumn = lines[lines.length - 1].length;
+                    }
                 }
                 
                 commentRanges.push(

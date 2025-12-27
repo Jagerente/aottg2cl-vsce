@@ -77,7 +77,7 @@ ANNOTATION_BLOCK_COMMENT
     ;
 
 LINE_COMMENT: '#' ~[\r\n]* -> channel(HIDDEN);
-BLOCK_COMMENT: '/*' ( BLOCK_COMMENT | . )*? '*/'  -> skip ;
+BLOCK_COMMENT: '/*' ( BLOCK_COMMENT | . )*? '*/'  -> channel(HIDDEN);
 
 program: (annotation* classDecl)*;
 
