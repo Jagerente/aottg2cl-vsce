@@ -111,6 +111,11 @@
           "minimum": 1,
           "maximum": 65535,
           "description": "Default port for the CL debug server."
+        },
+        "aottg2cl.parsing.useLegacyMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use legacy parsing mode with debounce delay. Legacy mode delays parsing by 300ms after typing stops, which may help on slower PCs but can cause inconsistent autocomplete suggestions. New mode parses immediately and waits for completion, providing more accurate results. Requires extension reload to take effect."
         }
       }
     },

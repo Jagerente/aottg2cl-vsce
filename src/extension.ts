@@ -17,6 +17,7 @@ import {BuildFinalFileTaskProvider} from './tasks/BuildFinalFileTaskProvider';
 import {BuildFinalFileIntoMapTaskProvider} from './tasks/BuildFinalFileIntoMapTaskProvider';
 import {ACLFormatter} from './formatting/ACLFormatter';
 import {DebugAdapterDescriptorFactory, DebugConfigurationProvider} from './debugger/adapter';
+import {Settings} from './config/settings';
 
 export let extensionContext: vscode.ExtensionContext;
 
@@ -85,18 +86,53 @@ export async function activate(context: vscode.ExtensionContext) {
     }
 
     let parseTimeout: NodeJS.Timeout | null = null;
+    const useLegacyMode = Settings.useLegacyParsingMode;
 
     vscode.workspace.onDidOpenTextDocument(async document => {
         await refetchDocumentData(document);
     });
-    vscode.workspace.onDidChangeTextDocument(event => {
-        if (parseTimeout) {
-            clearTimeout(parseTimeout);
-        }
-        parseTimeout = setTimeout(async () => {
-            await refetchDocumentData(event.document);
-        }, 300);
-    });
+    
+    // TODO: Remove legacy mode after some feedback
+    if (useLegacyMode) {
+        vscode.workspace.onDidChangeTextDocument(event => {
+            if (event.document.languageId !== 'acl') {
+                return;
+            }
+            
+            if (parseTimeout) {
+                clearTimeout(parseTimeout);
+            }
+            parseTimeout = setTimeout(async () => {
+                await refetchDocumentData(event.document);
+            }, 300);
+        });
+    } else {
+        vscode.workspace.onDidChangeTextDocument(event => {
+            if (event.document.languageId !== 'acl') {
+                return;
+            }
+            
+            refetchDocumentData(event.document).catch(err => {
+                console.error('Error parsing document:', err);
+            });
+        });
+    }
+
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration(e => {
+            if (e.affectsConfiguration('aottg2cl.parsing.useLegacyMode')) {
+                vscode.window.showInformationMessage(
+                    'Parsing mode setting changed. Extension reload required for changes to take effect.',
+                    'Reload Window'
+                ).then(selection => {
+                    if (selection === 'Reload Window') {
+                        vscode.commands.executeCommand('workbench.action.reloadWindow');
+                    }
+                });
+            }
+        })
+    );
+
     vscode.window.onDidChangeActiveTextEditor(async editor => {
         if (editor && editor.document.languageId === 'acl') {
             await refetchDocumentData(editor.document);
@@ -117,6 +153,11 @@ export async function activate(context: vscode.ExtensionContext) {
     });
     vscode.workspace.onDidCloseTextDocument(doc => {
         if (doc.languageId === 'acl') {
+            // TODO: Remove legacy mode after some feedback
+            if (parseTimeout) {
+                clearTimeout(parseTimeout);
+                parseTimeout = null;
+            }
             documentTreeProvider.clearDocument(doc);
             diagnosticCollection.delete(doc.uri);
         }

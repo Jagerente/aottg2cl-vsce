@@ -42,4 +42,8 @@ export class Settings {
     public static get debugPort(): number {
         return Settings.config.get<number>('debug.port', 4711);
     }
+
+    public static get useLegacyParsingMode(): boolean {
+        return Settings.config.get<boolean>('parsing.useLegacyMode', false);
+    }
 }
