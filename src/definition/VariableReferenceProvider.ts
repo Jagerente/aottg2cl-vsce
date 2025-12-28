@@ -1,24 +1,21 @@
 import * as vscode from 'vscode';
 import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
 import { CodeContextUtils } from '../utils/CodeContextUtils';
-import { IParameter, IVariable, IClass, IMethod, IField, IConstructor } from '../classes/IClass';
+import { IParameter, IVariable, IClass, IMethod, IField, IConstructor, IReference } from '../classes/IClass';
 
-export class VariableDefinitionProvider implements vscode.DefinitionProvider {
+export class VariableReferenceProvider implements vscode.ReferenceProvider {
     private documentTreeProvider: DocumentTreeProvider;
 
     constructor(documentTreeProvider: DocumentTreeProvider) {
         this.documentTreeProvider = documentTreeProvider;
     }
 
-    public provideDefinition(
+    public provideReferences(
         document: vscode.TextDocument,
         position: vscode.Position,
+        context: vscode.ReferenceContext,
         token: vscode.CancellationToken
-    ): vscode.Definition | null {
-        if (this.documentTreeProvider.isInsideString(document, position) || this.documentTreeProvider.isInsideComment(document, position)) {
-            return null;
-        }
-
+    ): vscode.ProviderResult<vscode.Location[]> {
         const wordPattern = /[A-Za-z_]\w*/;
 
         const wordRange = document.getWordRangeAtPosition(position, wordPattern);
@@ -115,14 +112,27 @@ export class VariableDefinitionProvider implements vscode.DefinitionProvider {
             return null;
         }
 
-        // Return definition location
-        const nameRange = resolved.nameRange;
-        const sourceUri = this.getSourceUri(resolved) || document.uri;
-        if (nameRange) {
-            return new vscode.Location(sourceUri, nameRange);
+        // Collect all references
+        const references: vscode.Location[] = [];
+
+        // Add declaration as a reference if includeDeclaration is true
+        if (context.includeDeclaration) {
+            const nameRange = resolved.nameRange;
+            const sourceUri = this.getSourceUri(resolved) || document.uri;
+            if (nameRange) {
+                references.push(new vscode.Location(sourceUri, nameRange));
+            }
         }
 
-        return null;
+        // Add all usage references from the current document
+        const entityReferences = resolved.references;
+        if (entityReferences) {
+            for (const ref of entityReferences) {
+                references.push(new vscode.Location(ref.uri, ref.range));
+            }
+        }
+
+        return references.length > 0 ? references : null;
     }
 
     private getSourceUri(
@@ -134,3 +144,4 @@ export class VariableDefinitionProvider implements vscode.DefinitionProvider {
         return undefined;
     }
 }
+

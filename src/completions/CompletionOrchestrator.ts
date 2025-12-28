@@ -70,7 +70,13 @@ export class CompletionOrchestrator implements vscode.CompletionItemProvider {
             items.push(...variableCompletions);
         }
 
-        if (context.isInsideChainNode || context.callChainString.endsWith('.') || context.callChainString.endsWith('(') || context.callChainString.endsWith(')')) {
+        if (
+            context.isInsideChainNode 
+            || context.textBeforeCursor.endsWith('.') 
+            || context.textBeforeCursor.endsWith('(') 
+            || context.textBeforeCursor.endsWith(')') 
+            || context.textAfterCursor.startsWith(';')
+        ) {
             return items;
         }
 
@@ -90,9 +96,6 @@ export class CompletionOrchestrator implements vscode.CompletionItemProvider {
         const wordRange = document.getWordRangeAtPosition(position, /[\w$]+/);
         const nextIsParen = /^\s*\(/.test(textAfterCursor);
 
-        const callChainString = CodeContextUtils.parseCallChain(textBeforeCursor);
-        const callChainArray = CodeContextUtils.splitCallChain(callChainString);
-
         return {
             document,
             position,
@@ -110,8 +113,7 @@ export class CompletionOrchestrator implements vscode.CompletionItemProvider {
             currentClass: this.documentTreeProvider.getCurrentClass(document, position),
             currentMethod: this.documentTreeProvider.getCurrentMethod(document, position),
             currentDeclaringMethod: this.documentTreeProvider.getCurrentDeclaringMethod(document, position),
-            callChainString,
-            callChainArray,
+            callChainInfo: this.documentTreeProvider.findChainAtPosition(document, position),
             nextIsParen,
             documentTreeProvider: this.documentTreeProvider
         };

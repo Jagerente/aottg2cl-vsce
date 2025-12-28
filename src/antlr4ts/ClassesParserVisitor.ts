@@ -73,6 +73,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
         const declarationRange: vscode.Range = this.getClassDeclarationRange(ctx);
         const bodyRange = this.getClassBodyRange(ctx);
+        const nameRange = this.getClassNameRange(ctx);
 
         this.currentClass = {
             kind: classKind,
@@ -84,6 +85,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             instanceFields: [],
             instanceMethods: [],
             declarationRange: declarationRange,
+            nameRange: nameRange,
             bodyRange: bodyRange,
         };
 
@@ -171,6 +173,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                         type: paramType,
                         description: paramDescription,
                         declarationRange: paramDeclarationRange,
+                        nameRange: this.getParameterNameRange(paramCtx),
                         reassignments: [],
                         isOptional: false,
                         isVariadic: false
@@ -217,6 +220,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 description,
                 parameters,
                 declarationRange,
+                nameRange: this.getMethodNameRange(ctx),
                 bodyRange,
                 localVariables: []
             };
@@ -242,9 +246,12 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             const name = ctx.ID()?.text;
             if (name) {
                 const valueText = ctx.expression()?.text.trim() ?? '';
-                const startToken = ctx.start;
+                const startToken = ctx.PRIVATE()
+                    ? ctx.PRIVATE()!.symbol
+                    : ctx.ID()!.symbol;
+                const idToken = ctx.ID()!.symbol;
                 const startPos = new vscode.Position(startToken.line - 1, startToken.charPositionInLine);
-                const endPos = startPos.translate(0, name.length);
+                const endPos = new vscode.Position(idToken.line - 1, idToken.charPositionInLine + idToken.text!.length);
                 const declRange = new vscode.Range(startPos, endPos);
 
                 const param = this.currentMethod.parameters.find(p => p.name === name);
@@ -281,6 +288,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                             value: valueText,
                             type: varType,
                             declarationRange: declRange,
+                            nameRange: this.getVariableNameRange(ctx),
                             scopeRange: new vscode.Range(startPos, this.currentMethod.bodyRange?.end ?? endPos),
                             reassignments: []
                         };
@@ -340,6 +348,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 description: fieldDescription,
                 private: ctx.PRIVATE() !== undefined,
                 declarationRange,
+                nameRange: this.getFieldNameRange(ctx),
                 readonly: false
             };
 
@@ -363,7 +372,8 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             this.visit(postfixOp);
         }
 
-        if (this.currentChain.length > 1 || (this.currentChain.length === 1 && this.currentChain[0].isMethodCall)) {
+        // if (this.currentChain.length > 1 || (this.currentChain.length === 1 && this.currentChain[0].isMethodCall)) {
+        if (this.currentChain.length > 0) {
             this.chains.push(this.currentChain);
         }
 
@@ -376,11 +386,18 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             const startToken = ctx.start;
             const startLine = startToken.line - 1;
             const startColumn = startToken.charPositionInLine;
+            const idToken = ctx.ID()!.symbol;
+            const endLine = idToken.line - 1;
+            const endColumn = idToken.charPositionInLine + idToken.text!.length;
 
             this.currentChain.push({
                 text,
                 startLine,
                 startColumn,
+                range: new vscode.Range(
+                    new vscode.Position(startLine, startColumn),
+                    new vscode.Position(endLine, endColumn)
+                ),
                 isMethodCall: false,
             });
         } else if (ctx.SELF()) {
@@ -388,17 +405,60 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             const startToken = ctx.start;
             const startLine = startToken.line - 1;
             const startColumn = startToken.charPositionInLine;
+            const selfToken = ctx.SELF()!.symbol;
+            const endLine = selfToken.line - 1;
+            const endColumn = selfToken.charPositionInLine + selfToken.text!.length;
 
             this.currentChain.push({
                 text,
                 startLine,
                 startColumn,
+                range: new vscode.Range(
+                    new vscode.Position(startLine, startColumn),
+                    new vscode.Position(endLine, endColumn)
+                ),
                 isMethodCall: false,
             });
         } else if (ctx.literal()) {
             this.visit(ctx.literal()!);
         } else if (ctx.LPAREN() && ctx.expression()) {
-            this.visit(ctx.expression()!);
+            // Check if this parenthesized expression is part of a postfixExpression
+            // (i.e., has postfix operators after it)
+            const parentCtx = ctx.parent;
+            const hasPostfixOps = parentCtx instanceof PostfixExpressionContext && 
+                                  parentCtx.postfixOperator().length > 0;
+            
+            if (hasPostfixOps) {
+                // Visit the expression inside parentheses first (this will create chains for inner expressions)
+                this.visit(ctx.expression()!);
+                
+                // Then create a chain node for the parenthesized expression result
+                const lparenToken = ctx.LPAREN()!.symbol;
+                const rparenToken = ctx.RPAREN()!.symbol;
+                const startLine = lparenToken.line - 1;
+                const startColumn = lparenToken.charPositionInLine;
+                const endLine = rparenToken.line - 1;
+                const endColumn = rparenToken.charPositionInLine + rparenToken.text!.length;
+                
+                // Get the text of the expression inside parentheses
+                const exprText = ctx.expression()!.text;
+                
+                // Add the parenthesized expression as a node in the current chain
+                // This will be the first node, followed by postfix operators
+                this.currentChain.push({
+                    text: `(${exprText})`,
+                    startLine,
+                    startColumn,
+                    range: new vscode.Range(
+                        new vscode.Position(startLine, startColumn),
+                        new vscode.Position(endLine, endColumn)
+                    ),
+                    isMethodCall: false,
+                });
+            } else {
+                // If no postfix operators, just visit the expression normally
+                this.visit(ctx.expression()!);
+            }
         }
     };
 
@@ -419,12 +479,21 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
         const argumentList = ctx.argumentList()?.expression().map(expr => expr.text) || [];
         const startToken = ctx.start;
-        const startLine = startToken.line;
+        const stopToken = ctx.stop || ctx.start;
+        const startLine = startToken.line - 1;
         const startColumn = startToken.charPositionInLine;
+        const endLine = stopToken.line - 1;
+        const endColumn = stopToken.charPositionInLine + (stopToken.text?.length ?? 0);
 
         prevItem.text += `(${argumentList.join(', ')})`;
         prevItem.isMethodCall = true;
         prevItem.methodArguments = argumentList;
+        
+        // Update range to include the method call with arguments
+        prevItem.range = new vscode.Range(
+            prevItem.range.start,
+            new vscode.Position(endLine, endColumn)
+        );
 
         this.visitChildren(ctx);
     };
@@ -433,13 +502,20 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
     public visitFieldAccess = (ctx: FieldAccessContext): void => {
         const fieldName = ctx.ID().text;
         const startToken = ctx.start;
+        const idToken = ctx.ID().symbol;
         const startLine = startToken!.line - 1;
         const startColumn = startToken!.charPositionInLine + 1;
+        const endLine = idToken.line - 1;
+        const endColumn = idToken.charPositionInLine + idToken.text!.length;
 
         this.currentChain.push({
             text: fieldName,
             startLine,
             startColumn,
+            range: new vscode.Range(
+                new vscode.Position(startLine, startColumn),
+                new vscode.Position(endLine, endColumn)
+            ),
             isMethodCall: false,
         });
     };
@@ -598,12 +674,11 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             ? ctx.PRIVATE()!.symbol
             : ctx.ID()!.symbol;
 
-        const semiToken = ctx.SEMI().symbol;
-
+        const idToken = ctx.ID()!.symbol;
         const startLine = startToken.line - 1;
         const startChar = startToken.charPositionInLine;
-        const endLine = semiToken.line - 1;
-        const endChar = semiToken.charPositionInLine + 1;
+        const endLine = idToken.line - 1;
+        const endChar = idToken.charPositionInLine + idToken.text!.length;
 
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
@@ -619,9 +694,9 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         const startLine = keywordToken.line - 1;
         const startChar = keywordToken.charPositionInLine;
 
-        const blockStartSymbol = ctx.block().start!;
-        const endLine = blockStartSymbol.line - 1;
-        const endChar = blockStartSymbol.charPositionInLine;
+        const rparenToken = ctx.RPAREN()!.symbol;
+        const endLine = rparenToken.line - 1;
+        const endChar = rparenToken.charPositionInLine;
 
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
@@ -638,6 +713,76 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         const endLine = token.line - 1;
         const endChar = token.charPositionInLine + token.text!.length;
 
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getClassNameRange(ctx: ClassDeclContext): vscode.Range {
+        const idToken = ctx.ID()!.symbol;
+        const startLine = idToken.line - 1;
+        const startChar = idToken.charPositionInLine;
+        const endLine = idToken.line - 1;
+        const endChar = idToken.charPositionInLine + idToken.text!.length;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getMethodNameRange(ctx: MethodDeclContext): vscode.Range {
+        const idToken = ctx.ID()!.symbol;
+        const startLine = idToken.line - 1;
+        const startChar = idToken.charPositionInLine;
+        const endLine = idToken.line - 1;
+        const endChar = idToken.charPositionInLine + idToken.text!.length;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getParameterNameRange(ctx: ParamContext): vscode.Range {
+        const idToken = ctx.ID()!.symbol;
+        const startLine = idToken.line - 1;
+        const startChar = idToken.charPositionInLine;
+        const endLine = idToken.line - 1;
+        const endChar = idToken.charPositionInLine + idToken.text!.length;
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getFieldNameRange(ctx: VariableDeclContext): vscode.Range {
+        const startToken = ctx.PRIVATE()
+            ? ctx.PRIVATE()!.symbol
+            : ctx.ID()!.symbol;
+        const idToken = ctx.ID()!.symbol;
+        
+        const startLine = startToken.line - 1;
+        const startChar = startToken.charPositionInLine;
+        const endLine = idToken.line - 1;
+        const endChar = idToken.charPositionInLine + idToken.text!.length;
+        
+        return new vscode.Range(
+            new vscode.Position(startLine, startChar),
+            new vscode.Position(endLine, endChar)
+        );
+    }
+
+    private getVariableNameRange(ctx: VariableDeclContext): vscode.Range {
+        const startToken = ctx.PRIVATE()
+            ? ctx.PRIVATE()!.symbol
+            : ctx.ID()!.symbol;
+        const idToken = ctx.ID()!.symbol;
+        
+        const startLine = startToken.line - 1;
+        const startChar = startToken.charPositionInLine;
+        const endLine = idToken.line - 1;
+        const endChar = idToken.charPositionInLine + idToken.text!.length;
+        
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)

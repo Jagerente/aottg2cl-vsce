@@ -9,7 +9,8 @@ import {
     IParameter,
     FindFieldInClassHierarchy,
     FindMethodInClassHierarchy,
-    TypeReference
+    TypeReference,
+    IChainNode
 } from '../classes/IClass';
 
 export class CodeContextUtils {
@@ -29,120 +30,6 @@ export class CodeContextUtils {
         
         const pattern = /^[\s]*([A-Za-z_]\w*)[\s]*=.*$/;
         return pattern.test(textBeforePosition);
-    }
-
-    public static parseCallChain(input: string): string {
-        let methodChain = '';
-        let bracesDepth = 0;
-        let inString = false;
-        let stringChar: string | null = null;
-        let escape = false;
-
-        for (let i = input.length - 1; i >= 0; i--) {
-            const char = input[i];
-
-            if (inString) {
-                if (escape) {
-                    escape = false;
-                } else if (char === '\\') {
-                    escape = true;
-                } else if (char === stringChar) {
-                    inString = false;
-                    stringChar = null;
-                }
-                methodChain = char + methodChain;
-                continue;
-            } else {
-                if (char === '"' || char === "'" || char === '`') {
-                    inString = true;
-                    stringChar = char;
-                    methodChain = char + methodChain;
-                    continue;
-                }
-            }
-
-            if (char === ')') {
-                bracesDepth++;
-            } else if (char === '(') {
-                bracesDepth--;
-                if (bracesDepth < 0) {
-                    break;
-                }
-            }
-
-            if (
-                bracesDepth === 0 &&
-                (char === '=' || char === '&' || char === '|' || char === '>' || char === '<' || /\s/.test(char) || char === ';' || char === ',' || char === '!')
-            ) {
-                break;
-            }
-
-            methodChain = char + methodChain;
-        }
-
-        if (!/^[A-Za-z_]\w*/.test(methodChain)) {
-            return '';
-        }
-
-        if (!this.areParenthesesBalanced(methodChain)) {
-            return '';
-        }
-
-        return methodChain.trim();
-    }
-
-    public static splitCallChain(chain: string): string[] {
-        const components: string[] = [];
-        let currentComponent = '';
-        let bracesDepth = 0;
-        let inString = false;
-        let stringChar: string | null = null;
-        let escape = false;
-
-        for (let i = 0; i < chain.length; i++) {
-            const char = chain[i];
-
-            if (inString) {
-                currentComponent += char;
-                if (escape) {
-                    escape = false;
-                } else if (char === '\\') {
-                    escape = true;
-                } else if (char === stringChar) {
-                    inString = false;
-                    stringChar = null;
-                }
-                continue;
-            } else {
-                if (char === '"' || char === "'" || char === '`') {
-                    inString = true;
-                    stringChar = char;
-                    currentComponent += char;
-                    continue;
-                }
-            }
-
-            if (char === '(') {
-                bracesDepth++;
-            } else if (char === ')') {
-                bracesDepth--;
-            }
-
-            if (char === '.' && bracesDepth === 0) {
-                if (currentComponent.trim() !== '') {
-                    components.push(currentComponent.trim());
-                    currentComponent = '';
-                }
-            } else {
-                currentComponent += char;
-            }
-        }
-
-        if (currentComponent.trim() !== '') {
-            components.push(currentComponent.trim());
-        }
-
-        return components;
     }
 
     public static areParenthesesBalanced(str: string): boolean {
@@ -253,6 +140,76 @@ export class CodeContextUtils {
         return currentTypeRef;
     }
 
+    public static resolveChainTypeNew(
+        document: vscode.TextDocument | string,
+        position: vscode.Position,
+        documentTreeProvider: DocumentTreeProvider,
+        identifierChain: IChainNode[],
+        currentClassDef?: IClass,
+        currentMethod?: IMethod | IConstructor
+    ): TypeReference | undefined {
+        if (identifierChain.length === 0) {
+            return undefined;
+        }
+        let currentTypeRef: TypeReference | undefined;
+        for (let i = 0; i < identifierChain.length; i++) {
+            const id = identifierChain[i];
+            if (i === 0) {
+                if (id.text === 'self') {
+                    if (!currentClassDef) {
+                        return undefined;
+                    }
+                    currentTypeRef = { name: currentClassDef.name, typeArguments: [] };
+                } else {
+                    const param = currentMethod?.parameters.find(p => p.name === id.text);
+                    let local: IVariable | undefined = undefined;
+                    if (!param && currentMethod) {
+                        local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, id.text, true, position);
+                    }
+
+                    if (param) {
+                        currentTypeRef = param.type;
+                    } else if (local) {
+                        currentTypeRef = local.type;
+                    } else {
+                        const tr = CodeContextUtils.parseTypeReference(id.text);
+                        const cls = documentTreeProvider.findClassByName(document, id.text);
+                        if (!cls) {
+                            return undefined;
+                        }
+                        currentTypeRef = tr;
+                    }
+                }
+            } else {
+                if (!currentTypeRef) {
+                    return undefined;
+                }
+                const raw = this.typeRefToString(currentTypeRef);
+                const cls = documentTreeProvider.findClassByName(document, raw);
+                if (!cls) {
+                    return undefined;
+                }
+                
+                if (id.isMethodCall) {
+                    const methodName = id.text.split('(')[0];
+                    const method = FindMethodInClassHierarchy(cls, methodName, id.methodArguments?.length ?? -1, true, true);
+                    if (method) {
+                        currentTypeRef = method.returnType;
+                        continue;
+                    }
+                } 
+
+                const field = FindFieldInClassHierarchy(cls, id.text, true, true, true, true);
+                if (field) {
+                    currentTypeRef = field.type;
+                    continue;
+                }
+                return undefined;
+            }
+        }
+        return currentTypeRef;
+    }
+
     public static resolveChainFinalPart(
         document: vscode.TextDocument,
         position: vscode.Position,
@@ -334,6 +291,93 @@ export class CodeContextUtils {
                 if (method) {
                     currentTypeRef = method.returnType;
                     currentPart = method;
+                    continue;
+                }
+                
+                return undefined;
+            }
+        }
+        return currentPart;
+    }
+
+    public static resolveChainFinalPartNew(
+        document: vscode.TextDocument,
+        position: vscode.Position,
+        documentTreeProvider: DocumentTreeProvider,
+        identifierChain: IChainNode[],
+        currentClassDef?: IClass,
+        currentMethod?: IMethod | IConstructor
+    ): IClass | IMethod | IField | IVariable | IParameter | undefined {
+        if (identifierChain.length === 0) {
+            return undefined;
+        }
+        let currentTypeRef: TypeReference | undefined;
+        let currentPart: IClass | IMethod | IField | IVariable | IParameter | undefined;
+        for (let i = 0; i < identifierChain.length; i++) {
+            const id = identifierChain[i];
+            if (i === 0) {
+                if (id.text === 'self') {
+                    if (!currentClassDef) {
+                        return undefined;
+                    }
+                    currentTypeRef = { name: currentClassDef.name, typeArguments: [] };
+                    currentPart = currentClassDef;
+                } else {
+                    let local: IVariable | undefined;
+                    let param: IParameter | undefined;
+                    if (currentMethod) {
+                        local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, id.text, true, position);
+                        if (!local) {
+                            param = currentMethod?.parameters.find(p => p.name === id.text);
+                        }
+                    }
+
+                    if (param) {
+                        currentTypeRef = param.type;
+                        currentPart = param;
+                    } else if (local) {
+                        currentTypeRef = local.type;
+                        currentPart = local;
+                    } else {
+                        const tr = CodeContextUtils.parseTypeReference(id.text);
+                        const cls = documentTreeProvider.findClassByName(document, id.text);
+                        if (!cls) {
+                            return undefined;
+                        }
+                        currentTypeRef = tr;
+                        currentPart = cls;
+                    }
+                }
+            } else {
+                if (!currentTypeRef) {
+                    return undefined;
+                }
+
+                let cls: IClass | undefined;
+                if (currentPart && 'kind' in currentPart && 'name' in currentPart) {
+                    cls = currentPart;
+                } else {
+                    cls = documentTreeProvider.findClassByReference(document, currentTypeRef);
+                }
+
+                if (!cls) {
+                    return undefined;
+                }
+
+                if (id.isMethodCall) {
+                    const methodName = id.text.split('(')[0];
+                    const method = FindMethodInClassHierarchy(cls, methodName, id.methodArguments?.length ?? -1, true, true);
+                    if (method) {
+                        currentTypeRef = method.returnType;
+                        currentPart = method;
+                        continue;
+                    }
+                }
+
+                const field = FindFieldInClassHierarchy(cls, id.text, true, true, true, true);
+                if (field) {
+                    currentTypeRef = field.type;
+                    currentPart = field;
                     continue;
                 }
                 

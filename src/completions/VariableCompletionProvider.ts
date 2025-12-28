@@ -31,52 +31,45 @@ export class VariableCompletionProvider {
             return [];
         }
 
-        const { document, position, textBeforeCursor, callChainString, callChainArray, wordRange, nextIsParen, currentClass: currentClassDef, currentMethod } = context;
+        const { document, position, callChainInfo, wordRange, nextIsParen, currentClass: currentClassDef, currentMethod } = context;
 
-        let lastDot = callChainString.lastIndexOf('.');
-        const afterDot = lastDot === -1 ? '' : callChainString.slice(lastDot + 1).trim();
-        const afterDotBeforeCursor = callChainString.slice(lastDot + 1, position.character).trim();
-
-        const textBeforeDot = callChainString.slice(0, lastDot + 1).trim();
-        const callChainArrayForResolve = CodeContextUtils.splitCallChain(textBeforeDot);
-
-        if (callChainArrayForResolve.length > 0) {
-            const resolvedType = CodeContextUtils.resolveChainType(
-                document,
-                position,
-                context.documentTreeProvider,
-                callChainArrayForResolve,
-                currentClassDef,
-                currentMethod
-            );
-
-            if (!resolvedType) {
-                return [];
-            }
-
-            const classDef = context.documentTreeProvider.findClassByReference(document, resolvedType);
-            if (!classDef) {
-                return [];
-            }
-
-            const includePrivates = classDef.name === currentClassDef?.name;
-            const staticContext = callChainArrayForResolve[0] !== 'self' && callChainArrayForResolve.length === 1 && context.documentTreeProvider.findClassByName(document, callChainArrayForResolve[0]) !== undefined;
-
-            let completions = this.getFieldsAndMethodsCompletions(
-                classDef,
-                includePrivates,
-                !staticContext,
-                staticContext || callChainArrayForResolve[0] === 'self' && callChainArrayForResolve.length === 1,
-                nextIsParen,
-                wordRange
-            );
-            if (afterDotBeforeCursor !== '') {
-                completions = completions.filter(item => item.label.toString().startsWith(afterDot));
-            }
-            return completions;
+        if (!callChainInfo || (callChainInfo.chain.length <= 1 && callChainInfo.nodeIndex !== undefined)) {
+            return this.getVarsAndClassesCompletions(context);
         }
 
-        return this.getVarsAndClassesCompletions(context);
+        const callChainBeforeCursor = callChainInfo?.chain.slice(0, callChainInfo.nodeIndex ?? callChainInfo.chain.length);
+
+        const resolvedType = CodeContextUtils.resolveChainTypeNew(
+            document,
+            position,
+            context.documentTreeProvider,
+            callChainBeforeCursor,
+            currentClassDef,
+            currentMethod
+        );
+
+        if (!resolvedType) {
+            return [];
+        }
+
+        const classDef = context.documentTreeProvider.findClassByReference(document, resolvedType);
+        if (!classDef) {
+            return [];
+        }
+
+        const includePrivates = classDef.name === currentClassDef?.name;
+        const staticContext = callChainBeforeCursor[0].text !== 'self' && callChainBeforeCursor.length === 1;
+
+        let completions = this.getFieldsAndMethodsCompletions(
+            classDef,
+            includePrivates,
+            !staticContext,
+            staticContext,
+            nextIsParen,
+            wordRange
+        );
+
+        return completions;
     }
 
     private getFieldsAndMethodsCompletions(
@@ -265,8 +258,6 @@ export class VariableCompletionProvider {
         if (charAfterWord === '(') {
             fullLineBeforeWordEnd += '()';
         }
-        const callChainString = CodeContextUtils.parseCallChain(fullLineBeforeWordEnd);
-        const callChainArray = CodeContextUtils.splitCallChain(callChainString);
 
         const currentClass = documentTreeProvider.getCurrentClass(document, position);
 
@@ -307,8 +298,11 @@ export class VariableCompletionProvider {
 
         const currentMethod = documentTreeProvider.getCurrentMethod(document, position);
 
-        if (currentMethod && callChainArray.length > 1) {
-            const resolvedType = CodeContextUtils.resolveChainFinalPart(document, position, documentTreeProvider, callChainArray, currentClass, currentMethod);
+        const chainInfo = documentTreeProvider.findChainAtPosition(document, position);
+        const callChain = chainInfo?.chain.slice(0, (chainInfo.nodeIndex ?? chainInfo.chain.length - 1) + 1);
+
+        if (currentMethod && callChain && callChain.length > 1) {
+            const resolvedType = CodeContextUtils.resolveChainFinalPartNew(document, position, documentTreeProvider, callChain, currentClass, currentMethod);
 
             if (resolvedType) {
                 let hoverContent: vscode.MarkdownString;
@@ -349,42 +343,33 @@ export class VariableCompletionProvider {
                 );
             }
 
-            if (callChainArray.length === 1 && callChainArray[0] === "self") {
-                const textAfterSelf = lineText.substring(wordRange!.end.character);
-                if (textAfterSelf.startsWith(".")) {
-                    const afterDot = textAfterSelf.substring(1).trim();
-                    const nextWordMatch = afterDot.match(/^([A-Za-z_][A-Za-z0-9_]*)/);
-                    if (nextWordMatch) {
-                        const nextWord = nextWordMatch[1];
-
-                        const extendedText = fullLineBeforeWordEnd + "." + nextWord;
-                        const extendedCallChainString = CodeContextUtils.parseCallChain(extendedText);
-                        const extendedCallChainArray = CodeContextUtils.splitCallChain(extendedCallChainString);
-                        
-                        if (extendedCallChainArray.length > 1 && extendedCallChainArray[0] === "self") {
-                            const resolvedType = CodeContextUtils.resolveChainFinalPart(document, position, documentTreeProvider, extendedCallChainArray, currentClass, currentMethod);
-                            
-                            if (resolvedType) {
-                                let hoverContent: vscode.MarkdownString;
-                                if ('kind' in resolvedType && 'name' in resolvedType) {
-                                    const classDef = resolvedType as IClass;
-                                    hoverContent = markdown.createClassMarkdown(classDef);
-                                } else if ('parameters' in resolvedType && 'returnType' in resolvedType) {
-                                    const methodDef = resolvedType as IMethod;
-                                    hoverContent = markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef));
-                                } else if ('label' in resolvedType && 'type' in resolvedType) {
-                                    const fieldDef = resolvedType as IField;
-                                    hoverContent = markdown.createFieldMarkdown(fieldDef);
-                                } else if ('name' in resolvedType && 'type' in resolvedType) {
-                                    const variableDef = resolvedType as IVariable;
-                                    hoverContent = markdown.createVariableMarkdown(variableDef);
-                                } else {
-                                    hoverContent = new vscode.MarkdownString(`Unknown type`);
-                                }
-                                
-                                return new vscode.Hover(hoverContent, wordRange);
-                            }
+            if (callChain && callChain.length === 1 && callChain[0].text === "self") {
+                // Check if there's a next link in the full chain
+                if (chainInfo && chainInfo.nodeIndex !== undefined && chainInfo.chain.length > chainInfo.nodeIndex + 1) {
+                    // Use the extended chain including the next link
+                    const extendedChain = chainInfo.chain.slice(0, chainInfo.nodeIndex + 2);
+                    
+                    const resolvedType = CodeContextUtils.resolveChainFinalPartNew(document, position, documentTreeProvider, extendedChain, currentClass, currentMethod);
+                    
+                    if (resolvedType) {
+                        let hoverContent: vscode.MarkdownString;
+                        if ('kind' in resolvedType && 'name' in resolvedType) {
+                            const classDef = resolvedType as IClass;
+                            hoverContent = markdown.createClassMarkdown(classDef);
+                        } else if ('parameters' in resolvedType && 'returnType' in resolvedType) {
+                            const methodDef = resolvedType as IMethod;
+                            hoverContent = markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef));
+                        } else if ('label' in resolvedType && 'type' in resolvedType) {
+                            const fieldDef = resolvedType as IField;
+                            hoverContent = markdown.createFieldMarkdown(fieldDef);
+                        } else if ('name' in resolvedType && 'type' in resolvedType) {
+                            const variableDef = resolvedType as IVariable;
+                            hoverContent = markdown.createVariableMarkdown(variableDef);
+                        } else {
+                            hoverContent = new vscode.MarkdownString(`Unknown type`);
                         }
+                        
+                        return new vscode.Hover(hoverContent, wordRange);
                     }
                 }
             }

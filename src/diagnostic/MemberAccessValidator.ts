@@ -285,8 +285,8 @@ export class MemberAccessValidator implements IValidator {
 
         // Soften warnings for Base classes where definitions might be incomplete or dynamic
         let code = DiagnosticCodes.MEMBER_DOES_NOT_EXIST;
-        if (['Object', 'Character', 'Component'].includes(classDef.name)) {
-            msg += `\nType '${classDef.name}' is a base class; resolution may be imprecise.`;
+        if (['Object', 'Character', 'Component', 'component', 'null'].includes(classDef.name)) {
+            msg += `\nResolution may be imprecise.`;
             severity = vscode.DiagnosticSeverity.Warning;
             code = DiagnosticCodes.MEMBER_DOES_NOT_EXIST_BASE_CLASS;
         }
@@ -302,10 +302,7 @@ export class MemberAccessValidator implements IValidator {
         severity: vscode.DiagnosticSeverity = vscode.DiagnosticSeverity.Error,
         code?: string | number
     ): vscode.Diagnostic {
-        const range = new vscode.Range(
-            new vscode.Position(link.startLine, link.startColumn),
-            new vscode.Position(link.startLine, link.startColumn + link.text.length)
-        );
+        const range = link.range;
         const diagnostic = new vscode.Diagnostic(range, message, severity);
         if (code !== undefined) {
             diagnostic.code = code;

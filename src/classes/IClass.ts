@@ -16,6 +16,7 @@ export interface IChainNode {
     text: string;
     startLine: number;
     startColumn: number;
+    range: vscode.Range;
     isMethodCall: boolean;
     methodArguments?: string[];
 }
@@ -37,6 +38,13 @@ export interface IReassignment {
     value: string;
 }
 
+export interface IReference {
+    uri: vscode.Uri;
+    range: vscode.Range;
+    isRead?: boolean;
+    isWrite?: boolean;
+}
+
 export interface TypeReference {
     name: string;
     typeArguments: TypeReference[];
@@ -47,9 +55,12 @@ export interface IVariable {
     value: string;
     type: TypeReference;
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
+    valueRange?: vscode.Range;
     scopeRange?: vscode.Range;
     reassignments?: IReassignment[];
     inLoop?: boolean;
+    references?: IReference[];
 }
 
 export interface IParameter {
@@ -57,9 +68,11 @@ export interface IParameter {
     type: TypeReference;
     description: string;
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
     isOptional: boolean;
     isVariadic: boolean;
     reassignments?: IReassignment[];
+    references?: IReference[];
 }
 
 export interface IConstructor {
@@ -67,9 +80,11 @@ export interface IConstructor {
     parameters: IParameter[];
     description: string;
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
     localVariables?: IVariable[];
+    references?: IReference[];
 }
 
 export interface IMethod {
@@ -80,9 +95,11 @@ export interface IMethod {
     description: string;
     parameters: IParameter[];
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
     localVariables?: IVariable[];
+    references?: IReference[];
 }
 
 export interface IField {
@@ -93,7 +110,9 @@ export interface IField {
     readonly: boolean;
     private: boolean
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
     sourceUri?: vscode.Uri;
+    references?: IReference[];
 }
 
 export interface IClass {
@@ -107,9 +126,11 @@ export interface IClass {
     instanceFields: IField[];
     instanceMethods: IMethod[];
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
     hidden?: boolean;
+    references?: IReference[];
 }
 
 export interface IGenericClass extends IClass {

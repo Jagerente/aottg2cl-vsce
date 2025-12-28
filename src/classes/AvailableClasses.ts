@@ -9,9 +9,11 @@ import {PrimitiveVoidClassInstance} from "./PrimitiveVoidClass";
 import {BaseComponentClassInstance} from "./BaseComponentsClass";
 import {JsonClassLoader} from "./json/JsonClassLoader";
 import { AbstractClassInstance } from './AbstractClass';
+import { PrimitiveNullClassInstance } from './PrimitiveNullClass';
 
 export const BaseClassesMap: Map<string, IClass> = new Map([
     [AbstractClassInstance.name, AbstractClassInstance],
+    [PrimitiveNullClassInstance.name, PrimitiveNullClassInstance],
     [PrimitiveIntClassInstance.name, PrimitiveIntClassInstance],
     [PrimitiveStringClassInstance.name, PrimitiveStringClassInstance],
     [PrimitiveFloatClassInstance.name, PrimitiveFloatClassInstance],

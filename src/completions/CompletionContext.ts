@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { IClass, IMethod, IConstructor } from '../classes/IClass';
+import { IClass, IMethod, IConstructor, IChainNode } from '../classes/IClass';
 import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
 
 export interface CompletionContext {
@@ -19,8 +19,11 @@ export interface CompletionContext {
     currentClass: IClass | undefined;
     currentMethod: IMethod | IConstructor | undefined;
     currentDeclaringMethod: IMethod | IConstructor | undefined;
-    callChainString: string;
-    callChainArray: string[];
+    callChainInfo: {
+        chain: IChainNode[];
+        nodeIndex: number | undefined;
+        identifierChain: string[];
+    } | undefined;
     nextIsParen: boolean;
     documentTreeProvider: DocumentTreeProvider;
 }
