@@ -1,4 +1,4 @@
-import { IVariable } from './../classes/IClass';
+import {IVariable} from './../classes/IClass';
 import * as vscode from 'vscode';
 import {
     IChainNode,
@@ -9,8 +9,8 @@ import {
     IMethod,
     IConditionNode, IGenericClass, TypeReference
 } from "../classes/IClass";
-import { ACLManager } from '../antlr4ts/ACLManager';
-import { CodeContextUtils } from "./CodeContextUtils";
+import {ACLManager} from '../antlr4ts/ACLManager';
+import {CodeContextUtils} from "./CodeContextUtils";
 
 type ParsedDocumentData = {
     userDefinedClasses: IClass[];
@@ -59,16 +59,16 @@ export class DocumentTreeProvider {
             if (chain.length === 0) {
                 return new vscode.Range(0, 0, 0, 0);
             }
-            
+
             const firstNode = chain[0];
             const lastNode = chain[chain.length - 1];
-            
+
             const startPos = new vscode.Position(firstNode.startLine, firstNode.startColumn);
             const endPos = new vscode.Position(
                 lastNode.startLine,
                 lastNode.startColumn + lastNode.text.length
             );
-            
+
             return new vscode.Range(startPos, endPos);
         });
 
@@ -91,10 +91,9 @@ export class DocumentTreeProvider {
         });
 
         for (const classDef of userDefinedClasses) {
-            let methods: IMethod|IConstructor[] = [...classDef.instanceMethods,...classDef.staticMethods];
-            if (classDef.constructors)
-            {
-                methods = [...methods,...classDef.constructors];
+            let methods: IMethod | IConstructor[] = [...classDef.instanceMethods, ...classDef.staticMethods];
+            if (classDef.constructors) {
+                methods = [...methods, ...classDef.constructors];
             }
 
             for (const methodDef of methods) {
@@ -125,13 +124,11 @@ export class DocumentTreeProvider {
                         classDef,
                         methodDef
                     );
-                    if (!parsedType)
-                    {
+                    if (!parsedType) {
                         continue;
                     }
 
-                    if (localVariable.inLoop && parsedType.typeArguments.length === 1)
-                    {
+                    if (localVariable.inLoop && parsedType.typeArguments.length === 1) {
                         parsedType = parsedType.typeArguments[0];
                     }
 
@@ -172,6 +169,15 @@ export class DocumentTreeProvider {
     public getCurrentClass(document: vscode.TextDocument, position: vscode.Position): IClass | undefined {
         for (const classDef of this.getUserDefinedClasses(document)) {
             if (classDef.bodyRange?.contains(position)) {
+                return classDef;
+            }
+        }
+        return undefined;
+    }
+
+    public getCurrentClassByDeclaration(document: vscode.TextDocument, position: vscode.Position): IClass | undefined {
+        for (const classDef of this.getUserDefinedClasses(document)) {
+            if (classDef.declarationRange?.contains(position)) {
                 return classDef;
             }
         }
@@ -221,7 +227,7 @@ export class DocumentTreeProvider {
             if (!generic) {
                 return undefined;
             }
-            
+
             return generic.instantiate(typeRef.typeArguments);
         }
 
@@ -231,12 +237,12 @@ export class DocumentTreeProvider {
             if (userDefined) {
                 return userDefined;
             }
-            
+
             const imported = parsedData.importedClasses.get(typeRef.name);
             if (imported) {
                 return imported;
             }
-            
+
             const global = this.globalClasses.get(typeRef.name);
             if (global) {
                 return global;
@@ -244,7 +250,7 @@ export class DocumentTreeProvider {
         } else {
             return this.globalClasses.get(typeRef.name);
         }
-        
+
         return undefined;
     }
 
@@ -409,7 +415,7 @@ export class DocumentTreeProvider {
         });
     }
 
-    public *iterateAvailableLocalVariables(
+    public* iterateAvailableLocalVariables(
         method: IMethod | IConstructor,
         reverse: boolean = false,
         posInScopeRange?: vscode.Position,

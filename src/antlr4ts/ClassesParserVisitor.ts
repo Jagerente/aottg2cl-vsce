@@ -583,7 +583,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
     private getClassBodyRange(ctx: ClassDeclContext): vscode.Range {
         const startLine = ctx.LBRACE().symbol.line - 1;
-        const startChar = ctx.LBRACE().symbol.charPositionInLine + 1;
+        const startChar = ctx.LBRACE().symbol.charPositionInLine;
         const rbraceSymbol = ctx.RBRACE().symbol;
         const endLine = rbraceSymbol.line - 1;
         const endChar = rbraceSymbol.charPositionInLine;

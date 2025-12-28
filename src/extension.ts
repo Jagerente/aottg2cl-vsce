@@ -18,21 +18,22 @@ import {BuildFinalFileIntoMapTaskProvider} from './tasks/BuildFinalFileIntoMapTa
 import {ACLFormatter} from './formatting/ACLFormatter';
 import {DebugAdapterDescriptorFactory, DebugConfigurationProvider} from './debugger/adapter';
 import {Settings} from './config/settings';
+import {CodeActionProviderOrchestrator} from './actions/CodeActionProviderOrchestrator';
 
 export let extensionContext: vscode.ExtensionContext;
 
 export async function activate(context: vscode.ExtensionContext) {
     extensionContext = context;
 
-    const { classes, genericClasses } = buildAvailableClasses(context);
+    const {classes, genericClasses} = buildAvailableClasses(context);
 
     const aclManager = new ACLManager();
     const documentTreeProvider = new DocumentTreeProvider(aclManager, classes, genericClasses);
-    
+
     const keywordsProvider = new KeywordCompletionProvider();
     const variablesProvider = new VariableCompletionProvider();
     const callbacksProvider = new MainFunctionsCompletionProvider();
-    
+
     const completionOrchestrator = new CompletionOrchestrator(
         documentTreeProvider,
         variablesProvider,
@@ -54,13 +55,17 @@ export async function activate(context: vscode.ExtensionContext) {
     const diagnosticCollection = vscode.languages.createDiagnosticCollection('acl');
     const diagnosticManager = new DiagnosticManager(diagnosticCollection, aclManager, documentTreeProvider);
     const symbolProvider = new SymbolProvider(documentTreeProvider);
-    
+    const codeActionOrchestrator = new CodeActionProviderOrchestrator(documentTreeProvider);
+
     context.subscriptions.push(
         vscode.languages.registerCompletionItemProvider({language: 'acl'}, completionOrchestrator, ' ', '.'),
         vscode.languages.registerHoverProvider({language: 'acl'}, hoverOrchestrator),
         vscode.languages.registerSignatureHelpProvider({language: 'acl'}, signatureHelpOrchestrator, '(', ',', ' '),
         vscode.languages.registerDefinitionProvider({language: 'acl'}, variableDefinitionProvider),
         vscode.languages.registerDocumentFormattingEditProvider({language: 'acl'}, formatter),
+        vscode.languages.registerCodeActionsProvider({language: 'acl'}, codeActionOrchestrator, {
+            providedCodeActionKinds: CodeActionProviderOrchestrator.providedCodeActionKinds
+        }),
         diagnosticCollection,
         vscode.commands.registerCommand('extension.buildScript', buildFinalFile),
         vscode.commands.registerCommand('extension.buildScriptIntoMap', buildFinalFileIntoMap),
@@ -91,14 +96,14 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidOpenTextDocument(async document => {
         await refetchDocumentData(document);
     });
-    
+
     // TODO: Remove legacy mode after some feedback
     if (useLegacyMode) {
         vscode.workspace.onDidChangeTextDocument(event => {
             if (event.document.languageId !== 'acl') {
                 return;
             }
-            
+
             if (parseTimeout) {
                 clearTimeout(parseTimeout);
             }
@@ -111,7 +116,7 @@ export async function activate(context: vscode.ExtensionContext) {
             if (event.document.languageId !== 'acl') {
                 return;
             }
-            
+
             refetchDocumentData(event.document).catch(err => {
                 console.error('Error parsing document:', err);
             });
