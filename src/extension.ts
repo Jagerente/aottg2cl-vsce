@@ -5,6 +5,7 @@ import {SignatureHelpOrchestrator} from './signature/SignatureHelpOrchestrator';
 import {SymbolProvider} from './symbols/SymbolProvider';
 import {VariableDefinitionProvider} from './definition/VariableDefinitionProvider';
 import {VariableReferenceProvider} from './definition/VariableReferenceProvider';
+import {VariableRenameProvider} from './definition/VariableRenameProvider';
 import {buildAvailableClasses} from './classes/AvailableClasses';
 import {ACLManager} from './antlr4ts/ACLManager';
 import {DiagnosticManager} from './diagnostic/DiagnosticManager';
@@ -35,6 +36,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const formatter = new ACLFormatter();
     const variableDefinitionProvider = new VariableDefinitionProvider(documentTreeProvider);
     const variableReferenceProvider = new VariableReferenceProvider(documentTreeProvider);
+    const variableRenameProvider = new VariableRenameProvider(documentTreeProvider);
     const diagnosticCollection = vscode.languages.createDiagnosticCollection('acl');
     const diagnosticManager = new DiagnosticManager(diagnosticCollection, aclManager, documentTreeProvider);
     const symbolProvider = new SymbolProvider(documentTreeProvider);
@@ -46,6 +48,7 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerSignatureHelpProvider({language: 'acl'}, signatureHelpOrchestrator, '(', ',', ' '),
         vscode.languages.registerDefinitionProvider({language: 'acl'}, variableDefinitionProvider),
         vscode.languages.registerReferenceProvider({language: 'acl'}, variableReferenceProvider),
+        vscode.languages.registerRenameProvider({language: 'acl'}, variableRenameProvider),
         vscode.languages.registerDocumentFormattingEditProvider({language: 'acl'}, formatter),
         vscode.languages.registerCodeActionsProvider({language: 'acl'}, codeActionOrchestrator, {
             providedCodeActionKinds: CodeActionProviderOrchestrator.providedCodeActionKinds

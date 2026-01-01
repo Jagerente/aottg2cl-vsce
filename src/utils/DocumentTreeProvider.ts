@@ -1,4 +1,4 @@
-import {IVariable, IReference, IParameter} from './../classes/IClass';
+import {IVariable, IReference, IParameter} from '../classes/IClass';
 import * as vscode from 'vscode';
 import {
     IChainNode,
