@@ -15,21 +15,23 @@ export class CodeActionProviderOrchestrator implements vscode.CodeActionProvider
 
     private readonly providers: vscode.CodeActionProvider[] = [];
 
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.providers.push(new DiagnosticCodeActionOrchestrator(documentTreeProvider));
-        this.providers.push(new FormatClassBracesProvider(documentTreeProvider));
-        this.providers.push(new FormatMethodBracesProvider(documentTreeProvider));
+    constructor(private readonly documentTreeProvider: DocumentTreeProvider) {
+        this.providers.push(new DiagnosticCodeActionOrchestrator(this.documentTreeProvider));
+        this.providers.push(new FormatClassBracesProvider(this.documentTreeProvider));
+        this.providers.push(new FormatMethodBracesProvider(this.documentTreeProvider));
     }
 
-    public provideCodeActions(
+    public async provideCodeActions(
         document: vscode.TextDocument,
         range: vscode.Range | vscode.Selection,
         context: vscode.CodeActionContext,
         token: vscode.CancellationToken
-    ): vscode.ProviderResult<(vscode.CodeAction | vscode.Command)[]> {
+    ): Promise<(vscode.CodeAction | vscode.Command)[] | undefined | null> {
         if (token.isCancellationRequested) {
             return [];
         }
+
+        await this.documentTreeProvider.ensureDocumentParsed(document);
 
         const actions: (vscode.CodeAction | vscode.Command)[] = [];
 
@@ -38,16 +40,15 @@ export class CodeActionProviderOrchestrator implements vscode.CodeActionProvider
                 break;
             }
 
-            const providerActions = provider.provideCodeActions(document, range, context, token);
+            const providerActionsResult = provider.provideCodeActions(document, range, context, token);
+            const providerActions = await Promise.resolve(providerActionsResult);
 
             if (token.isCancellationRequested) {
                 break;
             }
 
-            if (providerActions) {
-                if (Array.isArray(providerActions)) {
-                    actions.push(...providerActions);
-                }
+            if (providerActions && Array.isArray(providerActions)) {
+                actions.push(...providerActions);
             }
         }
 
