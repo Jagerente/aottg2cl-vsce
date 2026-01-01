@@ -64,18 +64,39 @@ export class VariableCompletionProvider {
         //
         // The key indicator is the chain structure before the cursor:
         //   - Static access: "Something.Something" or "Something.Something()" 
-        //     -> Chain has exactly one element that is NOT a method call AND NOT "self" -> static context
+        //     -> Chain has exactly one element that is NOT a method call AND NOT "self" AND is a class name -> static context
         //   - Instance access: "Something().Something" or "Something().Something()" 
         //     -> First element is a method call (constructor) -> instance context (we instantiated the class)
+        //   - Variable/parameter access: "btn.Something" where btn is a variable
+        //     -> First element is a variable or parameter -> instance context (accessing instance of a class)
         //   - Special case: "self.Something" or "self.Something()"
         //     -> If classDef is EXTENSION -> static context (self addresses extension as static)
         //     -> If classDef is not EXTENSION (component/class) -> instance context
-        const isDirectClassAccess = callChainBeforeCursor.length === 1 && 
-                                    !callChainBeforeCursor[0].isMethodCall && 
-                                    callChainBeforeCursor[0].text !== 'self';
-        const isSelfExtension = callChainBeforeCursor.length > 0 && 
-                                callChainBeforeCursor[0].text === 'self' && 
-                                classDef.kind === ClassKinds.EXTENSION;
+
+        // Check if the first element is a variable or parameter (not a direct class access)
+        const resolvedPart = CodeContextUtils.resolveChainFinalPart(
+            document,
+            position,
+            context.documentTreeProvider,
+            callChainBeforeCursor,
+            currentClassDef,
+            currentMethod,
+            0 // Only resolve the first element
+        );
+
+        // Check if resolved part is a variable (has 'name' and 'type', but no 'label', 'isOptional', or 'kind')
+        // or a parameter (has 'isOptional')
+        const isVariableOrParameter = resolvedPart !== undefined &&
+            (('name' in resolvedPart && !('label' in resolvedPart) && !('kind' in resolvedPart) && !('isOptional' in resolvedPart)) ||
+                ('isOptional' in resolvedPart));
+
+        const isDirectClassAccess = callChainBeforeCursor.length === 1 &&
+            !callChainBeforeCursor[0].isMethodCall &&
+            callChainBeforeCursor[0].text !== 'self' &&
+            !isVariableOrParameter;
+        const isSelfExtension = callChainBeforeCursor.length > 0 &&
+            callChainBeforeCursor[0].text === 'self' &&
+            classDef.kind === ClassKinds.EXTENSION;
         const staticContext = isDirectClassAccess || isSelfExtension;
 
         return this.getFieldsAndMethodsCompletions(

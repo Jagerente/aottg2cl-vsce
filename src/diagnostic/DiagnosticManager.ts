@@ -7,7 +7,7 @@ import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
 import {CtorValidator} from './CtorValidator';
 import {DuplicatesValidator} from './DuplicatesValidator';
 import {UserDefinedClassesValidator} from './UserDefinedClassesValidator';
-import { MemberAccessValidator } from './MemberAccessValidator';
+import {MemberAccessValidator} from './MemberAccessValidator';
 
 export class DiagnosticManager {
     private diagnosticCollection: vscode.DiagnosticCollection;
@@ -16,25 +16,27 @@ export class DiagnosticManager {
     constructor(
         diagnosticCollection: vscode.DiagnosticCollection,
         aclManager: ACLManager,
-        documentTreeProvider: DocumentTreeProvider,
+        private documentTreeProvider: DocumentTreeProvider,
     ) {
         this.diagnosticCollection = diagnosticCollection;
         this.validators = this.validators.concat(new ANTLRValidator(aclManager));
         this.validators = this.validators.concat(new MemberAccessValidator(documentTreeProvider));
         this.validators = this.validators.concat(new DuplicatesValidator(documentTreeProvider));
         this.validators = this.validators.concat(new IncompleteMemberAccessValidator(documentTreeProvider));
-        
+
         const userDefinedClassesValidator = new UserDefinedClassesValidator(documentTreeProvider);
         userDefinedClassesValidator.registerValidator(new CtorValidator());
         userDefinedClassesValidator.registerValidator(new CutsceneValidator());
-        
+
         this.validators = this.validators.concat(userDefinedClassesValidator);
     }
 
-    public validateDocument(document: vscode.TextDocument) {
+    public async validateDocument(document: vscode.TextDocument) {
         if (document.languageId !== 'acl') {
             return;
         }
+
+        await this.documentTreeProvider.ensureDocumentParsed(document);
 
         let diagnostics: vscode.Diagnostic[] = [];
 

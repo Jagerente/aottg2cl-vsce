@@ -14,7 +14,8 @@ import {
     PrimaryExpressionContext,
     PostfixOperatorContext,
     ParamContext,
-    LiteralContext
+    LiteralContext,
+    ExpressionContext
 } from './ACLParser';
 import {
     IClass,
@@ -280,8 +281,11 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                                 }
                             }
                         } else {
-                            varType = CodeContextUtils.parseTypeReferenceFallback(valueText, 'any');
+                            varType = CodeContextUtils.parseTypeReference(valueText, 'any');
                         }
+
+                        const exprCtx = ctx.expression();
+                        const valueRange = exprCtx ? this.getExpressionRange(exprCtx) : undefined;
 
                         local = {
                             name,
@@ -289,6 +293,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                             type: varType,
                             declarationRange: declRange,
                             nameRange: this.getVariableNameRange(ctx),
+                            valueRange: valueRange,
                             scopeRange: new vscode.Range(startPos, this.currentMethod.bodyRange?.end ?? endPos),
                             reassignments: []
                         };
@@ -313,31 +318,31 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             let fieldType: TypeReference = {name: 'any', typeArguments: []};
             let fieldDescription = '';
             const annotations = ctx.annotation();
-                    if (annotations?.length) {
-                        for (const ann of annotations) {
-                            const lines = this.getAnnotationLines(ann);
-                            for (const line of lines) {
-                                const m = line.match(/@type\s+(.+)/);
-                                if (m) {
-                                    const rest = m[1];
-                                    const typeStr = this.extractTypeFromAnnotation(rest);
-                                    if (typeStr) {
-                                        fieldType = CodeContextUtils.parseTypeReference(typeStr);
-                                        const escapedType = typeStr.replace(/[<>\[\](){}.*+?^$|\\]/g, '\\$&');
-                                        const descMatch = rest.match(new RegExp(`^${escapedType}\\s+(.+)$`));
-                                        if (descMatch) {
-                                            fieldDescription = descMatch[1].trim();
-                                        }
-                                        break;
-                                    }
+            if (annotations?.length) {
+                for (const ann of annotations) {
+                    const lines = this.getAnnotationLines(ann);
+                    for (const line of lines) {
+                        const m = line.match(/@type\s+(.+)/);
+                        if (m) {
+                            const rest = m[1];
+                            const typeStr = this.extractTypeFromAnnotation(rest);
+                            if (typeStr) {
+                                fieldType = CodeContextUtils.parseTypeReference(typeStr);
+                                const escapedType = typeStr.replace(/[<>\[\](){}.*+?^$|\\]/g, '\\$&');
+                                const descMatch = rest.match(new RegExp(`^${escapedType}\\s+(.+)$`));
+                                if (descMatch) {
+                                    fieldDescription = descMatch[1].trim();
                                 }
-                            }
-                            if (fieldType.name !== 'any') {
                                 break;
                             }
                         }
-                    } else {
-                fieldType = CodeContextUtils.parseTypeReferenceFallback(valueText, 'any');
+                    }
+                    if (fieldType.name !== 'any') {
+                        break;
+                    }
+                }
+            } else {
+                fieldType = CodeContextUtils.parseTypeReference(valueText, 'any');
             }
 
             const declarationRange = this.getFieldDeclarationRange(ctx);
@@ -425,13 +430,13 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             // Check if this parenthesized expression is part of a postfixExpression
             // (i.e., has postfix operators after it)
             const parentCtx = ctx.parent;
-            const hasPostfixOps = parentCtx instanceof PostfixExpressionContext && 
-                                  parentCtx.postfixOperator().length > 0;
-            
+            const hasPostfixOps = parentCtx instanceof PostfixExpressionContext &&
+                parentCtx.postfixOperator().length > 0;
+
             if (hasPostfixOps) {
                 // Visit the expression inside parentheses first (this will create chains for inner expressions)
                 this.visit(ctx.expression()!);
-                
+
                 // Then create a chain node for the parenthesized expression result
                 const lparenToken = ctx.LPAREN()!.symbol;
                 const rparenToken = ctx.RPAREN()!.symbol;
@@ -439,10 +444,10 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 const startColumn = lparenToken.charPositionInLine;
                 const endLine = rparenToken.line - 1;
                 const endColumn = rparenToken.charPositionInLine + rparenToken.text!.length;
-                
+
                 // Get the text of the expression inside parentheses
                 const exprText = ctx.expression()!.text;
-                
+
                 // Add the parenthesized expression as a node in the current chain
                 // This will be the first node, followed by postfix operators
                 this.currentChain.push({
@@ -488,7 +493,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         prevItem.text += `(${argumentList.join(', ')})`;
         prevItem.isMethodCall = true;
         prevItem.methodArguments = argumentList;
-        
+
         // Update range to include the method call with arguments
         prevItem.range = new vscode.Range(
             prevItem.range.start,
@@ -541,14 +546,16 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         });
 
         const name = ctx.ID().text;
-        const exprText = ctx.expression().text.trim();
+        const exprCtx = ctx.expression();
+        const exprText = exprCtx.text.trim();
 
         const idToken = ctx.ID().symbol;
         const startPos = new vscode.Position(idToken.line - 1, idToken.charPositionInLine);
         const endPos = startPos.translate(0, name.length);
         const declRange = new vscode.Range(startPos, endPos);
 
-        const typeRef = CodeContextUtils.parseTypeReferenceFallback(exprText, 'any');
+        const typeRef = CodeContextUtils.parseTypeReference(exprText, 'any');
+        const valueRange = this.getExpressionRange(exprCtx);
 
         if (this.currentMethod) {
             this.currentMethod.localVariables = this.currentMethod.localVariables || [];
@@ -557,6 +564,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 value: exprText,
                 type: typeRef,
                 declarationRange: declRange,
+                valueRange: valueRange,
                 scopeRange: new vscode.Range(
                     new vscode.Position(ctx.LPAREN().symbol.line - 1, ctx.LPAREN().symbol.charPositionInLine),
                     this.currentMethod.bodyRange?.end
@@ -626,11 +634,11 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             const stringToken = ctx.STRING()!;
             const startLine = stringToken.symbol.line - 1;
             const startColumn = stringToken.symbol.charPositionInLine;
-            
+
             const stopToken = ctx.stop!;
             const endLine = stopToken.line - 1;
             const endColumn = stopToken.charPositionInLine + (stopToken.text?.length ?? 0);
-            
+
             this.stringRanges.push(
                 new vscode.Range(
                     new vscode.Position(startLine, startColumn),
@@ -760,12 +768,12 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             ? ctx.PRIVATE()!.symbol
             : ctx.ID()!.symbol;
         const idToken = ctx.ID()!.symbol;
-        
+
         const startLine = startToken.line - 1;
         const startChar = startToken.charPositionInLine;
         const endLine = idToken.line - 1;
         const endChar = idToken.charPositionInLine + idToken.text!.length;
-        
+
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -777,12 +785,12 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             ? ctx.PRIVATE()!.symbol
             : ctx.ID()!.symbol;
         const idToken = ctx.ID()!.symbol;
-        
+
         const startLine = startToken.line - 1;
         const startChar = startToken.charPositionInLine;
         const endLine = idToken.line - 1;
         const endChar = idToken.charPositionInLine + idToken.text!.length;
-        
+
         return new vscode.Range(
             new vscode.Position(startLine, startChar),
             new vscode.Position(endLine, endChar)
@@ -883,20 +891,19 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
 
     private getAnnotationLines(annotationCtx: any): string[] {
         let rawText = '';
-        
+
         if (annotationCtx.ANNOTATION_COMMENT()) {
             rawText = annotationCtx.ANNOTATION_COMMENT()!.text.replace(/^#\s*/, '');
             return [rawText.trim()];
-        } 
-        else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
+        } else if (annotationCtx.ANNOTATION_BLOCK_COMMENT()) {
             rawText = annotationCtx.ANNOTATION_BLOCK_COMMENT()!.text;
             return rawText
-                .replace(/^\/\*|\*\/$/g, '') 
+                .replace(/^\/\*|\*\/$/g, '')
                 .split(/\r?\n/)
                 .map(line => line.trim())
                 .filter(line => line.length > 0);
         }
-        
+
         return [];
     }
 
@@ -943,5 +950,28 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         }
 
         return result.trim();
+    }
+
+    private getExpressionRange(exprCtx: ExpressionContext): vscode.Range | undefined {
+        if (!exprCtx) {
+            return undefined;
+        }
+
+        const startToken = exprCtx.start;
+        const stopToken = exprCtx.stop || exprCtx.start;
+
+        if (!startToken || !stopToken) {
+            return undefined;
+        }
+
+        const startLine = startToken.line - 1;
+        const startColumn = startToken.charPositionInLine;
+        const endLine = stopToken.line - 1;
+        const endColumn = stopToken.charPositionInLine + (stopToken.text?.length ?? 0);
+
+        return new vscode.Range(
+            new vscode.Position(startLine, startColumn),
+            new vscode.Position(endLine, endColumn)
+        );
     }
 }

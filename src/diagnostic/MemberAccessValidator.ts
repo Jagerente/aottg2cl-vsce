@@ -74,7 +74,7 @@ export class MemberAccessValidator implements IValidator {
             }
 
             // Validate the access on the current class
-            const nextType = this.validateMemberAccess(currentClassDef, node, currentTypeCtx.isStatic, diagnostics);
+            const nextType = this.validateMemberAccess(document, currentClassDef, node, currentTypeCtx.isStatic, diagnostics);
 
             if (!nextType) {
                 // Member not found on class. Diagnostic added in validateMemberAccess.
@@ -208,6 +208,7 @@ export class MemberAccessValidator implements IValidator {
     }
 
     private validateMemberAccess(
+        document: vscode.TextDocument,
         classDef: IClass,
         node: IChainNode,
         isStatic: boolean,
@@ -230,6 +231,29 @@ export class MemberAccessValidator implements IValidator {
                 this.reportMemberError(node, classDef, methodName, isStatic, 'method', diagnostics);
                 return undefined;
             }
+
+            // Special handling for MapObject.AddComponent and MapObject.GetComponent
+            // These methods take a string argument that represents the component type name
+            if (classDef.name === 'MapObject' && (methodName === 'AddComponent' || methodName === 'GetComponent')) {
+                const firstArg = node.methodArguments?.[0];
+                if (firstArg && firstArg.trim().length > 0) {
+                    // Extract string value from argument (remove quotes if present)
+                    let componentTypeName = firstArg.trim();
+                    if ((componentTypeName.startsWith('"') && componentTypeName.endsWith('"'))) {
+                        componentTypeName = componentTypeName.slice(1, -1);
+                    }
+
+                    if (componentTypeName.length > 0) {
+                        // Check if such component exists among definitions
+                        const componentClass = this.documentTreeProvider.findClassByName(document, componentTypeName);
+                        if (componentClass && componentClass.kind === ClassKinds.COMPONENT) {
+                            // Use the component type name from the argument as the type
+                            return {name: componentTypeName, typeArguments: []};
+                        }
+                    }
+                }
+            }
+
             return method.returnType;
 
         } else {

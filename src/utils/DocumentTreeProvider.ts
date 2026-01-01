@@ -142,59 +142,7 @@ export class DocumentTreeProvider {
             methodIndexByClassAndLine
         });
 
-        for (const classDef of userDefinedClasses) {
-            let methods: IMethod | IConstructor[] = [...classDef.instanceMethods, ...classDef.staticMethods];
-            if (classDef.constructors) {
-                methods = [...methods, ...classDef.constructors];
-            }
-
-            for (const methodDef of methods) {
-                if (!methodDef.localVariables) {
-                    continue;
-                }
-
-                for (let i = 0; i < methodDef.localVariables.length; i++) {
-                    const localVariable = methodDef.localVariables[i];
-                    const varType = localVariable.type.name;
-                    if (varType !== 'any') {
-                        continue;
-                    }
-
-                    if (!classDef.sourceUri || !localVariable.declarationRange) {
-                        continue;
-                    }
-
-                    const valuePosition = localVariable.valueRange?.start;
-                    if (!valuePosition) {
-                        continue;
-                    }
-
-                    const chainInfo = this.findChainAtPosition(document, valuePosition);
-
-                    if (!chainInfo || chainInfo.identifierChain.length === 0) {
-                        continue;
-                    }
-
-                    let parsedType = CodeContextUtils.resolveChainType(
-                        classDef.sourceUri.toString(),
-                        localVariable.declarationRange.start,
-                        this,
-                        chainInfo.chain,
-                        classDef,
-                        methodDef
-                    );
-                    if (!parsedType) {
-                        continue;
-                    }
-
-                    if (localVariable.inLoop && parsedType.typeArguments.length === 1) {
-                        parsedType = parsedType.typeArguments[0];
-                    }
-
-                    localVariable.type = parsedType;
-                }
-            }
-        }
+        this.inferLocalVariableTypes(document, userDefinedClasses);
 
         this.documentVersions.set(uri, currentVersion);
 
@@ -478,6 +426,82 @@ export class DocumentTreeProvider {
                     userDefinedParameters,
                     userDefinedVariables
                 );
+            }
+        }
+    }
+
+    /**
+     * Performs type inference for local variables with type 'any'.
+     *
+     * Iterates through all user-defined classes and their methods/constructors,
+     * finds local variables with type 'any' and attempts to determine their actual type
+     * based on the call chain at the value assignment position.
+     *
+     * For each variable with type 'any':
+     * 1. Finds the call chain at the variable's value position
+     * 2. Resolves the type of this chain using CodeContextUtils.resolveChainType
+     * 3. If the variable is in a loop and the resolved type has one type argument,
+     *    extracts that argument (e.g., for List<T> extracts T)
+     * 4. Updates the variable's type to the resolved type
+     *
+     * @param document The document for which type inference is performed
+     * @param userDefinedClasses Array of user-defined classes to process
+     */
+    private inferLocalVariableTypes(
+        document: vscode.TextDocument,
+        userDefinedClasses: IClass[]
+    ): void {
+        for (const classDef of userDefinedClasses) {
+            let methods: IMethod | IConstructor[] = [...classDef.instanceMethods, ...classDef.staticMethods];
+            if (classDef.constructors) {
+                methods = [...methods, ...classDef.constructors];
+            }
+
+            for (const methodDef of methods) {
+                if (!methodDef.localVariables) {
+                    continue;
+                }
+
+                for (let i = 0; i < methodDef.localVariables.length; i++) {
+                    const localVariable = methodDef.localVariables[i];
+                    const varType = localVariable.type.name;
+                    if (varType !== 'any') {
+                        continue;
+                    }
+
+                    if (!classDef.sourceUri || !localVariable.declarationRange) {
+                        continue;
+                    }
+
+                    const valuePosition = localVariable.valueRange?.start;
+                    if (!valuePosition) {
+                        continue;
+                    }
+
+                    const chainInfo = this.findChainAtPosition(document, valuePosition);
+
+                    if (!chainInfo || chainInfo.identifierChain.length === 0) {
+                        continue;
+                    }
+
+                    let parsedType = CodeContextUtils.resolveChainType(
+                        classDef.sourceUri.toString(),
+                        localVariable.declarationRange.start,
+                        this,
+                        chainInfo.chain,
+                        classDef,
+                        methodDef
+                    );
+                    if (!parsedType) {
+                        continue;
+                    }
+
+                    if (localVariable.inLoop && parsedType.typeArguments.length === 1) {
+                        parsedType = parsedType.typeArguments[0];
+                    }
+
+                    localVariable.type = parsedType;
+                }
             }
         }
     }

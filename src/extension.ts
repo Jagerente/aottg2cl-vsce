@@ -65,7 +65,7 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
         await documentTreeProvider.refetchUserDefinedClasses(document);
-        diagnosticManager.validateDocument(document);
+        await diagnosticManager.validateDocument(document);
     };
 
     for (const document of vscode.workspace.textDocuments) {
