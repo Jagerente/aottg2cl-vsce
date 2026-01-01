@@ -553,6 +553,10 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
         const startPos = new vscode.Position(idToken.line - 1, idToken.charPositionInLine);
         const endPos = startPos.translate(0, name.length);
         const declRange = new vscode.Range(startPos, endPos);
+        const nameRange = new vscode.Range(
+            new vscode.Position(idToken.line - 1, idToken.charPositionInLine),
+            new vscode.Position(idToken.line - 1, idToken.charPositionInLine + idToken.text!.length)
+        );
 
         const typeRef = CodeContextUtils.parseTypeReference(exprText, 'any');
         const valueRange = this.getExpressionRange(exprCtx);
@@ -564,6 +568,7 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
                 value: exprText,
                 type: typeRef,
                 declarationRange: declRange,
+                nameRange: nameRange,
                 valueRange: valueRange,
                 scopeRange: new vscode.Range(
                     new vscode.Position(ctx.LPAREN().symbol.line - 1, ctx.LPAREN().symbol.charPositionInLine),
