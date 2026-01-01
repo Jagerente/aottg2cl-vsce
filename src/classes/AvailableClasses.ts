@@ -43,9 +43,6 @@ export function buildAvailableClasses(
         
         const jsonGeneric = loader.getGenericClasses();
 
-        console.log('allClasses', allClasses);
-        console.log('jsonGeneric', jsonGeneric);
-
         return {
             classes: allClasses,
             genericClasses: jsonGeneric,

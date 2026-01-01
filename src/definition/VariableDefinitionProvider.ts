@@ -1,20 +1,19 @@
 import * as vscode from 'vscode';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
-import { CodeContextUtils } from '../utils/CodeContextUtils';
-import { IParameter, IVariable, IClass, IMethod, IField, IConstructor } from '../classes/IClass';
+import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
+import {CodeContextUtils} from '../utils/CodeContextUtils';
+import {IParameter, IVariable, IClass, IMethod, IField, IConstructor} from '../classes/IClass';
 
 export class VariableDefinitionProvider implements vscode.DefinitionProvider {
-    private documentTreeProvider: DocumentTreeProvider;
-
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.documentTreeProvider = documentTreeProvider;
+    constructor(private readonly documentTreeProvider: DocumentTreeProvider) {
     }
 
-    public provideDefinition(
+    public async provideDefinition(
         document: vscode.TextDocument,
         position: vscode.Position,
         token: vscode.CancellationToken
-    ): vscode.Definition | null {
+    ): Promise<vscode.Definition | null> {
+        await this.documentTreeProvider.ensureDocumentParsed(document);
+
         if (this.documentTreeProvider.isInsideString(document, position) || this.documentTreeProvider.isInsideComment(document, position)) {
             return null;
         }
@@ -36,14 +35,17 @@ export class VariableDefinitionProvider implements vscode.DefinitionProvider {
 
         // Handle chain calls (e.g., self.methodName, obj.field)
         const chainInfo = this.documentTreeProvider.findChainAtPosition(document, position);
-        if (chainInfo && chainInfo.identifierChain.length > 1) {
-            // Update the last identifier in the chain with the current word
-            chainInfo.identifierChain[chainInfo.identifierChain.length - 1] = word;
+        if (chainInfo && chainInfo.chain.length > 1) {
+            // Update the last node in the chain with the current word
+            const lastNode = chainInfo.chain[chainInfo.chain.length - 1];
+            if (lastNode) {
+                lastNode.text = word;
+            }
             resolved = CodeContextUtils.resolveChainFinalPart(
                 document,
                 position,
                 this.documentTreeProvider,
-                chainInfo.identifierChain,
+                chainInfo.chain,
                 currentClass,
                 currentMethod
             );
@@ -89,12 +91,12 @@ export class VariableDefinitionProvider implements vscode.DefinitionProvider {
         // Handle methods and fields in current class
         if (!resolved && currentClass) {
             const method = currentClass.instanceMethods.find(m => m.label === word) ||
-                          currentClass.staticMethods.find(m => m.label === word);
+                currentClass.staticMethods.find(m => m.label === word);
             if (method) {
                 resolved = method;
             } else {
                 const field = currentClass.instanceFields.find(f => f.label === word) ||
-                             currentClass.staticFields.find(f => f.label === word);
+                    currentClass.staticFields.find(f => f.label === word);
                 if (field) {
                     resolved = field;
                 }

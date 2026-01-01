@@ -1,21 +1,14 @@
 import * as vscode from 'vscode';
-import * as markdown from '../utils/MarkdownHelper';
-import { CodeContextUtils } from '../utils/CodeContextUtils';
-import { Settings } from '../config/settings';
+import {CodeContextUtils} from '../utils/CodeContextUtils';
+import {Settings} from '../config/settings';
 import {
     ClassKinds,
-    FindConstructorInClassHierarchy,
-    FindFieldInClassHierarchy,
-    FindMethodInClassHierarchy,
     IClass,
     IConstructor,
-    IField,
     IMethod,
     IParameter,
-    IVariable
 } from '../classes/IClass';
-import { CompletionContext } from './CompletionContext';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
+import {CompletionContext} from './CompletionContext';
 
 const PRIORITY_STATIC = '0';
 const PRIORITY_CONSTRUCTOR = '1';
@@ -31,7 +24,15 @@ export class VariableCompletionProvider {
             return [];
         }
 
-        const { document, position, callChainInfo, wordRange, nextIsParen, currentClass: currentClassDef, currentMethod } = context;
+        const {
+            document,
+            position,
+            callChainInfo,
+            wordRange,
+            nextIsParen,
+            currentClass: currentClassDef,
+            currentMethod
+        } = context;
 
         if (!callChainInfo || (callChainInfo.chain.length <= 1 && callChainInfo.nodeIndex !== undefined)) {
             return this.getVarsAndClassesCompletions(context);
@@ -39,7 +40,7 @@ export class VariableCompletionProvider {
 
         const callChainBeforeCursor = callChainInfo?.chain.slice(0, callChainInfo.nodeIndex ?? callChainInfo.chain.length);
 
-        const resolvedType = CodeContextUtils.resolveChainTypeNew(
+        const resolvedType = CodeContextUtils.resolveChainType(
             document,
             position,
             context.documentTreeProvider,
@@ -58,9 +59,26 @@ export class VariableCompletionProvider {
         }
 
         const includePrivates = classDef.name === currentClassDef?.name;
-        const staticContext = callChainBeforeCursor[0].text !== 'self' && callChainBeforeCursor.length === 1;
 
-        let completions = this.getFieldsAndMethodsCompletions(
+        // Detect "static context": determines if we should suggest only static members (not instance members).
+        //
+        // The key indicator is the chain structure before the cursor:
+        //   - Static access: "Something.Something" or "Something.Something()" 
+        //     -> Chain has exactly one element that is NOT a method call AND NOT "self" -> static context
+        //   - Instance access: "Something().Something" or "Something().Something()" 
+        //     -> First element is a method call (constructor) -> instance context (we instantiated the class)
+        //   - Special case: "self.Something" or "self.Something()"
+        //     -> If classDef is EXTENSION -> static context (self addresses extension as static)
+        //     -> If classDef is not EXTENSION (component/class) -> instance context
+        const isDirectClassAccess = callChainBeforeCursor.length === 1 && 
+                                    !callChainBeforeCursor[0].isMethodCall && 
+                                    callChainBeforeCursor[0].text !== 'self';
+        const isSelfExtension = callChainBeforeCursor.length > 0 && 
+                                callChainBeforeCursor[0].text === 'self' && 
+                                classDef.kind === ClassKinds.EXTENSION;
+        const staticContext = isDirectClassAccess || isSelfExtension;
+
+        return this.getFieldsAndMethodsCompletions(
             classDef,
             includePrivates,
             !staticContext,
@@ -68,8 +86,6 @@ export class VariableCompletionProvider {
             nextIsParen,
             wordRange
         );
-
-        return completions;
     }
 
     private getFieldsAndMethodsCompletions(
@@ -136,7 +152,7 @@ export class VariableCompletionProvider {
     private getVarsAndClassesCompletions(
         context: CompletionContext
     ): vscode.CompletionItem[] {
-        const { document, position, wordRange, currentMethod, documentTreeProvider } = context;
+        const {document, position, wordRange, currentMethod, documentTreeProvider} = context;
         const items: vscode.CompletionItem[] = [];
 
         documentTreeProvider.getAllAvailableClasses(document).forEach(classDef => {
@@ -245,340 +261,6 @@ export class VariableCompletionProvider {
         return items;
     }
 
-    public provideHover(document: vscode.TextDocument, position: vscode.Position, documentTreeProvider: DocumentTreeProvider): vscode.Hover | undefined {
-        const lineText = document.lineAt(position).text;
-        const wordRange = document.getWordRangeAtPosition(position);
-        const word = wordRange ? document.getText(wordRange) : null;
-        if (!word) {
-            return undefined;
-        }
-
-        let fullLineBeforeWordEnd = lineText.substring(0, wordRange!.end.character);
-        const charAfterWord = lineText.substring(wordRange!.end.character, wordRange!.end.character + 1);
-        if (charAfterWord === '(') {
-            fullLineBeforeWordEnd += '()';
-        }
-
-        const currentClass = documentTreeProvider.getCurrentClass(document, position);
-
-        const currentField = documentTreeProvider.getCurrentFieldDeclaration(document, position);
-        if (currentField) {
-            if (word === currentField.label) {
-                const hoverContent = markdown.createFieldMarkdown(currentField);
-                return new vscode.Hover(hoverContent, wordRange);
-            }
-        }
-
-        const currentDeclarationMethod = documentTreeProvider.getCurrentDeclaringMethod(document, position);
-        if (currentDeclarationMethod) {
-            const isMethod = 'label' in currentDeclarationMethod;
-            const methodName = isMethod ? currentDeclarationMethod.label : 'Init';
-
-            if (methodName === word) {
-                if (isMethod) {
-                    return new vscode.Hover(
-                        markdown.createMethodMarkdown(currentDeclarationMethod, this.constructMethodSignature(currentDeclarationMethod)),
-                        wordRange
-                    );
-                } else {
-                    return new vscode.Hover(
-                        markdown.createConstructorMarkdown(currentDeclarationMethod, this.constructMethodSignature(currentDeclarationMethod)),
-                        wordRange
-                    );
-                }
-            }
-
-            for (let i = 0; i < currentDeclarationMethod.parameters.length; i++) {
-                const param = currentDeclarationMethod.parameters[i];
-                if (param.name === word) {
-                    return new vscode.Hover(markdown.createParameterMarkdown(param), wordRange);
-                }
-            }
-        }
-
-        const currentMethod = documentTreeProvider.getCurrentMethod(document, position);
-
-        const chainInfo = documentTreeProvider.findChainAtPosition(document, position);
-        const callChain = chainInfo?.chain.slice(0, (chainInfo.nodeIndex ?? chainInfo.chain.length - 1) + 1);
-
-        if (currentMethod && callChain && callChain.length > 1) {
-            const resolvedType = CodeContextUtils.resolveChainFinalPartNew(document, position, documentTreeProvider, callChain, currentClass, currentMethod);
-
-            if (resolvedType) {
-                let hoverContent: vscode.MarkdownString;
-                if ('kind' in resolvedType && 'name' in resolvedType) {
-                    const classDef = resolvedType as IClass;
-                    hoverContent = markdown.createClassMarkdown(classDef);
-                } else if ('parameters' in resolvedType && 'returnType' in resolvedType) {
-                    const methodDef = resolvedType as IMethod;
-                    hoverContent = markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef));
-                } else if ('label' in resolvedType && 'type' in resolvedType) {
-                    const fieldDef = resolvedType as IField;
-                    hoverContent = markdown.createFieldMarkdown(fieldDef);
-                } else if ('name' in resolvedType && 'type' in resolvedType) {
-                    const variableDef = resolvedType as IVariable;
-                    hoverContent = markdown.createVariableMarkdown(variableDef);
-                } else {
-                    hoverContent = new vscode.MarkdownString(`Unknown type`);
-                }
-
-                return new vscode.Hover(hoverContent, wordRange);
-            }
-        }
-
-        if (currentMethod) {
-            const local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, word, true, position);;
-            if (local) {
-                return new vscode.Hover(
-                    markdown.createVariableMarkdown(local),
-                    wordRange
-                );
-            }
-
-            const param = currentMethod.parameters?.find(p => p.name === word);
-            if (param) {
-                return new vscode.Hover(
-                    markdown.createParameterMarkdown(param),
-                    wordRange
-                );
-            }
-
-            if (callChain && callChain.length === 1 && callChain[0].text === "self") {
-                // Check if there's a next link in the full chain
-                if (chainInfo && chainInfo.nodeIndex !== undefined && chainInfo.chain.length > chainInfo.nodeIndex + 1) {
-                    // Use the extended chain including the next link
-                    const extendedChain = chainInfo.chain.slice(0, chainInfo.nodeIndex + 2);
-                    
-                    const resolvedType = CodeContextUtils.resolveChainFinalPartNew(document, position, documentTreeProvider, extendedChain, currentClass, currentMethod);
-                    
-                    if (resolvedType) {
-                        let hoverContent: vscode.MarkdownString;
-                        if ('kind' in resolvedType && 'name' in resolvedType) {
-                            const classDef = resolvedType as IClass;
-                            hoverContent = markdown.createClassMarkdown(classDef);
-                        } else if ('parameters' in resolvedType && 'returnType' in resolvedType) {
-                            const methodDef = resolvedType as IMethod;
-                            hoverContent = markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef));
-                        } else if ('label' in resolvedType && 'type' in resolvedType) {
-                            const fieldDef = resolvedType as IField;
-                            hoverContent = markdown.createFieldMarkdown(fieldDef);
-                        } else if ('name' in resolvedType && 'type' in resolvedType) {
-                            const variableDef = resolvedType as IVariable;
-                            hoverContent = markdown.createVariableMarkdown(variableDef);
-                        } else {
-                            hoverContent = new vscode.MarkdownString(`Unknown type`);
-                        }
-                        
-                        return new vscode.Hover(hoverContent, wordRange);
-                    }
-                }
-            }
-        }
-
-        const classDef = documentTreeProvider.findClassByName(document, word);
-        if (classDef) {
-            if (charAfterWord !== '(') {
-                return new vscode.Hover(markdown.createClassMarkdown(classDef), wordRange);
-            }
-            if (classDef.constructors && classDef.constructors.length > 0) {
-                const chains = documentTreeProvider.getChains(document);
-                let argCount = -1;
-                
-                for (const chain of chains) {
-                    const firstLink = chain[0];
-                    if (firstLink.isMethodCall && firstLink.text.split('(')[0] === word) {
-                        const linkEndColumn = firstLink.startColumn + firstLink.text.length;
-                        
-                        if (position.line === firstLink.startLine && 
-                            position.character >= firstLink.startColumn && 
-                            position.character <= linkEndColumn) {
-                            if (firstLink.methodArguments) {
-                                argCount = firstLink.methodArguments.length;
-                                break;
-                            }
-                        }
-                    }
-                }
-                
-                const ctor = FindConstructorInClassHierarchy(classDef, argCount);
-                if (ctor) {
-                    return new vscode.Hover(markdown.createConstructorMarkdown(ctor, this.constructMethodSignature(ctor)), wordRange);
-                }
-
-                return new vscode.Hover(markdown.createConstructorMarkdown(classDef.constructors[0], this.constructMethodSignature(classDef.constructors[0])), wordRange);
-            }
-        }
-
-        if (currentClass) {
-            const fieldDef = FindFieldInClassHierarchy(currentClass, word, true, true, true, true);
-            if (fieldDef) {
-                return new vscode.Hover(markdown.createFieldMarkdown(fieldDef), wordRange);
-            }
-
-            const methodDef = FindMethodInClassHierarchy(currentClass, word, -1, true, true);
-            if (methodDef) {
-                return new vscode.Hover(markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef)), wordRange);
-            }
-        }
-
-        const methodDef = this.findMethodByNameFromAllClasses(document, word, documentTreeProvider);
-        if (methodDef) {
-            return new vscode.Hover(markdown.createMethodMarkdown(methodDef, this.constructMethodSignature(methodDef)), wordRange);
-        }
-
-        return undefined;
-    }
-
-    public provideSignatureHelp(document: vscode.TextDocument, position: vscode.Position, documentTreeProvider: DocumentTreeProvider): vscode.SignatureHelp | undefined {
-        const lineText = document.lineAt(position.line).text;
-        const openParenIndex = lineText.lastIndexOf('(', position.character);
-
-        if (openParenIndex === -1) {
-            return undefined;
-        }
-
-        let textBeforeParen = lineText.substring(0, openParenIndex).trim();
-        const identifierChain = this.extractIdentifierChain(textBeforeParen);
-
-        if (identifierChain.length === 0) {
-            return undefined;
-        }
-
-        const argumentText = lineText.substring(openParenIndex + 1, position.character);
-        const providedArgumentsCount = this.countArguments(argumentText);
-
-        let classDef = documentTreeProvider.findClassByName(document, identifierChain[0]);
-        if (identifierChain.length === 1 && classDef) {
-            if (classDef && classDef.constructors && classDef.constructors.length > 0) {
-                const signatureHelp = new vscode.SignatureHelp();
-
-                classDef.constructors.forEach(constructor => {
-                    const signature = new vscode.SignatureInformation(this.constructMethodSignature(constructor), new vscode.MarkdownString(constructor.description));
-
-                    constructor.parameters.forEach(param => {
-                        signature.parameters.push(new vscode.ParameterInformation(param.name, new vscode.MarkdownString(param.description)));
-                    });
-
-                    signatureHelp.signatures.push(signature);
-                });
-
-                signatureHelp.activeSignature = this.findClosestSignature(signatureHelp.signatures, providedArgumentsCount);
-                signatureHelp.activeParameter = providedArgumentsCount - 1;
-                return signatureHelp;
-            }
-        }
-
-        const resolvedType = CodeContextUtils.resolveChainType(
-            document,
-            position,
-            documentTreeProvider,
-            identifierChain.slice(0, -1),
-            documentTreeProvider.getCurrentClass(document, position),
-            documentTreeProvider.getCurrentMethod(document, position)
-        );
-        if (!resolvedType) {
-            return undefined;
-        }
-
-        classDef = documentTreeProvider.findClassByReference(document, resolvedType);
-        if (!classDef) {
-            return undefined;
-        }
-
-        const methodName = identifierChain[identifierChain.length - 1];
-        const methodDef = this.findMethodByName(classDef, methodName);
-        if (!methodDef) {
-            return undefined;
-        }
-
-        const signatureHelp = new vscode.SignatureHelp();
-        const signature = new vscode.SignatureInformation(this.constructMethodSignature(methodDef), new vscode.MarkdownString(methodDef.description));
-
-        methodDef.parameters.forEach(param => {
-            signature.parameters.push(new vscode.ParameterInformation(param.name, new vscode.MarkdownString(param.description)));
-        });
-
-        signatureHelp.signatures = [signature];
-        signatureHelp.activeSignature = this.findClosestSignature(signatureHelp.signatures, providedArgumentsCount);
-        signatureHelp.activeParameter = providedArgumentsCount - 1;
-
-        return signatureHelp;
-    }
-
-    private extractIdentifierChain(text: string): string[] {
-        const match = text.match(/[\w\d_]+(\.[\w\d_]+)*$/);
-        if (match) {
-            return match[0].split('.').map(id => id.trim());
-        }
-        return [];
-    }
-
-    private countArguments(argumentText: string): number {
-        let count = 0;
-        let insideString = false;
-        let stringChar = '';
-        for (let i = 0; i < argumentText.length; i++) {
-            const char = argumentText[i];
-
-            if ((char === '"' || char === "'") && (i === 0 || argumentText[i - 1] !== '\\')) {
-                if (!insideString) {
-                    insideString = true;
-                    stringChar = char;
-                } else if (char === stringChar) {
-                    insideString = false;
-                }
-            } else if (char === ',' && !insideString) {
-                count++;
-            }
-        }
-
-        return count + 1;
-    }
-
-    private findClosestSignature(signatures: vscode.SignatureInformation[], argumentCount: number): number {
-        let closestIndex = 0;
-        let closestDiff = Infinity;
-
-        signatures.forEach((signature, index) => {
-            const paramCount = signature.parameters.length;
-
-            const diff = Math.abs(paramCount - argumentCount);
-
-            if (diff < closestDiff) {
-                closestIndex = index;
-                closestDiff = diff;
-            }
-        });
-
-        return closestIndex;
-    }
-
-    private findMethodByName(classDef: IClass, methodName: string): IMethod | undefined {
-        let methodDef = classDef.instanceMethods.find(m => m.label === methodName) || classDef.staticMethods.find(m => m.label === methodName);
-        if (methodDef) {
-            return methodDef;
-        }
-        if (classDef.extends) {
-            for (const parentClass of classDef.extends) {
-                methodDef = this.findMethodByName(parentClass, methodName);
-                if (methodDef) {
-                    return methodDef;
-                }
-            }
-        }
-        return undefined;
-    }
-
-    private findMethodByNameFromAllClasses(document: vscode.TextDocument, methodName: string, documentTreeProvider: DocumentTreeProvider): IMethod | undefined {
-        for (const classDef of documentTreeProvider.getAllAvailableClasses(document)) {
-            const method = this.findMethodByName(classDef, methodName);
-            if (method) {
-                return method;
-            }
-        }
-        return undefined;
-    }
-
     private createMethodCompletions(
         method: IMethod,
         nextIsParen: boolean,
@@ -586,27 +268,27 @@ export class VariableCompletionProvider {
         kind: vscode.CompletionItemKind = vscode.CompletionItemKind.Method
     ): vscode.CompletionItem[] {
         const completions: vscode.CompletionItem[] = [];
-        
+
         const requiredParams = method.parameters.filter(p => !p.isOptional && !p.isVariadic);
         const optionalParams = method.parameters.filter(p => p.isOptional && !p.isVariadic);
         const variadicParams = method.parameters.filter(p => p.isVariadic);
-        
+
         const variantCount = 1 + optionalParams.length + (variadicParams.length > 0 ? 1 : 0);
-        
+
         for (let variant = 0; variant < variantCount; variant++) {
             const paramsToInclude: IParameter[] = [...requiredParams];
-            
+
             if (variant > 0) {
                 const optionalCount = Math.min(variant, optionalParams.length);
                 paramsToInclude.push(...optionalParams.slice(0, optionalCount));
             }
-            
+
             if (variadicParams.length > 0 && variant === variantCount - 1) {
                 paramsToInclude.push(...variadicParams);
             }
-            
+
             const item = new vscode.CompletionItem(method.label, kind);
-            
+
             const signatureParams = paramsToInclude.map((param) => {
                 const optionalFlag = param.isOptional ? '?' : '';
                 const variadicFlag = param.isVariadic ? '...' : '';
@@ -614,11 +296,11 @@ export class VariableCompletionProvider {
             });
             const paramsString = signatureParams.join(', ');
             item.detail = `(${paramsString}): ${CodeContextUtils.typeRefToString(method.returnType)}`;
-            
+
             if (variantCount > 1) {
                 item.detail += ` [${variant + 1}/${variantCount}]`;
             }
-            
+
             item.documentation = new vscode.MarkdownString(method.description);
             if (wordRange) {
                 item.range = wordRange;
@@ -635,10 +317,10 @@ export class VariableCompletionProvider {
                 }).join(', ');
                 item.insertText = new vscode.SnippetString(`${method.label}(${snippetParams})`);
             }
-            
+
             completions.push(item);
         }
-        
+
         return completions;
     }
 

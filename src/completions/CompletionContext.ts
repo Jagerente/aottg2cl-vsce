@@ -19,12 +19,13 @@ export interface CompletionContext {
     currentClass: IClass | undefined;
     currentMethod: IMethod | IConstructor | undefined;
     currentDeclaringMethod: IMethod | IConstructor | undefined;
-    callChainInfo: {
-        chain: IChainNode[];
-        nodeIndex: number | undefined;
-        identifierChain: string[];
-    } | undefined;
+    callChainInfo: CallChainInfo | undefined;
     nextIsParen: boolean;
     documentTreeProvider: DocumentTreeProvider;
 }
 
+export interface CallChainInfo {
+    chain: IChainNode[];
+    nodeIndex: number | undefined;
+    identifierChain: string[];
+}

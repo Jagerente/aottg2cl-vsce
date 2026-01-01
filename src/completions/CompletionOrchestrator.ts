@@ -1,24 +1,31 @@
 import * as vscode from 'vscode';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
-import { CodeContextUtils } from '../utils/CodeContextUtils';
-import { VariableCompletionProvider } from './VariableCompletionProvider';
-import { KeywordCompletionProvider } from './KeywordCompletionProvider';
-import { MainFunctionsCompletionProvider } from './MainFunctionsCompletionProvider';
-import { CompletionContext } from './CompletionContext';
-import { ClassKinds } from '../classes/IClass';
+import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
+import {CodeContextUtils} from '../utils/CodeContextUtils';
+import {VariableCompletionProvider} from './VariableCompletionProvider';
+import {KeywordCompletionProvider} from './KeywordCompletionProvider';
+import {MainFunctionsCompletionProvider} from './MainFunctionsCompletionProvider';
+import {CompletionContext} from './CompletionContext';
+import {ClassKinds} from '../classes/IClass';
 
 export class CompletionOrchestrator implements vscode.CompletionItemProvider {
+    private readonly variableCompletionProvider: VariableCompletionProvider;
+    private readonly keywordCompletionProvider: KeywordCompletionProvider;
+    private readonly mainFunctionsCompletionProvider: MainFunctionsCompletionProvider;
+
     constructor(
         private documentTreeProvider: DocumentTreeProvider,
-        private variableProvider: VariableCompletionProvider,
-        private keywordProvider: KeywordCompletionProvider,
-        private mainFunctionsProvider: MainFunctionsCompletionProvider
-    ) {}
+    ) {
+        this.variableCompletionProvider = new VariableCompletionProvider();
+        this.keywordCompletionProvider = new KeywordCompletionProvider();
+        this.mainFunctionsCompletionProvider = new MainFunctionsCompletionProvider();
+    }
 
-    public provideCompletionItems(
+    public async provideCompletionItems(
         document: vscode.TextDocument,
         position: vscode.Position
-    ): vscode.ProviderResult<vscode.CompletionItem[]> {
+    ): Promise<vscode.CompletionItem[]> {
+        await this.documentTreeProvider.ensureDocumentParsed(document);
+
         const context = this.parseContext(document, position);
 
         if (context.isInsideString || context.isInsideComment) {
@@ -33,56 +40,55 @@ export class CompletionOrchestrator implements vscode.CompletionItemProvider {
             const isEmptyLine = context.textBeforeCursor.trim() === '' && context.textAfterCursor.trim() === '';
             const textBeforeCursor = context.textBeforeCursor.trimStart();
             const extendSnippet = isEmptyLine || !(textBeforeCursor.endsWith('function ') || textBeforeCursor.endsWith('coroutine '));
-    
+
             if (!context.isDeclaringVariable && (!context.isInsideMethodDeclaration || textBeforeCursor.endsWith('function ') || textBeforeCursor.endsWith('coroutine ') || isEmptyLine)) {
                 switch (context.currentClass?.kind) {
                     case ClassKinds.CLASS:
-                        items.push(...this.mainFunctionsProvider.provideClassCompletions(context.currentClass, extendSnippet, preferSnippet, context.wordRange));
+                        items.push(...this.mainFunctionsCompletionProvider.provideClassCompletions(context.currentClass, extendSnippet, preferSnippet, context.wordRange));
                         break;
                     case ClassKinds.EXTENSION:
                         if (context.currentClass.name === 'Main') {
-                            items.push(...this.mainFunctionsProvider.provideMainClassCompletions(context.currentClass, extendSnippet, preferSnippet, context.wordRange));
+                            items.push(...this.mainFunctionsCompletionProvider.provideMainClassCompletions(context.currentClass, extendSnippet, preferSnippet, context.wordRange));
                             break;
                         }
                         break;
                     case ClassKinds.COMPONENT:
-                        items.push(...this.mainFunctionsProvider.provideComponentClassCompletions(context.currentClass, extendSnippet, preferSnippet, context.wordRange));
+                        items.push(...this.mainFunctionsCompletionProvider.provideComponentClassCompletions(context.currentClass, extendSnippet, preferSnippet, context.wordRange));
                         break;
                     case ClassKinds.CUTSCENE:
-                        items.push(...this.mainFunctionsProvider.provideCutsceneCompletions(context.currentClass, extendSnippet, preferSnippet, context.wordRange));
+                        items.push(...this.mainFunctionsCompletionProvider.provideCutsceneCompletions(context.currentClass, extendSnippet, preferSnippet, context.wordRange));
                         break;
                 }
             }
 
-            const keywordCompletions = this.keywordProvider.provideCompletions(context);
+            const keywordCompletions = this.keywordCompletionProvider.provideCompletions(context);
             items.push(...keywordCompletions);
 
             return items;
         }
 
         if (context.isInsideClassDeclaration || context.isInsideMethodDeclaration) {
-            items.push(...this.keywordProvider.provideCompletions(context));
+            items.push(...this.keywordCompletionProvider.provideCompletions(context));
             return items;
         }
 
         if (context.currentMethod || (context.currentClass && context.isDeclaringVariable)) {
-            const variableCompletions = this.variableProvider.provideCompletions(context);
+            const variableCompletions = this.variableCompletionProvider.provideCompletions(context);
             items.push(...variableCompletions);
         }
 
         if (
-            context.isInsideChainNode 
-            || context.textBeforeCursor.endsWith('.') 
-            || context.textBeforeCursor.endsWith('(') 
-            || context.textBeforeCursor.endsWith(')') 
+            context.isInsideChainNode
+            || context.textBeforeCursor.endsWith('.')
+            || context.textBeforeCursor.endsWith('(')
+            || context.textBeforeCursor.endsWith(')')
             || context.textAfterCursor.startsWith(';')
         ) {
             return items;
         }
 
-        if (!context.isDeclaringVariable)
-        {
-            const keywordCompletions = this.keywordProvider.provideCompletions(context);
+        if (!context.isDeclaringVariable) {
+            const keywordCompletions = this.keywordCompletionProvider.provideCompletions(context);
             items.push(...keywordCompletions);
         }
 
@@ -119,4 +125,3 @@ export class CompletionOrchestrator implements vscode.CompletionItemProvider {
         };
     }
 }
-

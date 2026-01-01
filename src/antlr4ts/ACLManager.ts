@@ -42,7 +42,7 @@ export class ACLManager {
         try {
             visitor.visit(parser.program());
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
 
         this.classes = visitor.getParsedClasses().map(cls => {

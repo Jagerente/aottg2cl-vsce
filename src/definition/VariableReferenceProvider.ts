@@ -1,21 +1,20 @@
 import * as vscode from 'vscode';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
-import { CodeContextUtils } from '../utils/CodeContextUtils';
-import { IParameter, IVariable, IClass, IMethod, IField, IConstructor, IReference } from '../classes/IClass';
+import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
+import {CodeContextUtils} from '../utils/CodeContextUtils';
+import {IParameter, IVariable, IClass, IMethod, IField, IConstructor, IReference} from '../classes/IClass';
 
 export class VariableReferenceProvider implements vscode.ReferenceProvider {
-    private documentTreeProvider: DocumentTreeProvider;
-
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.documentTreeProvider = documentTreeProvider;
+    constructor(private readonly documentTreeProvider: DocumentTreeProvider) {
     }
 
-    public provideReferences(
+    public async provideReferences(
         document: vscode.TextDocument,
         position: vscode.Position,
         context: vscode.ReferenceContext,
         token: vscode.CancellationToken
-    ): vscode.ProviderResult<vscode.Location[]> {
+    ): Promise<vscode.Location[] | null> {
+        await this.documentTreeProvider.ensureDocumentParsed(document);
+
         const wordPattern = /[A-Za-z_]\w*/;
 
         const wordRange = document.getWordRangeAtPosition(position, wordPattern);
@@ -33,14 +32,17 @@ export class VariableReferenceProvider implements vscode.ReferenceProvider {
 
         // Handle chain calls (e.g., self.methodName, obj.field)
         const chainInfo = this.documentTreeProvider.findChainAtPosition(document, position);
-        if (chainInfo && chainInfo.identifierChain.length > 1) {
-            // Update the last identifier in the chain with the current word
-            chainInfo.identifierChain[chainInfo.identifierChain.length - 1] = word;
+        if (chainInfo && chainInfo.chain.length > 1) {
+            // Update the last node in the chain with the current word
+            const lastNode = chainInfo.chain[chainInfo.chain.length - 1];
+            if (lastNode) {
+                lastNode.text = word;
+            }
             resolved = CodeContextUtils.resolveChainFinalPart(
                 document,
                 position,
                 this.documentTreeProvider,
-                chainInfo.identifierChain,
+                chainInfo.chain,
                 currentClass,
                 currentMethod
             );
@@ -86,12 +88,12 @@ export class VariableReferenceProvider implements vscode.ReferenceProvider {
         // Handle methods and fields in current class
         if (!resolved && currentClass) {
             const method = currentClass.instanceMethods.find(m => m.label === word) ||
-                          currentClass.staticMethods.find(m => m.label === word);
+                currentClass.staticMethods.find(m => m.label === word);
             if (method) {
                 resolved = method;
             } else {
                 const field = currentClass.instanceFields.find(f => f.label === word) ||
-                             currentClass.staticFields.find(f => f.label === word);
+                    currentClass.staticFields.find(f => f.label === word);
                 if (field) {
                     resolved = field;
                 }
