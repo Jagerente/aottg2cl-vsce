@@ -21,6 +21,7 @@ interface JsonClassDefinition {
     description: string;
     typeParameters?: string[];
     extends?: string[];
+    deprecated?: string;
     hidden?: boolean;
     instanceFields?: JsonField[];
     instanceMethods?: JsonMethod[];
@@ -40,6 +41,7 @@ interface JsonField {
     description: string;
     readonly?: boolean;
     private?: boolean;
+    deprecated?: string;
 }
 
 interface JsonParameter {
@@ -56,11 +58,13 @@ interface JsonMethod {
     description: string;
     parameters?: JsonParameter[];
     kind: JsonMethodKind;
+    deprecated?: string;
 }
 
 interface JsonConstructor {
     parameters?: JsonParameter[];
     description: string;
+    deprecated?: string;
 }
 
 export class JsonClassLoader {
@@ -146,6 +150,10 @@ export class JsonClassLoader {
             cls.hidden = true;
         }
 
+        if (jsonDef.deprecated && jsonDef.deprecated.trim().length > 0) {
+            cls.deprecated = jsonDef.deprecated;
+        }
+
         if (jsonDef.instanceFields) {
             cls.instanceFields = jsonDef.instanceFields.map(f => this.convertField(f, cls));
         }
@@ -179,7 +187,7 @@ export class JsonClassLoader {
     }
 
     private convertField(jsonField: JsonField, parent: IClass): IField {
-        return {
+        const field: IField = {
             parent,
             label: jsonField.label,
             type: this.convertTypeReference(jsonField.type),
@@ -187,10 +195,14 @@ export class JsonClassLoader {
             readonly: !!jsonField.readonly,
             private: !!jsonField.private
         };
+        if (jsonField.deprecated && jsonField.deprecated.trim().length > 0) {
+            field.deprecated = jsonField.deprecated;
+        }
+        return field;
     }
 
     private convertMethod(jsonMethod: JsonMethod, parent: IClass): IMethod {
-        return {
+        const method: IMethod = {
             parent,
             label: jsonMethod.label,
             returnType: this.convertTypeReference(jsonMethod.returnType),
@@ -198,14 +210,22 @@ export class JsonClassLoader {
             parameters: jsonMethod.parameters?.map(p => this.convertParameter(p)) ?? [],
             kind: this.parseMethodKind(jsonMethod.kind)
         };
+        if (jsonMethod.deprecated && jsonMethod.deprecated.trim().length > 0) {
+            method.deprecated = jsonMethod.deprecated;
+        }
+        return method;
     }
 
     private convertConstructor(jsonCtor: JsonConstructor, parent: IClass): IConstructor {
-        return {
+        const ctor: IConstructor = {
             parent,
             parameters: jsonCtor.parameters?.map(p => this.convertParameter(p)) ?? [],
             description: jsonCtor.description
         };
+        if (jsonCtor.deprecated && jsonCtor.deprecated.trim().length > 0) {
+            ctor.deprecated = jsonCtor.deprecated;
+        }
+        return ctor;
     }
 
     private convertParameter(jsonParam: JsonParameter): IParameter {

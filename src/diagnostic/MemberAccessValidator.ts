@@ -6,6 +6,7 @@ import {
     FindMethodInClassHierarchy,
     IChainNode,
     IClass,
+    IField,
     IMethod,
     IConstructor,
     TypeReference,
@@ -73,6 +74,8 @@ export class MemberAccessValidator implements IValidator {
                 return;
             }
 
+            this.checkDeprecatedClass(currentClassDef, chain[i - 1], diagnostics);
+
             // Validate the access on the current class
             const nextType = this.validateMemberAccess(document, currentClassDef, node, currentTypeCtx.isStatic, diagnostics);
 
@@ -126,6 +129,8 @@ export class MemberAccessValidator implements IValidator {
                     diagnostics.push(this.createDiagnostic(node, `Constructor for '${methodName}' with ${node.methodArguments?.length} arguments not found.`, vscode.DiagnosticSeverity.Error, DiagnosticCodes.CONSTRUCTOR_NOT_FOUND));
                     return undefined;
                 }
+                this.checkDeprecatedClass(classAsConstructor, node, diagnostics);
+                this.checkDeprecatedConstructor(ctor, node, diagnostics);
                 return {type: {name: classAsConstructor.name, typeArguments: []}, isStatic: false}; // Returns instance
             }
 
@@ -175,6 +180,7 @@ export class MemberAccessValidator implements IValidator {
         // 2. Static Class Reference
         const staticClass = this.documentTreeProvider.findClassByName(document, node.text);
         if (staticClass) {
+            this.checkDeprecatedClass(staticClass, node, diagnostics);
             return {
                 type: {name: staticClass.name, typeArguments: []},
                 isStatic: true
@@ -232,6 +238,8 @@ export class MemberAccessValidator implements IValidator {
                 return undefined;
             }
 
+            this.checkDeprecatedMethod(method, node, diagnostics);
+
             // Special handling for MapObject.AddComponent and MapObject.GetComponent
             // These methods take a string argument that represents the component type name
             if (classDef.name === 'MapObject' && (methodName === 'AddComponent' || methodName === 'GetComponent')) {
@@ -269,6 +277,7 @@ export class MemberAccessValidator implements IValidator {
             // 2. Check Fields
             const field = FindFieldInClassHierarchy(classDef, fieldName, !isStatic, isStatic, true, true);
             if (field) {
+                this.checkDeprecatedField(field, node, diagnostics);
                 return field.type;
             }
 
@@ -317,6 +326,34 @@ export class MemberAccessValidator implements IValidator {
 
         if (severity === vscode.DiagnosticSeverity.Error || Settings.showUnresolvedMemberWarnings) {
             diagnostics.push(this.createDiagnostic(node, msg, severity, code));
+        }
+    }
+
+    private checkDeprecatedClass(classDef: IClass, node: IChainNode, diagnostics: vscode.Diagnostic[]): void {
+        if (classDef.deprecated && classDef.deprecated.trim().length > 0) {
+            const message = `Class '${classDef.name}' is deprecated. ${classDef.deprecated}`;
+            diagnostics.push(this.createDiagnostic(node, message, vscode.DiagnosticSeverity.Warning, DiagnosticCodes.DEPRECATED_CLASS));
+        }
+    }
+
+    private checkDeprecatedField(field: IField, node: IChainNode, diagnostics: vscode.Diagnostic[]): void {
+        if (field.deprecated && field.deprecated.trim().length > 0) {
+            const message = `Field '${field.label}' is deprecated. ${field.deprecated}`;
+            diagnostics.push(this.createDiagnostic(node, message, vscode.DiagnosticSeverity.Warning, DiagnosticCodes.DEPRECATED_FIELD));
+        }
+    }
+
+    private checkDeprecatedMethod(method: IMethod, node: IChainNode, diagnostics: vscode.Diagnostic[]): void {
+        if (method.deprecated && method.deprecated.trim().length > 0) {
+            const message = `Method '${method.label}' is deprecated. ${method.deprecated}`;
+            diagnostics.push(this.createDiagnostic(node, message, vscode.DiagnosticSeverity.Warning, DiagnosticCodes.DEPRECATED_METHOD));
+        }
+    }
+
+    private checkDeprecatedConstructor(ctor: IConstructor, node: IChainNode, diagnostics: vscode.Diagnostic[]): void {
+        if (ctor.deprecated && ctor.deprecated.trim().length > 0) {
+            const message = `Constructor for '${ctor.parent.name}' is deprecated. ${ctor.deprecated}`;
+            diagnostics.push(this.createDiagnostic(node, message, vscode.DiagnosticSeverity.Warning, DiagnosticCodes.DEPRECATED_CONSTRUCTOR));
         }
     }
 

@@ -12,6 +12,10 @@ export class DiagnosticCodes {
     static readonly TYPE_DEFINITION_NOT_FOUND = 'ACL107';
     static readonly MEMBER_DOES_NOT_EXIST = 'ACL108';
     static readonly MEMBER_DOES_NOT_EXIST_BASE_CLASS = 'ACL109';
+    static readonly DEPRECATED_CLASS = 'ACL110';
+    static readonly DEPRECATED_FIELD = 'ACL111';
+    static readonly DEPRECATED_METHOD = 'ACL112';
+    static readonly DEPRECATED_CONSTRUCTOR = 'ACL113';
 
     // CtorValidator
     static readonly MULTIPLE_CONSTRUCTORS = 'ACL201';

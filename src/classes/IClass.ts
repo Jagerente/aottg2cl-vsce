@@ -79,6 +79,7 @@ export interface IConstructor {
     parent: IClass;
     parameters: IParameter[];
     description: string;
+    deprecated?: string;
     declarationRange?: vscode.Range;
     nameRange?: vscode.Range;
     bodyRange?: vscode.Range;
@@ -94,6 +95,7 @@ export interface IMethod {
     returnType: TypeReference;
     description: string;
     parameters: IParameter[];
+    deprecated?: string;
     declarationRange?: vscode.Range;
     nameRange?: vscode.Range;
     bodyRange?: vscode.Range;
@@ -109,6 +111,7 @@ export interface IField {
     description: string;
     readonly: boolean;
     private: boolean
+    deprecated?: string;
     declarationRange?: vscode.Range;
     nameRange?: vscode.Range;
     sourceUri?: vscode.Uri;
@@ -125,6 +128,7 @@ export interface IClass {
     staticMethods: IMethod[];
     instanceFields: IField[];
     instanceMethods: IMethod[];
+    deprecated?: string;
     declarationRange?: vscode.Range;
     nameRange?: vscode.Range;
     bodyRange?: vscode.Range;
