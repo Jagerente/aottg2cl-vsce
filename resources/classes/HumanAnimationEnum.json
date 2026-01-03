@@ -1,0 +1,818 @@
+{
+  "kind": "extension",
+  "name": "HumanAnimationEnum",
+  "description": "Enumeration of available animations for human characters.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "HorseMount",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Horse mount animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HorseDismount",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Horse dismount animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HorseIdle",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Horse idle animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HorseRun",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Horse run animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "IdleF",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle female animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "IdleM",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle male animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "IdleAHSSM",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle AHSS male animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "IdleAHSSF",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle AHSS female animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "IdleTSF",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle Thunderspear female animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "IdleTSM",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle Thunderspear male animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Jump animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Run",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Run animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RunTS",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Run Thunderspear animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RunBuffed",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Run buffed animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Dodge",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Dodge animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Land",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Land animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Slide",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Slide animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grabbed",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grabbed animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Dash",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Dash animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Refill",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Refill animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ToRoof",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "To roof animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "WallRun",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Wall run animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "OnWall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "On wall animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ChangeBlade",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Change blade animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ChangeBladeAir",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Change blade air animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSHookForwardBoth",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS hook forward both animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSHookForwardL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS hook forward left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSHookForwardR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS hook forward right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSShootR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS shoot right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSShootL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS shoot left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSShootBoth",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS shoot both animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSShootRAir",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS shoot right air animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSShootLAir",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS shoot left air animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSShootBothAir",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS shoot both air animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSGunReloadBoth",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS gun reload both animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSGunReloadBothAir",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSS gun reload both air animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TSShootR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Thunderspear shoot right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TSShootL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Thunderspear shoot left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TSShootRAir",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Thunderspear shoot right air animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TSShootLAir",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Thunderspear shoot left air animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AirHookLJust",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air hook left just animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AirHookRJust",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air hook right just animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AirHookL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air hook left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AirHookR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air hook right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AirHook",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air hook animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AirRelease",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air release animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AirFall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air fall animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AirRise",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air rise animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Air2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air 2 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Air2Right",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air 2 right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Air2Left",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air 2 left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Air2Backward",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Air 2 backward animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Attack1HookL1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack 1 hook left 1 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Attack1HookL2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack 1 hook left 2 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Attack1HookR1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack 1 hook right 1 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Attack1HookR2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack 1 hook right 2 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Attack1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack 1 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Attack2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack 2 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Attack4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack 4 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialArmin",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Armin animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialMarco0",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Marco 0 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialMarco1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Marco 1 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialSasha",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Sasha animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialMikasa1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Mikasa 1 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialMikasa2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Mikasa 2 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialLevi",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Levi animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialPetra",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Petra animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialJean",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Jean animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialShifter",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Special Shifter animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteSalute",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote salute animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteNo",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote no animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteYes",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote yes animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteWave",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote wave animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

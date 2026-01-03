@@ -10,9 +10,20 @@
   "instanceMethods": [],
   "staticFields": [
     {
+      "label": "StretchToFill",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "StretchToFill scale mode.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
       "label": "ScaleAndCrop",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "ScaleAndCrop scale mode.",
@@ -23,21 +34,10 @@
     {
       "label": "ScaleToFit",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "ScaleToFit scale mode.",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "StretchToFill",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "StretchToFill scale mode.",
       "readonly": true,
       "private": false,
       "deprecated": ""

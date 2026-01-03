@@ -9,6 +9,8 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
-cl-examples/**
 *.vsix
 .idea/**
+.cursor/**
+resources/examples/**
+resources/schema/**

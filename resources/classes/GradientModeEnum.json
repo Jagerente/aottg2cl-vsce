@@ -1,0 +1,37 @@
+{
+  "kind": "extension",
+  "name": "GradientModeEnum",
+  "description": "Enumeration of gradient mode values for LineRenderer.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Blend",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Blend: gradient colors are blended.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Fixed",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Fixed: gradient colors are fixed.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

@@ -98,10 +98,10 @@
     {
       "label": "Alignment",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
-      "description": "The alignment of the line renderer.",
+      "description": "The alignment of the line renderer. Refer to LineAlignmentEnum",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -109,10 +109,10 @@
     {
       "label": "TextureMode",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
-      "description": "The texture mode of the line renderer.",
+      "description": "The texture mode of the line renderer. Refer to LineTextureModeEnum",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -131,10 +131,10 @@
     {
       "label": "ShadowCastingMode",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
-      "description": "Does the line renderer cast shadows.",
+      "description": "Does the line renderer cast shadows. Refer to ShadowCastingModeEnum",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -212,10 +212,10 @@
     {
       "label": "ColorGradientMode",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
-      "description": "The color gradient mode of the line renderer.",
+      "description": "The color gradient mode of the line renderer. Refer to GradientModeEnum",
       "readonly": false,
       "private": false,
       "deprecated": ""

@@ -1,7 +1,7 @@
 {
   "kind": "component",
   "name": "Collider",
-  "description": "",
+  "description": "Represents a Collider component for detecting collisions and managing collider properties.",
   "extends": [
     "Object"
   ],
@@ -147,7 +147,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "Gets the closest point on the collider to the given position. Returns: The closest point on the collider.",
+      "description": "Gets the closest point on the collider to the given position.",
       "parameters": [
         {
           "name": "position",
@@ -169,7 +169,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "Gets the closest point on the collider's bounding box to the given position. Returns: The closest point on the bounding box.",
+      "description": "Gets the closest point on the collider's bounding box to the given position.",
       "parameters": [
         {
           "name": "position",
@@ -191,7 +191,7 @@
         "name": "LineCastHitResult",
         "typeArguments": []
       },
-      "description": "Runs a raycast physics check between start to end and checks if it hits any collider with the given collideWith layer. Returns: A LineCastHitResult if it hit something, otherwise returns null.",
+      "description": "Runs a raycast physics check between start to end and checks if it hits any collider with the given collideWith layer.",
       "parameters": [
         {
           "name": "start",

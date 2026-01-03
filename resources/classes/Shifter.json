@@ -377,7 +377,7 @@
         {
           "name": "enemyObj",
           "type": {
-            "name": "Character|MapTargetable",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The enemy to target (can be Character or MapTargetable).",

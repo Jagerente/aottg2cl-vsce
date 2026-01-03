@@ -48,7 +48,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Gets the property with given name. If property does not exist, returns defaultValue.",
+      "description": "Gets the property with given name.",
       "parameters": [
         {
           "name": "property",
@@ -80,7 +80,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Loads persistent data from given file name. If encrypted is true, will treat the file as having been saved as encrypted.",
+      "description": "Loads persistent data from given file name.",
       "parameters": [
         {
           "name": "fileName",
@@ -98,7 +98,7 @@
             "name": "bool",
             "typeArguments": []
           },
-          "description": "Whether the file is encrypted.",
+          "description": "Whether the file is encrypted. If true, will treat the file as having been saved as encrypted.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -112,7 +112,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Saves current persistent data to given file name. If encrypted is true, will also encrypt the file instead of using plaintext.",
+      "description": "Saves current persistent data to given file name.",
       "parameters": [
         {
           "name": "fileName",
@@ -130,7 +130,7 @@
             "name": "bool",
             "typeArguments": []
           },
-          "description": "Whether to encrypt the file.",
+          "description": "Whether to encrypt the file. If true, will also encrypt the file instead of using plaintext.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -177,7 +177,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Determines whether the file given already exists. Throws an error if given an invalid file name.",
+      "description": "Determines whether the file given already exists.",
       "parameters": [
         {
           "name": "fileName",

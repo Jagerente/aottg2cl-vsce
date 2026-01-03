@@ -65,7 +65,7 @@
     {
       "label": "Direction",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "The direction of the slider. Refer to SliderDirectionEnum",
@@ -111,7 +111,7 @@
             "name": "function",
             "typeArguments": []
           },
-          "description": "Method that will be called with the new value as parameter (int for integer sliders, float for float sliders)",
+          "description": "Method that will be called with the new value as parameter (int for integer sliders, float for float sliders).",
           "isOptional": false,
           "isVariadic": false
         }

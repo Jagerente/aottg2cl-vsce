@@ -3,18 +3,42 @@
   "name": "AoTTG 2 Custom Logic",
   "scopeName": "source.acl",
   "patterns": [
-    { "include": "#comments" },
-    { "include": "#strings" },
-    { "include": "#numbers" },
-    { "include": "#class-definitions" },
-    { "include": "#function-definitions" },
-    { "include": "#keywords" },
-    { "include": "#constants" },
-    { "include": "#storage-types" },
-    { "include": "#constructors" },
-    { "include": "#member-access" },
-    { "include": "#operators" },
-    { "include": "#variables" }
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#class-definitions"
+    },
+    {
+      "include": "#function-definitions"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#storage-types"
+    },
+    {
+      "include": "#constructors"
+    },
+    {
+      "include": "#member-access"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#variables"
+    }
   ],
   "repository": {
     "comments": {
@@ -23,13 +47,21 @@
           "begin": "/\\*",
           "end": "\\*/",
           "name": "comment.block.acl",
-          "patterns": [{ "include": "#annotations" }]
+          "patterns": [
+            {
+              "include": "#annotations"
+            }
+          ]
         },
         {
           "begin": "#",
           "end": "$",
           "name": "comment.line.hash.acl",
-          "patterns": [{ "include": "#annotations" }]
+          "patterns": [
+            {
+              "include": "#annotations"
+            }
+          ]
         }
       ]
     },
@@ -39,114 +71,193 @@
           "name": "meta.annotation.import.acl",
           "begin": "\\s*(@import)\\b",
           "beginCaptures": {
-            "1": { "name": "keyword.control.import.acl" }
+            "1": {
+              "name": "keyword.control.import.acl"
+            }
           },
           "end": "$",
           "patterns": [
-            { "match": "[A-Za-z_][A-Za-z0-9_]*", "name": "entity.name.namespace.acl" }
+            {
+              "match": "[A-Za-z_][A-Za-z0-9_]*",
+              "name": "entity.name.namespace.acl"
+            }
           ]
         },
         {
           "name": "meta.annotation.param.acl",
           "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+\\b(int|float|string|bool|any)\\b(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "variable.parameter.acl" },
-            "3": { "name": "support.type.builtin.acl" },
-            "4": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "variable.parameter.acl"
+            },
+            "3": {
+              "name": "support.type.builtin.acl"
+            },
+            "4": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.param.acl",
           "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+\\b(function|coroutine)\\b(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "variable.parameter.acl" },
-            "3": { "name": "storage.type.function.acl" },
-            "4": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "variable.parameter.acl"
+            },
+            "3": {
+              "name": "storage.type.function.acl"
+            },
+            "4": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.param.acl",
-          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+((?:Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|LineCastHitResult)(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
+          "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+((?:AlignEnum|AngleUnitEnum|Animation|AnimationEnum|Animator|AnnieAnimationEnum|AudioSource|Button|Camera|CameraModeEnum|Character|CharacterTypeEnum|CollideModeEnum|CollideWithEnum|Collider|Collision|CollisionDetectionModeEnum|Color|Convert|Cutscene|Dict|Dropdown|DummyAnimationEnum|EffectNameEnum|ErenAnimationEnum|FlexDirectionEnum|FontStyleEnum|ForceModeEnum|Game|GradientModeEnum|HandStateEnum|HorseAnimationEnum|Human|HumanAnimationEnum|HumanParticleEffectEnum|Icon|Image|Input|InputCategoryEnum|Json|JustifyEnum|Label|LanguageEnum|LightBuiltin|LineAlignmentEnum|LineCastHitResult|LineRenderer|LineTextureModeEnum|List|LoadoutEnum|Locale|LodBuiltin|Map|MapObject|MapTargetable|Math|NavmeshObstacleBuiltin|Network|NetworkView|Object|OutlineModeEnum|OverflowEnum|PersistentData|PhysicMaterialCombineEnum|Physics|PhysicsMaterialBuiltin|Player|PlayerStatusEnum|Prefab|ProgressBar|ProjectileNameEnum|Quaternion|Random|Range|RigidbodyBuiltin|RoomData|ScaleModeEnum|ScrollElasticityEnum|ScrollView|Set|ShadowCastingModeEnum|Shifter|ShifterTypeEnum|Slider|SliderDirectionEnum|SpecialEnum|SteamStateEnum|String|TSKillSoundEnum|TeamEnum|TextAlignEnum|TextField|TextOverflowEnum|Time|Titan|TitanAnimationEnum|TitanTypeEnum|Toggle|Transform|UI|Vector2|Vector3|VisualElement|WallColossal|WallColossalAnimationEnum|WeaponEnum)(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "variable.parameter.acl" },
-            "3": { "name": "support.type.acl" },
-            "4": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "variable.parameter.acl"
+            },
+            "3": {
+              "name": "support.type.acl"
+            },
+            "4": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.param.acl",
           "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+((?:List|Dict|Set)\\s*<[^<>]*>)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "variable.parameter.acl" },
-            "3": { "name": "entity.name.type.class.acl" },
-            "4": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "variable.parameter.acl"
+            },
+            "3": {
+              "name": "entity.name.type.class.acl"
+            },
+            "4": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.param.acl",
           "match": "\\s*(@param)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s+([A-Za-z_][A-Za-z0-9_]*(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "variable.parameter.acl" },
-            "3": { "name": "entity.name.type.class.acl" },
-            "4": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "variable.parameter.acl"
+            },
+            "3": {
+              "name": "entity.name.type.class.acl"
+            },
+            "4": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.typeish.acl",
           "match": "\\s*(@type|@return|@var)\\s+\\b(int|float|string|bool|any)\\b(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "support.type.builtin.acl" },
-            "3": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "support.type.builtin.acl"
+            },
+            "3": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.typeish.acl",
           "match": "\\s*(@type|@return|@var)\\s+\\b(function|coroutine)\\b(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "storage.type.function.acl" },
-            "3": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "storage.type.function.acl"
+            },
+            "3": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.typeish.acl",
-          "match": "\\s*(@type|@return|@var)\\s+((?:Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|LineCastHitResult)(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
+          "match": "\\s*(@type|@return|@var)\\s+((?:AlignEnum|AngleUnitEnum|Animation|AnimationEnum|Animator|AnnieAnimationEnum|AudioSource|Button|Camera|CameraModeEnum|Character|CharacterTypeEnum|CollideModeEnum|CollideWithEnum|Collider|Collision|CollisionDetectionModeEnum|Color|Convert|Cutscene|Dict|Dropdown|DummyAnimationEnum|EffectNameEnum|ErenAnimationEnum|FlexDirectionEnum|FontStyleEnum|ForceModeEnum|Game|GradientModeEnum|HandStateEnum|HorseAnimationEnum|Human|HumanAnimationEnum|HumanParticleEffectEnum|Icon|Image|Input|InputCategoryEnum|Json|JustifyEnum|Label|LanguageEnum|LightBuiltin|LineAlignmentEnum|LineCastHitResult|LineRenderer|LineTextureModeEnum|List|LoadoutEnum|Locale|LodBuiltin|Map|MapObject|MapTargetable|Math|NavmeshObstacleBuiltin|Network|NetworkView|Object|OutlineModeEnum|OverflowEnum|PersistentData|PhysicMaterialCombineEnum|Physics|PhysicsMaterialBuiltin|Player|PlayerStatusEnum|Prefab|ProgressBar|ProjectileNameEnum|Quaternion|Random|Range|RigidbodyBuiltin|RoomData|ScaleModeEnum|ScrollElasticityEnum|ScrollView|Set|ShadowCastingModeEnum|Shifter|ShifterTypeEnum|Slider|SliderDirectionEnum|SpecialEnum|SteamStateEnum|String|TSKillSoundEnum|TeamEnum|TextAlignEnum|TextField|TextOverflowEnum|Time|Titan|TitanAnimationEnum|TitanTypeEnum|Toggle|Transform|UI|Vector2|Vector3|VisualElement|WallColossal|WallColossalAnimationEnum|WeaponEnum)(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "support.type.acl" },
-            "3": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "support.type.acl"
+            },
+            "3": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.typeish.acl",
           "match": "\\s*(@type|@return|@var)\\s+((?:List|Dict|Set)\\s*<[^<>]*>)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "entity.name.type.class.acl" },
-            "3": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "entity.name.type.class.acl"
+            },
+            "3": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.typeish.acl",
           "match": "\\s*(@type|@return|@var)\\s+([A-Za-z_][A-Za-z0-9_]*(?:\\s*<[^<>]*>)?)\\s*(?:\\s+(.*?))?(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "entity.name.type.class.acl" },
-            "3": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "entity.name.type.class.acl"
+            },
+            "3": {
+              "name": "comment.line.description.acl"
+            }
           }
         },
         {
           "name": "meta.annotation.unknown.acl",
           "match": "\\s*(@\\w+)\\b(.*?)(?=\\s*\\*/|$)",
           "captures": {
-            "1": { "name": "storage.type.annotation.acl" },
-            "2": { "name": "comment.line.description.acl" }
+            "1": {
+              "name": "storage.type.annotation.acl"
+            },
+            "2": {
+              "name": "comment.line.description.acl"
+            }
           }
         }
       ]
@@ -184,7 +295,7 @@
         {
           "name": "storage.type.acl",
           "match": "\\bfield\\b"
-        }        
+        }
       ]
     },
     "class-definitions": {
@@ -192,8 +303,12 @@
         {
           "match": "\\b(class|component|extension|cutscene)\\s+([A-Za-z_][A-Za-z0-9_]*)",
           "captures": {
-            "1": { "name": "storage.type.class.acl" },
-            "2": { "name": "entity.name.type.class.acl" }
+            "1": {
+              "name": "storage.type.class.acl"
+            },
+            "2": {
+              "name": "entity.name.type.class.acl"
+            }
           }
         }
       ]
@@ -201,13 +316,21 @@
     "function-definitions": {
       "begin": "\\b(function|coroutine)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(\\()",
       "beginCaptures": {
-        "1": { "name": "storage.type.function.acl" },
-        "2": { "name": "entity.name.function.definition.acl" },
-        "3": { "name": "punctuation.definition.parameters.begin.acl" }
+        "1": {
+          "name": "storage.type.function.acl"
+        },
+        "2": {
+          "name": "entity.name.function.definition.acl"
+        },
+        "3": {
+          "name": "punctuation.definition.parameters.begin.acl"
+        }
       },
       "end": "\\)",
       "endCaptures": {
-        "0": { "name": "punctuation.definition.parameters.end.acl" }
+        "0": {
+          "name": "punctuation.definition.parameters.end.acl"
+        }
       },
       "patterns": [
         {
@@ -251,25 +374,40 @@
         },
         {
           "name": "support.type.acl",
-          "match": "\\b(Game|Network|Map|UI|Time|Convert|String|Input|Math|Random|Cutscene|Camera|RoomData|PersistentData|Json|Physics|Component|Object|Character|Human|Titan|Shifter|MapObject|Transform|Player|NetworkView|Color|Vector3|Quaternion|LineCastHitResult)\\b"
+          "match": "\\b(AlignEnum|AngleUnitEnum|Animation|AnimationEnum|Animator|AnnieAnimationEnum|AudioSource|Button|Camera|CameraModeEnum|Character|CharacterTypeEnum|CollideModeEnum|CollideWithEnum|Collider|Collision|CollisionDetectionModeEnum|Color|Convert|Cutscene|Dict|Dropdown|DummyAnimationEnum|EffectNameEnum|ErenAnimationEnum|FlexDirectionEnum|FontStyleEnum|ForceModeEnum|Game|GradientModeEnum|HandStateEnum|HorseAnimationEnum|Human|HumanAnimationEnum|HumanParticleEffectEnum|HumanSoundEnum|HumanStateEnum|Icon|Image|Input|InputAnnieShifterEnum|InputCategoryEnum|InputErenShifterEnum|InputGeneralEnum|InputHumanEnum|InputInteractionEnum|InputTitanEnum|Json|JustifyEnum|Label|LanguageEnum|LightBuiltin|LineAlignmentEnum|LineCastHitResult|LineRenderer|LineTextureModeEnum|List|LoadoutEnum|Locale|LodBuiltin|Map|MapObject|MapTargetable|Math|NavmeshObstacleBuiltin|Network|NetworkView|Object|OutlineModeEnum|OverflowEnum|PersistentData|PhysicMaterialCombineEnum|Physics|PhysicsMaterialBuiltin|Player|PlayerStatusEnum|Prefab|ProfileIconEnum|ProgressBar|ProjectileNameEnum|Quaternion|Random|Range|RigidbodyBuiltin|RoomData|ScaleModeEnum|ScrollElasticityEnum|ScrollView|Set|ShadowCastingModeEnum|Shifter|ShifterSoundEnum|ShifterTypeEnum|Slider|SliderDirectionEnum|SpecialEnum|SteamStateEnum|String|TSKillSoundEnum|TeamEnum|TextAlignEnum|TextField|TextOverflowEnum|Time|Titan|TitanAnimationEnum|TitanSoundEnum|TitanTypeEnum|Toggle|Transform|UI|UILabelEnum|Vector2|Vector3|VisualElement|WallColossal|WallColossalAnimationEnum|WeaponEnum)\\b"
         },
-        { "include": "#generics" }
+        {
+          "include": "#generics"
+        }
       ]
     },
     "generics": {
       "begin": "\\b(List|Dict|Set)\\s*(<)",
       "beginCaptures": {
-        "1": { "name": "support.type.generic.acl" },
-        "2": { "name": "punctuation.definition.generic.begin.acl" }
+        "1": {
+          "name": "support.type.generic.acl"
+        },
+        "2": {
+          "name": "punctuation.definition.generic.begin.acl"
+        }
       },
       "end": ">",
       "endCaptures": {
-        "0": { "name": "punctuation.definition.generic.end.acl" }
+        "0": {
+          "name": "punctuation.definition.generic.end.acl"
+        }
       },
       "patterns": [
-        { "include": "#storage-types" },
-        { "include": "#constructors" },
-        { "match": ",", "name": "punctuation.separator.acl" }
+        {
+          "include": "#storage-types"
+        },
+        {
+          "include": "#constructors"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.acl"
+        }
       ]
     },
     "constructors": {
@@ -278,7 +416,9 @@
           "name": "meta.constructor-call.acl",
           "match": "\\b([A-Z][A-Za-z0-9_]*)\\s*(?=\\()",
           "captures": {
-            "1": { "name": "entity.name.function.constructor.acl" }
+            "1": {
+              "name": "entity.name.function.constructor.acl"
+            }
           }
         }
       ]
@@ -289,16 +429,24 @@
           "name": "meta.method-call.acl",
           "match": "(\\.)\\s*([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
           "captures": {
-            "1": { "name": "punctuation.accessor.acl" },
-            "2": { "name": "entity.name.function.member.acl" }
+            "1": {
+              "name": "punctuation.accessor.acl"
+            },
+            "2": {
+              "name": "entity.name.function.member.acl"
+            }
           }
         },
         {
           "name": "meta.property-access.acl",
           "match": "(\\.)\\s*([A-Za-z_][A-Za-z0-9_]*)",
           "captures": {
-            "1": { "name": "punctuation.accessor.acl" },
-            "2": { "name": "variable.other.property.acl" }
+            "1": {
+              "name": "punctuation.accessor.acl"
+            },
+            "2": {
+              "name": "variable.other.property.acl"
+            }
           }
         }
       ]

@@ -83,7 +83,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Clamp a value between a minimum and maximum value. Returns: The clamped value. Will be the same type as the inputs",
+      "description": "Clamp a value between a minimum and maximum value.",
       "parameters": [
         {
           "name": "value",
@@ -91,7 +91,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "The value to clamp. Can be int or float",
+          "description": "The value to clamp. Can be int or float.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -101,7 +101,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "The minimum value. Can be int or float",
+          "description": "The minimum value. Can be int or float.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -111,7 +111,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "The maximum value. Can be int or float",
+          "description": "The maximum value. Can be int or float.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -125,7 +125,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Get the maximum of two values. Returns: The maximum of the two values. Will be the same type as the inputs",
+      "description": "Get the maximum of two values.",
       "parameters": [
         {
           "name": "a",
@@ -133,7 +133,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "The first value. Can be int or float",
+          "description": "The first value. Can be int or float.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -143,7 +143,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "The second value. Can be int or float",
+          "description": "The second value. Can be int or float.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -157,7 +157,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Get the minimum of two values. Returns: The minimum of the two values. Will be the same type as the inputs",
+      "description": "Get the minimum of two values.",
       "parameters": [
         {
           "name": "a",
@@ -165,7 +165,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "The first value. Can be int or float",
+          "description": "The first value. Can be int or float.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -175,7 +175,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "The second value. Can be int or float",
+          "description": "The second value. Can be int or float.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -189,7 +189,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Raise a value to the power of another value",
+      "description": "Raise a value to the power of another value.",
       "parameters": [
         {
           "name": "a",
@@ -221,7 +221,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Get the absolute value of a number. Returns: The absolute value. Will be the same type as the input",
+      "description": "Get the absolute value of a number.",
       "parameters": [
         {
           "name": "value",
@@ -229,7 +229,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "The number. Can be int or float",
+          "description": "The number. Can be int or float.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -243,7 +243,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the square root of a number",
+      "description": "Get the square root of a number.",
       "parameters": [
         {
           "name": "value",
@@ -265,7 +265,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Modulo for floats",
+      "description": "Modulo for floats.",
       "parameters": [
         {
           "name": "value",
@@ -297,7 +297,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Get the remainder of a division operation",
+      "description": "Get the remainder of a division operation.",
       "parameters": [
         {
           "name": "a",
@@ -329,7 +329,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the sine of an angle. Returns: Value between -1 and 1",
+      "description": "Get the sine of an angle.",
       "parameters": [
         {
           "name": "angle",
@@ -337,7 +337,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "The angle in degrees",
+          "description": "The angle in degrees.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -351,7 +351,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the cosine of an angle. Returns: Value between -1 and 1",
+      "description": "Get the cosine of an angle.",
       "parameters": [
         {
           "name": "angle",
@@ -359,7 +359,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "The angle in degrees",
+          "description": "The angle in degrees.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -373,7 +373,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the tangent of an angle in radians",
+      "description": "Get the tangent of an angle in radians.",
       "parameters": [
         {
           "name": "angle",
@@ -381,7 +381,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "The angle in degrees",
+          "description": "The angle in degrees.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -395,7 +395,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the arcsine of a value in degrees",
+      "description": "Get the arcsine of a value in degrees.",
       "parameters": [
         {
           "name": "value",
@@ -417,7 +417,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the arccosine of a value in degrees",
+      "description": "Get the arccosine of a value in degrees.",
       "parameters": [
         {
           "name": "value",
@@ -439,7 +439,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the arctangent of a value in degrees",
+      "description": "Get the arctangent of a value in degrees.",
       "parameters": [
         {
           "name": "value",
@@ -461,7 +461,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the arctangent of a value in degrees",
+      "description": "Get the arctangent of a value in degrees.",
       "parameters": [
         {
           "name": "a",
@@ -493,7 +493,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Get the smallest integer greater than or equal to a value",
+      "description": "Get the smallest integer greater than or equal to a value.",
       "parameters": [
         {
           "name": "value",
@@ -515,7 +515,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Get the largest integer less than or equal to a value",
+      "description": "Get the largest integer less than or equal to a value.",
       "parameters": [
         {
           "name": "value",
@@ -537,7 +537,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Round a value to the nearest integer",
+      "description": "Round a value to the nearest integer.",
       "parameters": [
         {
           "name": "value",
@@ -559,7 +559,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Convert an angle from degrees to radians",
+      "description": "Convert an angle from degrees to radians.",
       "parameters": [
         {
           "name": "angle",
@@ -581,7 +581,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Convert an angle from radians to degrees",
+      "description": "Convert an angle from radians to degrees.",
       "parameters": [
         {
           "name": "angle",
@@ -603,7 +603,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Linearly interpolate between two values",
+      "description": "Linearly interpolate between two values.",
       "parameters": [
         {
           "name": "a",
@@ -645,7 +645,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Linearly interpolate between two values without clamping",
+      "description": "Linearly interpolate between two values without clamping.",
       "parameters": [
         {
           "name": "a",
@@ -687,7 +687,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the sign of a value",
+      "description": "Get the sign of a value.",
       "parameters": [
         {
           "name": "value",
@@ -709,7 +709,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the inverse lerp of two values",
+      "description": "Get the inverse lerp of two values.",
       "parameters": [
         {
           "name": "a",
@@ -751,7 +751,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Linearly interpolate between two angles",
+      "description": "Linearly interpolate between two angles.",
       "parameters": [
         {
           "name": "a",
@@ -793,7 +793,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the natural logarithm of a value",
+      "description": "Get the natural logarithm of a value.",
       "parameters": [
         {
           "name": "value",
@@ -815,7 +815,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Move a value towards a target value",
+      "description": "Move a value towards a target value.",
       "parameters": [
         {
           "name": "current",
@@ -857,7 +857,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Move an angle towards a target angle",
+      "description": "Move an angle towards a target angle.",
       "parameters": [
         {
           "name": "current",
@@ -899,7 +899,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the ping pong value of a time value",
+      "description": "Get the ping pong value of a time value.",
       "parameters": [
         {
           "name": "t",
@@ -931,7 +931,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Get the exponential value of a number",
+      "description": "Get the exponential value of a number.",
       "parameters": [
         {
           "name": "value",
@@ -953,7 +953,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Smoothly step between two values",
+      "description": "Smoothly step between two values.",
       "parameters": [
         {
           "name": "a",
@@ -995,7 +995,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Perform a bitwise AND operation",
+      "description": "Perform a bitwise AND operation.",
       "parameters": [
         {
           "name": "a",
@@ -1027,7 +1027,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Perform a bitwise OR operation",
+      "description": "Perform a bitwise OR operation.",
       "parameters": [
         {
           "name": "a",
@@ -1059,7 +1059,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Perform a bitwise XOR operation",
+      "description": "Perform a bitwise XOR operation.",
       "parameters": [
         {
           "name": "a",
@@ -1091,7 +1091,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Perform a bitwise NOT operation",
+      "description": "Perform a bitwise NOT operation.",
       "parameters": [
         {
           "name": "value",
@@ -1113,7 +1113,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Shift bits to the left",
+      "description": "Shift bits to the left.",
       "parameters": [
         {
           "name": "value",
@@ -1145,7 +1145,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Shift bits to the right",
+      "description": "Shift bits to the right.",
       "parameters": [
         {
           "name": "value",

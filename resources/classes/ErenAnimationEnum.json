@@ -1,0 +1,191 @@
+{
+  "kind": "extension",
+  "name": "ErenAnimationEnum",
+  "description": "Enumeration of available animations for Eren characters.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Idle",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Run",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Run animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Walk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Walk animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Jump animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Fall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Fall animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Land",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Land animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Die",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Die animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackCombo",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack combo animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackKick",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack kick animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Stun",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Stun animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteNod",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote nod animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteRoar",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote roar animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RockLift",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Rock lift animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RockLift001",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Rock lift 001 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RockWalk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Rock walk animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RockFixHole",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Rock fix hole animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

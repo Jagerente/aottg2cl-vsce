@@ -12,7 +12,7 @@
     {
       "label": "Off",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Steam is off.",
@@ -23,7 +23,7 @@
     {
       "label": "Warning",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Steam warning state.",
@@ -34,7 +34,7 @@
     {
       "label": "Damage",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Steam damage state.",

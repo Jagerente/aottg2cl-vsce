@@ -34,7 +34,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Path to the image resource (e.g., \"Icons/Game/BladeIcon\")",
+          "description": "Path to the image resource (e.g., \"Icons/Game/BladeIcon\").",
           "isOptional": false,
           "isVariadic": false
         }

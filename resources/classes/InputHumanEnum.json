@@ -1,0 +1,180 @@
+{
+  "kind": "extension",
+  "name": "InputHumanEnum",
+  "description": "Enumeration of Human input keybind settings.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "AttackDefault",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/AttackDefault keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSpecial",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/AttackSpecial keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HookLeft",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/HookLeft keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HookRight",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/HookRight keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HookBoth",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/HookBoth keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Dash",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/Dash keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ReelIn",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/ReelIn keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ReelOut",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/ReelOut keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Dodge",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/Dodge keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/Jump keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Reload",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/Reload keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HorseMount",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/HorseMount keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HorseWalk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/HorseWalk keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HorseJump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/HorseJump keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "NapeLock",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human/NapeLock keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

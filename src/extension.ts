@@ -68,19 +68,28 @@ export async function activate(context: vscode.ExtensionContext) {
             return;
         }
         await documentTreeProvider.refetchUserDefinedClasses(document);
+    };
+
+    const validateDocumentDiagnostics = async (document: vscode.TextDocument) => {
+        if (document.languageId !== 'acl') {
+            return;
+        }
         await diagnosticManager.validateDocument(document);
     };
 
     for (const document of vscode.workspace.textDocuments) {
         if (document.languageId === 'acl') {
             await refetchDocumentData(document);
+            await validateDocumentDiagnostics(document);
         }
     }
 
     let parseTimeout: NodeJS.Timeout | null = null;
+    let diagnosticTimeout: NodeJS.Timeout | null = null;
 
     vscode.workspace.onDidOpenTextDocument(async document => {
         await refetchDocumentData(document);
+        await validateDocumentDiagnostics(document);
     });
 
     vscode.workspace.onDidChangeTextDocument(event => {
@@ -96,11 +105,20 @@ export async function activate(context: vscode.ExtensionContext) {
         parseTimeout = setTimeout(async () => {
             await refetchDocumentData(event.document);
         }, debounceDelay);
+
+        if (diagnosticTimeout) {
+            clearTimeout(diagnosticTimeout);
+        }
+
+        diagnosticTimeout = setTimeout(async () => {
+            await validateDocumentDiagnostics(event.document);
+        }, debounceDelay);
     });
 
     vscode.window.onDidChangeActiveTextEditor(async editor => {
         if (editor && editor.document.languageId === 'acl') {
             await refetchDocumentData(editor.document);
+            await validateDocumentDiagnostics(editor.document);
         }
     });
     vscode.window.onDidChangeWindowState(async event => {
@@ -108,10 +126,12 @@ export async function activate(context: vscode.ExtensionContext) {
             const activeEditor = vscode.window.activeTextEditor;
             if (activeEditor && activeEditor.document.languageId === 'acl') {
                 await refetchDocumentData(activeEditor.document);
+                await validateDocumentDiagnostics(activeEditor.document);
             }
             for (const document of vscode.workspace.textDocuments) {
                 if (document.languageId === 'acl' && document !== activeEditor?.document) {
                     await refetchDocumentData(document);
+                    await validateDocumentDiagnostics(document);
                 }
             }
         }
@@ -121,6 +141,10 @@ export async function activate(context: vscode.ExtensionContext) {
             if (parseTimeout) {
                 clearTimeout(parseTimeout);
                 parseTimeout = null;
+            }
+            if (diagnosticTimeout) {
+                clearTimeout(diagnosticTimeout);
+                diagnosticTimeout = null;
             }
             documentTreeProvider.clearDocument(doc);
             diagnosticCollection.delete(doc.uri);

@@ -45,7 +45,7 @@
         {
           "name": "value",
           "type": {
-            "name": "T",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The element to check for.",
@@ -67,7 +67,7 @@
         {
           "name": "value",
           "type": {
-            "name": "T",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The element to add.",
@@ -89,7 +89,7 @@
         {
           "name": "value",
           "type": {
-            "name": "T",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The element to remove.",
@@ -112,12 +112,7 @@
           "name": "set",
           "type": {
             "name": "Set",
-            "typeArguments": [
-              {
-                "name": "T",
-                "typeArguments": []
-              }
-            ]
+            "typeArguments": []
           },
           "description": "The set to union with.",
           "isOptional": false,
@@ -139,12 +134,7 @@
           "name": "set",
           "type": {
             "name": "Set",
-            "typeArguments": [
-              {
-                "name": "T",
-                "typeArguments": []
-              }
-            ]
+            "typeArguments": []
           },
           "description": "The set to intersect with.",
           "isOptional": false,
@@ -166,12 +156,7 @@
           "name": "set",
           "type": {
             "name": "Set",
-            "typeArguments": [
-              {
-                "name": "T",
-                "typeArguments": []
-              }
-            ]
+            "typeArguments": []
           },
           "description": "The set to compute the difference with.",
           "isOptional": false,
@@ -193,12 +178,7 @@
           "name": "set",
           "type": {
             "name": "Set",
-            "typeArguments": [
-              {
-                "name": "T",
-                "typeArguments": []
-              }
-            ]
+            "typeArguments": []
           },
           "description": "The set to check against.",
           "isOptional": false,
@@ -220,12 +200,7 @@
           "name": "set",
           "type": {
             "name": "Set",
-            "typeArguments": [
-              {
-                "name": "T",
-                "typeArguments": []
-              }
-            ]
+            "typeArguments": []
           },
           "description": "The set to check against.",
           "isOptional": false,
@@ -247,12 +222,7 @@
           "name": "set",
           "type": {
             "name": "Set",
-            "typeArguments": [
-              {
-                "name": "T",
-                "typeArguments": []
-              }
-            ]
+            "typeArguments": []
           },
           "description": "The set to check against.",
           "isOptional": false,
@@ -274,12 +244,7 @@
           "name": "set",
           "type": {
             "name": "Set",
-            "typeArguments": [
-              {
-                "name": "T",
-                "typeArguments": []
-              }
-            ]
+            "typeArguments": []
           },
           "description": "The set to check against.",
           "isOptional": false,
@@ -301,12 +266,7 @@
           "name": "set",
           "type": {
             "name": "Set",
-            "typeArguments": [
-              {
-                "name": "T",
-                "typeArguments": []
-              }
-            ]
+            "typeArguments": []
           },
           "description": "The set to check against.",
           "isOptional": false,
@@ -328,12 +288,7 @@
           "name": "set",
           "type": {
             "name": "Set",
-            "typeArguments": [
-              {
-                "name": "T",
-                "typeArguments": []
-              }
-            ]
+            "typeArguments": []
           },
           "description": "The set to compare with.",
           "isOptional": false,

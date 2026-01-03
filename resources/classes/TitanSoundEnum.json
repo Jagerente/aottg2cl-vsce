@@ -1,0 +1,488 @@
+{
+  "kind": "extension",
+  "name": "TitanSoundEnum",
+  "description": "Enumeration of titan sounds.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Footstep1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Footstep1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Footstep2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Footstep2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Footstep3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Footstep3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Swing1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Swing1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Swing2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Swing2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Swing3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Swing3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hurt1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hurt1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hurt2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hurt2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hurt3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hurt3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hurt4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hurt4 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hurt5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hurt5 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hurt6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hurt6 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hurt7",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hurt7 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hurt8",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hurt8 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt4 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt5 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt6 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt7",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt7 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt8",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt8 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt9",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt9 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grunt10",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Grunt10 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hit",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hit sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Roar1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Roar1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Roar2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Roar2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DeathFall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "DeathFall sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DeathNoFall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "DeathNoFall sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Bite1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Bite1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Bite2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Bite2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Laugh1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Laugh1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Laugh2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Laugh2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Huff1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Huff1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Huff2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Huff2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Huff3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Huff3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Huff4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Huff4 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Huff5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Huff5 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Huff6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Huff6 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TitanJump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "TitanJump sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RockPickup",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "RockPickup sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RockThrow1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "RockThrow1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RockThrow2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "RockThrow2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

@@ -74,6 +74,17 @@
       "readonly": true,
       "private": false,
       "deprecated": ""
+    },
+    {
+      "label": "Rock2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Rock2 projectile.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
     }
   ],
   "staticMethods": [],

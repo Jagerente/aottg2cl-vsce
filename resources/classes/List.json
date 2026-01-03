@@ -77,7 +77,7 @@
         {
           "name": "value",
           "type": {
-            "name": "T",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The value to set.",
@@ -99,7 +99,7 @@
         {
           "name": "value",
           "type": {
-            "name": "T",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The element to add.",
@@ -131,7 +131,7 @@
         {
           "name": "value",
           "type": {
-            "name": "T",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The element to insert.",
@@ -175,7 +175,7 @@
         {
           "name": "value",
           "type": {
-            "name": "T",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The element to remove.",
@@ -197,7 +197,7 @@
         {
           "name": "value",
           "type": {
-            "name": "T",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The element to check for.",
@@ -316,7 +316,7 @@
         {
           "name": "initialValue",
           "type": {
-            "name": "T",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The initial accumulator value.",
@@ -355,6 +355,22 @@
         ]
       },
       "description": "Convert the list to a set.",
+      "parameters": [],
+      "kind": "function",
+      "deprecated": ""
+    },
+    {
+      "label": "Copy",
+      "returnType": {
+        "name": "List",
+        "typeArguments": [
+          {
+            "name": "T",
+            "typeArguments": []
+          }
+        ]
+      },
+      "description": "Copy the list to a new list.",
       "parameters": [],
       "kind": "function",
       "deprecated": ""

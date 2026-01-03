@@ -52,6 +52,28 @@
       "readonly": true,
       "private": false,
       "deprecated": ""
+    },
+    {
+      "label": "AnnieShifter",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter input category.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ErenShifter",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ErenShifter input category.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
     }
   ],
   "staticMethods": [],

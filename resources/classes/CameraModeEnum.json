@@ -1,0 +1,48 @@
+{
+  "kind": "extension",
+  "name": "CameraModeEnum",
+  "description": "Enumeration of camera input mode values.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "TPS",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "TPS camera mode.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Original",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Original camera mode.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "FPS",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "FPS camera mode.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

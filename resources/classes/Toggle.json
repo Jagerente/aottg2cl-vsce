@@ -56,7 +56,7 @@
             "name": "function",
             "typeArguments": []
           },
-          "description": "Method that will be called with the new boolean value as parameter",
+          "description": "Method that will be called with the new boolean value as parameter.",
           "isOptional": false,
           "isVariadic": false
         }

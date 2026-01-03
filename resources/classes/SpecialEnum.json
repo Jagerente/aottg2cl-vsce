@@ -1,0 +1,246 @@
+{
+  "kind": "extension",
+  "name": "SpecialEnum",
+  "description": "Enumeration of special abilities for humans.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Potato",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Potato special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Escape",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Escape special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Dance",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Dance special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Distract",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Distract special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Smell",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Smell special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Supply",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Supply special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SmokeBomb",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "SmokeBomb special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Carry",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Carry special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Switchback",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Switchback special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Confuse",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Confuse special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DownStrike",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "DownStrike special ability (Blade only).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Spin1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Spin1 special ability (Blade only).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Spin2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Spin2 special ability (Blade only).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Spin3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Spin3 special ability (Blade only).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeThrow",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeThrow special ability (Blade only).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSTwinShot",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSTwinShot special ability (AHSS only).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Stock",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Stock special ability (Thunderspear only).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "None",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "None special ability (no special).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Eren",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Eren shifter transformation special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Annie",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Annie shifter transformation special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Armored",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Armored shifter transformation special ability.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

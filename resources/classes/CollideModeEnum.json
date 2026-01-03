@@ -21,12 +21,23 @@
       "deprecated": ""
     },
     {
-      "label": "Hitboxes",
+      "label": "Physical",
       "type": {
         "name": "string",
         "typeArguments": []
       },
       "description": "Hitboxes collision mode.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "None",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "None collision mode.",
       "readonly": true,
       "private": false,
       "deprecated": ""

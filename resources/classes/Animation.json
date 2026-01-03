@@ -19,7 +19,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation to check.",
+          "description": "The name of the animation to check. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -41,7 +41,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation to play.",
+          "description": "The name of the animation to play. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -83,7 +83,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation to play.",
+          "description": "The name of the animation to play. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -135,7 +135,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation to queue.",
+          "description": "The name of the animation to queue. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -157,7 +157,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation to stop. If null, stops all animations.",
+          "description": "The name of the animation to stop. If null, stops all animations. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": true,
           "isVariadic": false
         }
@@ -179,7 +179,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation.",
+          "description": "The name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -211,7 +211,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation.",
+          "description": "The name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -233,7 +233,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation.",
+          "description": "The name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -255,7 +255,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation.",
+          "description": "The name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -277,7 +277,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation.",
+          "description": "The name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -309,7 +309,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation.",
+          "description": "The name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -341,7 +341,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation.",
+          "description": "The name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }

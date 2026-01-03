@@ -84,52 +84,7 @@
       "deprecated": ""
     }
   ],
-  "staticFields": [
-    {
-      "label": "FrictionCombineMinimum",
-      "type": {
-        "name": "int",
-        "typeArguments": []
-      },
-      "description": "PhysicMaterialCombine.Minimum.",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "FrictionCombineMultiply",
-      "type": {
-        "name": "int",
-        "typeArguments": []
-      },
-      "description": "PhysicMaterialCombine.Multiply.",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "FrictionCombineMaximum",
-      "type": {
-        "name": "int",
-        "typeArguments": []
-      },
-      "description": "PhysicMaterialCombine.Maximum.",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "FrictionCombineAverage",
-      "type": {
-        "name": "int",
-        "typeArguments": []
-      },
-      "description": "PhysicMaterialCombine.Average.",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    }
-  ],
+  "staticFields": [],
   "staticMethods": [],
   "constructors": []
 }

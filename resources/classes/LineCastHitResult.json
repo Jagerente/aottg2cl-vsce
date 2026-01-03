@@ -1,7 +1,7 @@
 {
   "kind": "class",
   "name": "LineCastHitResult",
-  "description": "The result of a Physics.LineCast",
+  "description": "The result of a Physics.LineCast.",
   "extends": [
     "Object"
   ],
@@ -13,7 +13,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "true if the linecast hit a character",
+      "description": "true if the linecast hit a character.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -24,7 +24,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "true if the linecast hit a map object",
+      "description": "true if the linecast hit a map object.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -35,7 +35,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "The distance to the hit point",
+      "description": "The distance to the hit point.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -46,7 +46,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The point in world space where the linecast hit",
+      "description": "The point in world space where the linecast hit.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -57,7 +57,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The normal of the surface the linecast hit",
+      "description": "The normal of the surface the linecast hit.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -68,7 +68,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "The collider that was hit",
+      "description": "The collider that was hit.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -79,7 +79,7 @@
         "name": "Collider",
         "typeArguments": []
       },
-      "description": "The collider that was hit",
+      "description": "The collider that was hit.",
       "readonly": true,
       "private": false,
       "deprecated": ""

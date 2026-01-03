@@ -332,12 +332,12 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Causes the (AI) titan to target an enemy character or MapTargetable for focusTime seconds. If focusTime is 0 it will use the default focus time",
+      "description": "Causes the (AI) titan to target an enemy character or MapTargetable for focusTime seconds. If focusTime is 0 it will use the default focus time.",
       "parameters": [
         {
           "name": "enemyObj",
           "type": {
-            "name": "Character|MapTargetable",
+            "name": "Object",
             "typeArguments": []
           },
           "description": "The enemy to target (can be Character or MapTargetable).",
@@ -364,7 +364,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Gets the target currently focused by this character. Returns null if no target is set.",
+      "description": "Gets the target currently focused by this character.",
       "parameters": [],
       "kind": "function",
       "deprecated": ""

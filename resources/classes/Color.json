@@ -73,7 +73,7 @@
         "name": "Color",
         "typeArguments": []
       },
-      "description": "Linearly interpolates between two colors. Returns: A new color between `a` and `b`.",
+      "description": "Linearly interpolates between two colors.",
       "parameters": [
         {
           "name": "a",
@@ -81,7 +81,7 @@
             "name": "Color",
             "typeArguments": []
           },
-          "description": "Color to interpolate from",
+          "description": "Color to interpolate from.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -91,7 +91,7 @@
             "name": "Color",
             "typeArguments": []
           },
-          "description": "Color to interpolate to",
+          "description": "Color to interpolate to.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -101,7 +101,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "Interpolation factor. 0 = `a`, 1 = `b`",
+          "description": "Interpolation factor. 0 = `a`, 1 = `b`.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -115,7 +115,7 @@
         "name": "Color",
         "typeArguments": []
       },
-      "description": "Creates a gradient color from two colors. Returns: A new color interpolated between the two colors.",
+      "description": "Creates a gradient color from two colors.",
       "parameters": [
         {
           "name": "a",

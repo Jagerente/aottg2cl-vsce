@@ -200,7 +200,7 @@
         "name": "string",
         "typeArguments": []
       },
-      "description": "Team character belongs to. Refer to TeamEnum",
+      "description": "Team character belongs to. Using enum is not mandatory, value can be any string. Refer to TeamEnum",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -366,7 +366,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Causes the character to play an animation.",
+      "description": "Causes the character to play an animation. Available animations can be found here: Human, Titan, Annie, Eren. Use the right-hand string value for the animation. Note that shifters also have all titan animations.",
       "parameters": [
         {
           "name": "animation",
@@ -374,7 +374,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the animation. Available animations can be found here: Human, Titan, Annie, Eren. Use the right-hand string value for the animation. Note that shifters also have all titan animations.",
+          "description": "Name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -406,7 +406,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the animation.",
+          "description": "Name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -450,7 +450,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Gets the animation speed of a given animation. Returns 1.0 if the character is not owned by the player or is dead.",
+      "description": "Gets the animation speed of a given animation.",
       "parameters": [
         {
           "name": "animation",
@@ -458,7 +458,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the animation.",
+          "description": "Name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -480,7 +480,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the animation.",
+          "description": "Name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -514,7 +514,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Returns true if the animation is playing. Returns: True if the animation is playing, false otherwise.",
+      "description": "Returns true if the animation is playing.",
       "parameters": [
         {
           "name": "animation",
@@ -522,7 +522,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the animation.",
+          "description": "Name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -536,7 +536,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Gets the normalized time of the currently playing animation. Returns: The normalized time (0-1) of the animation.",
+      "description": "Gets the normalized time of the currently playing animation.",
       "parameters": [
         {
           "name": "animation",
@@ -544,7 +544,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the animation.",
+          "description": "Name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -558,7 +558,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Forces the character to play an animation, even if it's already playing.",
+      "description": "Forces the character to play an animation, even if it's already playing. Available animations can be found here: Human, Titan, Annie, Eren. Use the right-hand string value for the animation. Note that shifters also have all titan animations.",
       "parameters": [
         {
           "name": "animation",
@@ -566,7 +566,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the animation. Available animations can be found here: Human, Titan, Annie, Eren. Use the right-hand string value for the animation. Note that shifters also have all titan animations.",
+          "description": "Name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -590,7 +590,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Gets the length of animation. Returns: The length of the animation in seconds.",
+      "description": "Gets the length of animation.",
       "parameters": [
         {
           "name": "animation",
@@ -598,7 +598,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the animation.",
+          "description": "Name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -612,7 +612,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Returns true if the character is playing a sound. Returns: True if the sound is playing, false otherwise. Available sound names can be found here: Humans, Shifters, Titans. Note that shifters also have all titan sounds.",
+      "description": "Returns true if the character is playing a sound. Available sound names can be found here: Humans, Shifters, Titans. Note that shifters also have all titan sounds.",
       "parameters": [
         {
           "name": "sound",
@@ -620,7 +620,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the sound.",
+          "description": "Name of the sound. Refer to HumanSoundEnum, TitanSoundEnum, ShifterSoundEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -634,7 +634,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Plays a sound for the character.",
+      "description": "Plays a sound for the character. Available sound names can be found here: Human, Shifters, Titans. Note that shifters also have all titan sounds.",
       "parameters": [
         {
           "name": "sound",
@@ -642,7 +642,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the sound to play. Available sound names can be found here: Human, Shifters, Titans. Note that shifters also have all titan sounds.",
+          "description": "Name of the sound to play. Refer to HumanSoundEnum, TitanSoundEnum, ShifterSoundEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -664,7 +664,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the sound to stop.",
+          "description": "Name of the sound to stop. Refer to HumanSoundEnum, TitanSoundEnum, ShifterSoundEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -686,7 +686,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Name of the sound.",
+          "description": "Name of the sound. Refer to HumanSoundEnum, TitanSoundEnum, ShifterSoundEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -757,11 +757,11 @@
         {
           "name": "mode",
           "type": {
-            "name": "string",
+            "name": "int",
             "typeArguments": []
           },
           "description": "Force mode. Default is Acceleration. Refer to ForceModeEnum",
-          "isOptional": true,
+          "isOptional": false,
           "isVariadic": false
         }
       ],

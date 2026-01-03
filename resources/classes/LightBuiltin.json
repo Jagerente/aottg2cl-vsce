@@ -112,7 +112,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "LightType.Directional",
+      "description": "LightType.Directional.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -123,7 +123,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "LightType.Point",
+      "description": "LightType.Point.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -134,7 +134,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "LightType.Point",
+      "description": "LightType.Spot.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -145,7 +145,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "LightShadows.None",
+      "description": "LightShadows.None.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -156,7 +156,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "LightShadows.Hard",
+      "description": "LightShadows.Hard.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -167,7 +167,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "LightShadows.Soft",
+      "description": "LightShadows.Soft.",
       "readonly": true,
       "private": false,
       "deprecated": ""

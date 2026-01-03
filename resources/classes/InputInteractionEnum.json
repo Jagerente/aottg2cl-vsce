@@ -1,0 +1,213 @@
+{
+  "kind": "extension",
+  "name": "InputInteractionEnum",
+  "description": "Enumeration of Interaction input keybind settings.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Interact",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/Interact keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Interact2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/Interact2 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Interact3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/Interact3 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ItemMenu",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/ItemMenu keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteMenu",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/EmoteMenu keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "MenuNext",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/MenuNext keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "QuickSelect1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/QuickSelect1 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "QuickSelect2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/QuickSelect2 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "QuickSelect3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/QuickSelect3 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "QuickSelect4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/QuickSelect4 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "QuickSelect5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/QuickSelect5 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "QuickSelect6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/QuickSelect6 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "QuickSelect7",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/QuickSelect7 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "QuickSelect8",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/QuickSelect8 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Function1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/Function1 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Function2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/Function2 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Function3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/Function3 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Function4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Interaction/Function4 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

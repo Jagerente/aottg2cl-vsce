@@ -12,7 +12,7 @@
     {
       "label": "Horizontal",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Horizontal slider direction.",
@@ -23,7 +23,7 @@
     {
       "label": "Vertical",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Vertical slider direction.",

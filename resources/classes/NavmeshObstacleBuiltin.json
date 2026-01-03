@@ -32,7 +32,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The scale of the obstacle",
+      "description": "The scale of the obstacle.",
       "readonly": false,
       "private": false,
       "deprecated": ""

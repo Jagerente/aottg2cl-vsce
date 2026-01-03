@@ -12,7 +12,7 @@
     {
       "label": "Healthy",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Hand is healthy.",
@@ -23,7 +23,7 @@
     {
       "label": "Broken",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Hand is broken.",

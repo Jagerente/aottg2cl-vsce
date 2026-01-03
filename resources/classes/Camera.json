@@ -267,7 +267,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The camera mode. Accepted values are TPS, Original, FPS.",
+          "description": "The camera mode. Accepted values are TPS, Original, FPS. Refer to CameraModeEnum",
           "isOptional": false,
           "isVariadic": false
         }

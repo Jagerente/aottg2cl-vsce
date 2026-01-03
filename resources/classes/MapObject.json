@@ -13,7 +13,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Object does not move",
+      "description": "Object does not move.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -24,7 +24,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The position of the object",
+      "description": "The position of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -35,7 +35,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The local position of the object",
+      "description": "The local position of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -46,7 +46,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The rotation of the object",
+      "description": "The rotation of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -57,7 +57,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The local rotation of the object",
+      "description": "The local rotation of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -68,7 +68,7 @@
         "name": "Quaternion",
         "typeArguments": []
       },
-      "description": "The rotation of the object as a quaternion",
+      "description": "The rotation of the object as a quaternion.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -79,7 +79,7 @@
         "name": "Quaternion",
         "typeArguments": []
       },
-      "description": "The local rotation of the object as a quaternion",
+      "description": "The local rotation of the object as a quaternion.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -90,7 +90,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The forward direction of the object",
+      "description": "The forward direction of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -101,7 +101,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The up direction of the object",
+      "description": "The up direction of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -112,7 +112,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The right direction of the object",
+      "description": "The right direction of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -123,7 +123,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "The scale of the object",
+      "description": "The scale of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -134,7 +134,7 @@
         "name": "string",
         "typeArguments": []
       },
-      "description": "The name of the object",
+      "description": "The name of the object.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -145,7 +145,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "The parent of the object",
+      "description": "The parent of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -156,7 +156,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Whether the object is active",
+      "description": "Whether the object is active.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -167,7 +167,7 @@
         "name": "Transform",
         "typeArguments": []
       },
-      "description": "The transform of the object",
+      "description": "The transform of the object.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -178,7 +178,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Whether the object has a renderer",
+      "description": "Whether the object has a renderer.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -189,7 +189,7 @@
         "name": "Color",
         "typeArguments": []
       },
-      "description": "The color of the object",
+      "description": "The color of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -200,7 +200,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "The x tiling of the object's texture",
+      "description": "The x tiling of the object's texture.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -211,7 +211,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "The y tiling of the object's texture",
+      "description": "The y tiling of the object's texture.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -222,7 +222,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "The x offset of the object's texture",
+      "description": "The x offset of the object's texture.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -233,7 +233,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "The y offset of the object's texture",
+      "description": "The y offset of the object's texture.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -244,7 +244,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "The ID of the object",
+      "description": "The ID of the object.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -255,7 +255,7 @@
         "name": "string",
         "typeArguments": []
       },
-      "description": "The tag of the object",
+      "description": "The tag of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -266,7 +266,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "The layer of the object",
+      "description": "The layer of the object.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -301,7 +301,7 @@
         "name": "component",
         "typeArguments": []
       },
-      "description": "Add a component to the object",
+      "description": "Add a component to the object.",
       "parameters": [
         {
           "name": "name",
@@ -323,7 +323,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Remove a component from the object",
+      "description": "Remove a component from the object.",
       "parameters": [
         {
           "name": "name",
@@ -345,7 +345,7 @@
         "name": "component",
         "typeArguments": []
       },
-      "description": "Get a component from the object",
+      "description": "Get a component from the object.",
       "parameters": [
         {
           "name": "name",
@@ -367,7 +367,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Set whether a component is enabled",
+      "description": "Set whether a component is enabled.",
       "parameters": [
         {
           "name": "name",
@@ -399,7 +399,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Set whether all components are enabled",
+      "description": "Set whether all components are enabled.",
       "parameters": [
         {
           "name": "enabled",
@@ -421,7 +421,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Add a sphere collider to the object",
+      "description": "Add a sphere collider to the object.",
       "parameters": [
         {
           "name": "collideMode",
@@ -473,7 +473,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Add a box collider to the object",
+      "description": "Add a box collider to the object.",
       "parameters": [
         {
           "name": "collideMode",
@@ -520,12 +520,34 @@
       "deprecated": ""
     },
     {
+      "label": "SetCollideWith",
+      "returnType": {
+        "name": "void",
+        "typeArguments": []
+      },
+      "description": "Set the collideWith property for all colliders on this object and its children. This changes which layers the colliders can collide with.",
+      "parameters": [
+        {
+          "name": "collideWith",
+          "type": {
+            "name": "string",
+            "typeArguments": []
+          },
+          "description": "What the colliders should collide with. Refer to CollideWithEnum",
+          "isOptional": false,
+          "isVariadic": false
+        }
+      ],
+      "kind": "function",
+      "deprecated": ""
+    },
+    {
       "label": "AddSphereTarget",
       "returnType": {
         "name": "MapTargetable",
         "typeArguments": []
       },
-      "description": "Add a sphere target to the object",
+      "description": "Add a sphere target to the object.",
       "parameters": [
         {
           "name": "team",
@@ -567,7 +589,7 @@
         "name": "MapTargetable",
         "typeArguments": []
       },
-      "description": "Add a box target to the object",
+      "description": "Add a box target to the object.",
       "parameters": [
         {
           "name": "team",
@@ -609,7 +631,7 @@
         "name": "MapObject",
         "typeArguments": []
       },
-      "description": "Get a child object by name",
+      "description": "Get a child object by name.",
       "parameters": [
         {
           "name": "name",
@@ -647,7 +669,7 @@
         "name": "Transform",
         "typeArguments": []
       },
-      "description": "Get a child transform by name",
+      "description": "Get a child transform by name.",
       "parameters": [
         {
           "name": "name",
@@ -669,7 +691,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Set the color of all renderers on the object",
+      "description": "Set the color of all renderers on the object.",
       "parameters": [
         {
           "name": "color",
@@ -691,7 +713,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Check if a position is within the object's bounds",
+      "description": "Check if a position is within the object's bounds.",
       "parameters": [
         {
           "name": "position",
@@ -795,7 +817,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Whether or not the object has the given tag",
+      "description": "Whether or not the object has the given tag.",
       "parameters": [
         {
           "name": "tag",
@@ -817,7 +839,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Add a builtin component to the MapObject",
+      "description": "Add a builtin component to the MapObject.",
       "parameters": [
         {
           "name": "name",
@@ -834,12 +856,23 @@
       "deprecated": ""
     },
     {
+      "label": "AddRigidbody",
+      "returnType": {
+        "name": "RigidbodyBuiltin",
+        "typeArguments": []
+      },
+      "description": "Add a Rigidbody component to the MapObject.",
+      "parameters": [],
+      "kind": "function",
+      "deprecated": ""
+    },
+    {
       "label": "GetBuiltinComponent",
       "returnType": {
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Gets a builtin component to the MapObject",
+      "description": "Gets a builtin component to the MapObject.",
       "parameters": [
         {
           "name": "name",
@@ -861,7 +894,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Remove a builtin component from the MapObject",
+      "description": "Remove a builtin component from the MapObject.",
       "parameters": [
         {
           "name": "name",

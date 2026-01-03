@@ -1,7 +1,7 @@
 {
   "kind": "extension",
   "name": "Cutscene",
-  "description": "",
+  "description": "Provides methods to control in-game cutscenes and dialogues from custom logic scripts.",
   "extends": [
     "Object"
   ],
@@ -16,7 +16,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Start a cutscene",
+      "description": "Start a cutscene.",
       "parameters": [
         {
           "name": "name",
@@ -48,7 +48,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Show a dialogue box",
+      "description": "Show a dialogue box.",
       "parameters": [
         {
           "name": "icon",
@@ -56,7 +56,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The icon name to display.",
+          "description": "The icon name to display. Refer to ProfileIconEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -90,7 +90,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Show a dialogue box for a certain amount of time",
+      "description": "Show a dialogue box for a certain amount of time.",
       "parameters": [
         {
           "name": "icon",
@@ -98,7 +98,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The icon name to display.",
+          "description": "The icon name to display. Refer to ProfileIconEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -142,7 +142,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Hide the dialogue box",
+      "description": "Hide the dialogue box.",
       "parameters": [],
       "kind": "function",
       "deprecated": ""

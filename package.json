@@ -4,6 +4,7 @@
   "description": "Syntax highlighting and autocomplete for AoTTG 2 Custom Logic",
   "version": "0.2.0",
   "publisher": "Jagerente",
+  "icon": "resources/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Jagerente/aottg2cl-vsce"
@@ -190,7 +191,8 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "update-syntax": "ts-node scripts/updateSyntaxClasses.ts",
+    "vscode:prepublish": "npm run update-syntax && npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint && npm run test:integration",
@@ -213,6 +215,7 @@
     "esbuild": "^0.25.4",
     "eslint": "^9.11.1",
     "mocha": "^10.2.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   },
   "dependencies": {

@@ -24,7 +24,7 @@
         "name": "string",
         "typeArguments": []
       },
-      "description": "The current special the human is using.",
+      "description": "The current special the human is using. Refer to SpecialEnum",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -299,7 +299,7 @@
         "name": "string",
         "typeArguments": []
       },
-      "description": "The state of the human.",
+      "description": "The state of the human. Refer to HumanStateEnum",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -567,7 +567,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the special to set.",
+          "description": "The name of the special to set. Refer to SpecialEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -643,7 +643,7 @@
             "name": "bool",
             "typeArguments": []
           },
-          "description": "True to enable, false to disable",
+          "description": "True to enable, false to disable.",
           "isOptional": false,
           "isVariadic": false
         }

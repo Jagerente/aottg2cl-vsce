@@ -1,0 +1,103 @@
+{
+  "kind": "extension",
+  "name": "WallColossalAnimationEnum",
+  "description": "Enumeration of available animations for WallColossal characters.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Idle",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackWallSlap1L",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack wall slap 1 left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackWallSlap1R",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack wall slap 1 right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackWallSlap2L",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack wall slap 2 left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackWallSlap2R",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack wall slap 2 right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSteam",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack steam animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSweep",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack sweep animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackKick",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack kick animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

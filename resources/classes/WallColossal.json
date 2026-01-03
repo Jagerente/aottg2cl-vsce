@@ -76,7 +76,7 @@
     {
       "label": "LeftHandState",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Colossal's left hand state. Refer to HandStateEnum",
@@ -87,7 +87,7 @@
     {
       "label": "RightHandState",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Colossal's right hand state. Refer to HandStateEnum",
@@ -153,7 +153,7 @@
     {
       "label": "SteamState",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Colossal's current steam state. Refer to SteamStateEnum",

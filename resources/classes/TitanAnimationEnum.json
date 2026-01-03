@@ -1,0 +1,983 @@
+{
+  "kind": "extension",
+  "name": "TitanAnimationEnum",
+  "description": "Enumeration of available animations for titan characters.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Idle",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RunAbnormal",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Run abnormal animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SprintAbnormal",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sprint abnormal animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RunCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Run crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "IdleCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "JumpCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Jump crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "FallCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Fall crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "LandCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Land crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Walk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Walk animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Jump animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Fall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Fall animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Land",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Land animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Stun",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Stun animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "StunLeft",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Stun left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "StunRight",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Stun right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DieBack",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Die back animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DieFront",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Die front animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DieGround",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Die ground animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DieCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Die crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DieSit",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Die sit animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackPunchCombo",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack punch combo animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackPunch",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack punch animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlam",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack slam animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBellyFlop",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack belly flop animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBellyFlopGetup",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack belly flop getup animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackKick",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack kick animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackStomp",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack stomp animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSwingL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack swing left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSwingR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack swing right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBiteF",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack bite front animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBiteL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack bite left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBiteR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack bite right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabAirFarL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab air far left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabAirFarR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab air far right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabAirL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab air left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabAirR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab air right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabBackL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab back left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabBackR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab back right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabCoreL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab core left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabCoreR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab core right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabGroundBackL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab ground back left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabGroundBackR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab ground back right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabGroundFrontL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab ground front left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabGroundFrontR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab ground front right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabHeadBackL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab head back left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabHeadBackR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab head back right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabHeadFrontL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab head front left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabHeadFrontR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab head front right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabHighL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab high left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabHighR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab high right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabStomachL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab stomach left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabStomachR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab stomach right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackEatL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack eat left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackEatR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack eat right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapHighL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack slap high left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapHighR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack slap high right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack slap left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack slap right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapLowL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack slap low left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapLowR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack slap low right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushChestL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack brush chest left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushChestR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack brush chest right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackHitBack",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack hit back animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackHitFace",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack hit face animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackRockThrow",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack rock throw animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackJump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack jump animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackJumpCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack jump crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitIdle",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit idle animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitIdleCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit idle crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitDown",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit down animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitUp",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit up animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitUpCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit up crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitFall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit fall animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitFallCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit fall crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Turn90L",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Turn 90 left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Turn90R",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Turn 90 right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Turn90LCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Turn 90 left crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Turn90RCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Turn 90 right crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Blind",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Blind animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitBlind",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit blind animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BlindCrawler",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Blind crawler animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ArmHurtL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Arm hurt left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ArmHurtR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Arm hurt right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "CoverNape",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Cover nape animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteLaugh",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote laugh animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteNod",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote nod animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteShake",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote shake animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteRoar",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote roar animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

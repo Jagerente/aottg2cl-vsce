@@ -1,0 +1,356 @@
+{
+  "kind": "extension",
+  "name": "InputTitanEnum",
+  "description": "Enumeration of Titan input keybind settings.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Kick",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/Kick keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/Jump keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Sit",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/Sit keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Walk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/Walk keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Sprint",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/Sprint keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "CoverNape1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/CoverNape1 keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackPunch",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackPunch keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBellyFlop",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackBellyFlop keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackSlapL keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackSlapR keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackRockThrow",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackRockThrow keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBiteL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackBiteL keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBiteF",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackBiteF keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBiteR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackBiteR keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackHitFace",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackHitFace keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackHitBack",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackHitBack keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlam",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackSlam keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackStomp",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackStomp keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSwing",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackSwing keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabAirFar",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackGrabAirFar keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabAir",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackGrabAir keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabBody",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackGrabBody keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabCore",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackGrabCore keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabGround",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackGrabGround keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabHead",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackGrabHead keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabHigh",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackGrabHigh keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapHighL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackSlapHighL keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapHighR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackSlapHighR keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapLowL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackSlapLowL keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSlapLowR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackSlapLowR keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushChest",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan/AttackBrushChest keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

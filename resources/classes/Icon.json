@@ -21,7 +21,7 @@
     {
       "label": "ScaleMode",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "The scale mode for the icon. Refer to ScaleModeEnum",
@@ -45,7 +45,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Path to the icon resource (e.g., \"Icons/Game/BladeIcon\")",
+          "description": "Path to the icon resource (e.g., \"Icons/Game/BladeIcon\").",
           "isOptional": false,
           "isVariadic": false
         }

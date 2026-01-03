@@ -33,7 +33,7 @@
           }
         ]
       },
-      "description": "Keys snapshot. Returns a stable snapshot list of all keys. The returned list is read-only - any attempt to modify it will throw an exception. The snapshot remains unchanged even if the dictionary is mutated later. After dictionary mutations, accessing Keys again creates a new snapshot object. Access is O(1) when the dictionary has not changed. Rebuild after mutations is O(n) and allocates new snapshot objects. Calling Keys/Values after frequent mutations will allocate.",
+      "description": "Keys snapshot. Returns a stable snapshot list of all keys. The returned list is read-only - any attempt to modify it will throw an exception. The snapshot remains unchanged even if the dictionary is mutated later. After dictionary mutations, accessing Keys again creates a new snapshot object. Access is O(1) when the dictionary has not changed. Rebuild after mutations is O(n) and allocates new snapshot objects.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -49,7 +49,7 @@
           }
         ]
       },
-      "description": "Values snapshot. Returns a stable snapshot list of all values. The returned list is read-only - any attempt to modify it will throw an exception. The snapshot remains unchanged even if the dictionary is mutated later. After dictionary mutations (Set/Remove/Clear), accessing Values again creates a new snapshot object. Access is O(1) when the dictionary has not changed. Rebuild after mutations is O(n) and allocates new snapshot objects. Calling Keys/Values after frequent mutations will allocate.",
+      "description": "Values snapshot. Returns a stable snapshot list of all values. The returned list is read-only - any attempt to modify it will throw an exception. The snapshot remains unchanged even if the dictionary is mutated later. After dictionary mutations (Set/Remove/Clear), accessing Values again creates a new snapshot object. Access is O(1) when the dictionary has not changed. Rebuild after mutations is O(n) and allocates new snapshot objects.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -73,25 +73,25 @@
         "name": "V",
         "typeArguments": []
       },
-      "description": "Gets a value from the dictionary. Returns the value associated with the key, or defaultValue if the key is not found. If the stored value is null, Get returns null (even if defaultValue is provided).",
+      "description": "Gets a value from the dictionary.",
       "parameters": [
         {
           "name": "key",
           "type": {
-            "name": "K",
+            "name": "Object",
             "typeArguments": []
           },
-          "description": "The key of the value to get",
+          "description": "The key of the value to get.",
           "isOptional": false,
           "isVariadic": false
         },
         {
           "name": "defaultValue",
           "type": {
-            "name": "V",
+            "name": "Object",
             "typeArguments": []
           },
-          "description": "The value to return if the key is not found",
+          "description": "The value to return if the key is not found.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -110,20 +110,20 @@
         {
           "name": "key",
           "type": {
-            "name": "K",
+            "name": "Object",
             "typeArguments": []
           },
-          "description": "The key of the value to set",
+          "description": "The key of the value to set.",
           "isOptional": false,
           "isVariadic": false
         },
         {
           "name": "value",
           "type": {
-            "name": "V",
+            "name": "Object",
             "typeArguments": []
           },
-          "description": "The value to set",
+          "description": "The value to set.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -142,10 +142,10 @@
         {
           "name": "key",
           "type": {
-            "name": "K",
+            "name": "Object",
             "typeArguments": []
           },
-          "description": "The key of the value to remove",
+          "description": "The key of the value to remove.",
           "isOptional": false,
           "isVariadic": false
         }
@@ -159,15 +159,15 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the dictionary contains a key. Returns: True if the dictionary contains the key, false otherwise.",
+      "description": "Checks if the dictionary contains a key.",
       "parameters": [
         {
           "name": "key",
           "type": {
-            "name": "K",
+            "name": "Object",
             "typeArguments": []
           },
-          "description": "The key to check",
+          "description": "The key to check.",
           "isOptional": false,
           "isVariadic": false
         }

@@ -75,10 +75,10 @@
         {
           "name": "value",
           "type": {
-            "name": "string",
+            "name": "int",
             "typeArguments": []
           },
-          "description": "Acceptable values are: `Clamped`, `Elastic`, and `Unrestricted`",
+          "description": "Acceptable values are: `Clamped`, `Elastic`, and `Unrestricted`. Refer to ScrollElasticityEnum",
           "isOptional": false,
           "isVariadic": false
         }

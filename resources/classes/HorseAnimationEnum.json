@@ -1,0 +1,92 @@
+{
+  "kind": "extension",
+  "name": "HorseAnimationEnum",
+  "description": "Enumeration of available animations for horse characters.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Idle0",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle0 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Idle1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle1 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Idle2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle2 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Idle3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle3 animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Crazy",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Crazy animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Run",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Run animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Walk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Walk animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

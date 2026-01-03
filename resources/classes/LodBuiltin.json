@@ -21,7 +21,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Configures the distance threshold.",
+      "description": "Configures the detail priority.",
       "readonly": false,
       "private": false,
       "deprecated": ""

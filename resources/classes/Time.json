@@ -15,7 +15,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Time between each tick (0.02 seconds)",
+      "description": "Time between each tick (0.02 seconds).",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -48,7 +48,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Unity's Time.time",
+      "description": "Unity's Time.time.",
       "readonly": true,
       "private": false,
       "deprecated": ""

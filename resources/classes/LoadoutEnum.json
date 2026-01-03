@@ -1,7 +1,7 @@
 {
   "kind": "extension",
   "name": "LoadoutEnum",
-  "description": "Enumeration of loadout types for humans.",
+  "description": "Enumeration of loadout types for all character types.",
   "extends": [
     "Object"
   ],
@@ -10,46 +10,123 @@
   "instanceMethods": [],
   "staticFields": [
     {
-      "label": "Blades",
+      "label": "HumanBlades",
       "type": {
         "name": "string",
         "typeArguments": []
       },
-      "description": "Blades loadout.",
+      "description": "Blades loadout (human).",
       "readonly": true,
       "private": false,
       "deprecated": ""
     },
     {
-      "label": "AHSS",
+      "label": "HumanAHSS",
       "type": {
         "name": "string",
         "typeArguments": []
       },
-      "description": "AHSS loadout.",
+      "description": "AHSS loadout (human).",
       "readonly": true,
       "private": false,
       "deprecated": ""
     },
     {
-      "label": "APG",
+      "label": "HumanAPG",
       "type": {
         "name": "string",
         "typeArguments": []
       },
-      "description": "APG loadout.",
+      "description": "APG loadout (human).",
       "readonly": true,
       "private": false,
       "deprecated": ""
     },
     {
-      "label": "Thunderspears",
+      "label": "HumanThunderspears",
       "type": {
         "name": "string",
         "typeArguments": []
       },
-      "description": "Thunderspears loadout.",
+      "description": "Thunderspears loadout (human).",
       "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TitanSmall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Small titan size.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TitanMedium",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Medium titan size.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TitanLarge",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Large titan size.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ShifterAnnie",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "",
+      "readonly": false,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ShifterEren",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "",
+      "readonly": false,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ShifterArmored",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "",
+      "readonly": false,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ShifterWallColossal",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "",
+      "readonly": false,
       "private": false,
       "deprecated": ""
     }

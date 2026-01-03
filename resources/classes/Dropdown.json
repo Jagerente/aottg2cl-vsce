@@ -72,7 +72,7 @@
             "name": "function",
             "typeArguments": []
           },
-          "description": "Method that will be called with the new selected value as parameter",
+          "description": "Method that will be called with the new selected value as parameter.",
           "isOptional": false,
           "isVariadic": false
         }

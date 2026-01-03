@@ -26,7 +26,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Time left until the game ends",
+      "description": "Time left until the game ends.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -42,7 +42,7 @@
           }
         ]
       },
-      "description": "List of all titans",
+      "description": "List of all titans.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -58,7 +58,7 @@
           }
         ]
       },
-      "description": "List of all AI titans",
+      "description": "List of all AI titans.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -74,7 +74,7 @@
           }
         ]
       },
-      "description": "List of all player titans",
+      "description": "List of all player titans.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -90,7 +90,7 @@
           }
         ]
       },
-      "description": "List of all shifters",
+      "description": "List of all shifters.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -106,7 +106,7 @@
           }
         ]
       },
-      "description": "List of all AI shifters",
+      "description": "List of all AI shifters.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -122,7 +122,7 @@
           }
         ]
       },
-      "description": "List of all player shifters",
+      "description": "List of all player shifters.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -138,7 +138,7 @@
           }
         ]
       },
-      "description": "List of all humans",
+      "description": "List of all humans.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -154,7 +154,7 @@
           }
         ]
       },
-      "description": "List of all AI humans",
+      "description": "List of all AI humans.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -170,7 +170,7 @@
           }
         ]
       },
-      "description": "List of all player humans",
+      "description": "List of all player humans.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -186,7 +186,7 @@
           }
         ]
       },
-      "description": "List of all loadouts",
+      "description": "List of all loadouts.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -276,7 +276,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Print a debug statement to the console",
+      "description": "Print a debug statement to the console.",
       "parameters": [
         {
           "name": "message",
@@ -298,7 +298,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Print a message to the chat",
+      "description": "Print a message to the chat.",
       "parameters": [
         {
           "name": "message",
@@ -320,7 +320,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Print a message to all players",
+      "description": "Print a message to all players.",
       "parameters": [
         {
           "name": "message",
@@ -342,7 +342,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Get a general setting",
+      "description": "Get a general setting.",
       "parameters": [
         {
           "name": "settingName",
@@ -364,7 +364,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Get a titan setting",
+      "description": "Get a titan setting.",
       "parameters": [
         {
           "name": "settingName",
@@ -386,7 +386,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Get a misc setting",
+      "description": "Get a misc setting.",
       "parameters": [
         {
           "name": "settingName",
@@ -408,7 +408,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "End the game",
+      "description": "End the game.",
       "parameters": [
         {
           "name": "delay",
@@ -430,7 +430,7 @@
         "name": "Character",
         "typeArguments": []
       },
-      "description": "Find a character by view ID",
+      "description": "Find a character by view ID.",
       "parameters": [
         {
           "name": "viewID",
@@ -452,7 +452,7 @@
         "name": "Titan",
         "typeArguments": []
       },
-      "description": "Spawn a titan",
+      "description": "Spawn a titan.",
       "parameters": [
         {
           "name": "type",
@@ -474,7 +474,7 @@
         "name": "Titan",
         "typeArguments": []
       },
-      "description": "Spawn a titan at a position",
+      "description": "Spawn a titan at a position.",
       "parameters": [
         {
           "name": "type",
@@ -521,7 +521,7 @@
           }
         ]
       },
-      "description": "Spawn titans",
+      "description": "Spawn titans.",
       "parameters": [
         {
           "name": "type",
@@ -553,7 +553,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn titans asynchronously",
+      "description": "Spawn titans asynchronously.",
       "parameters": [
         {
           "name": "type",
@@ -590,7 +590,7 @@
           }
         ]
       },
-      "description": "Spawn titans at a position",
+      "description": "Spawn titans at a position.",
       "parameters": [
         {
           "name": "type",
@@ -642,7 +642,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn titans at a position asynchronously",
+      "description": "Spawn titans at a position asynchronously.",
       "parameters": [
         {
           "name": "type",
@@ -694,7 +694,7 @@
         "name": "Shifter",
         "typeArguments": []
       },
-      "description": "Spawn a shifter",
+      "description": "Spawn a shifter.",
       "parameters": [
         {
           "name": "type",
@@ -716,7 +716,7 @@
         "name": "Shifter",
         "typeArguments": []
       },
-      "description": "Spawn a shifter at a position",
+      "description": "Spawn a shifter at a position.",
       "parameters": [
         {
           "name": "type",
@@ -758,7 +758,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn a projectile. Note: `extraParam` and `extraParam2` are optional. They may or may not be used depending on the value of `projectileName`",
+      "description": "Spawn a projectile. Note: `extraParam` and `extraParam2` are optional. They may or may not be used depending on the value of `projectileName`.",
       "parameters": [
         {
           "name": "projectileName",
@@ -776,7 +776,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn position",
+          "description": "Spawn position.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -786,7 +786,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn rotation",
+          "description": "Spawn rotation.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -796,7 +796,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn velocity",
+          "description": "Spawn velocity.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -806,7 +806,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn gravity",
+          "description": "Spawn gravity.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -816,7 +816,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "Live time of the projectile",
+          "description": "Live time of the projectile.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -836,7 +836,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "Optional. Type depends on projectile: Thunderspear: float (explosion radius), Flare: Color (flare color), Rock1: float (rock size), Others: unused",
+          "description": "Optional. Type depends on projectile: Thunderspear: float (explosion radius), Flare: Color (flare color), Rock1: float (rock size), Others: unused.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -846,7 +846,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "Optional. Type depends on projectile: Thunderspear: Color (projectile color), Others: unused",
+          "description": "Optional. Type depends on projectile: Thunderspear: Color (projectile color), Others: unused.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -860,7 +860,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn a projectile with an owner. Note: `extraParam` and `extraParam2` are optional. They may or may not be used depending on the value of `projectileName`",
+      "description": "Spawn a projectile with an owner. Note: `extraParam` and `extraParam2` are optional. They may or may not be used depending on the value of `projectileName`.",
       "parameters": [
         {
           "name": "projectileName",
@@ -878,7 +878,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn position",
+          "description": "Spawn position.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -888,7 +888,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn rotation",
+          "description": "Spawn rotation.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -898,7 +898,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn velocity",
+          "description": "Spawn velocity.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -908,7 +908,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn gravity",
+          "description": "Spawn gravity.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -918,7 +918,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "Live time of the projectile",
+          "description": "Live time of the projectile.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -928,7 +928,7 @@
             "name": "Character",
             "typeArguments": []
           },
-          "description": "The character that the projectile belongs to",
+          "description": "The character that the projectile belongs to.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -938,7 +938,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "Optional. Type depends on projectile: Thunderspear: float (explosion radius), Flare: Color (flare color), Rock1: float (rock size), Others: unused",
+          "description": "Optional. Type depends on projectile: Thunderspear: float (explosion radius), Flare: Color (flare color), Rock1: float (rock size), Others: unused.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -948,7 +948,7 @@
             "name": "Object",
             "typeArguments": []
           },
-          "description": "Optional. Type depends on projectile: Thunderspear: Color (projectile color), Others: unused",
+          "description": "Optional. Type depends on projectile: Thunderspear: Color (projectile color), Others: unused.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -962,7 +962,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn an effect",
+      "description": "Spawn an effect.",
       "parameters": [
         {
           "name": "effectName",
@@ -980,7 +980,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn position",
+          "description": "Spawn position.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -990,7 +990,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn rotation",
+          "description": "Spawn rotation.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -1000,7 +1000,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "Spawn scale",
+          "description": "Spawn scale.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -1010,7 +1010,7 @@
             "name": "Color",
             "typeArguments": []
           },
-          "description": "Thunderspear explode color (Only valid when effectName is \"ThunderspearExplode\")",
+          "description": "Thunderspear explode color (Only valid when effectName is \"ThunderspearExplode\").",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1034,7 +1034,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn an unscaled effect",
+      "description": "Spawn an unscaled effect.",
       "parameters": [
         {
           "name": "effectName",
@@ -1052,7 +1052,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn position",
+          "description": "Spawn position.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -1062,7 +1062,7 @@
             "name": "Vector3",
             "typeArguments": []
           },
-          "description": "Spawn rotation",
+          "description": "Spawn rotation.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -1072,7 +1072,7 @@
             "name": "Color",
             "typeArguments": []
           },
-          "description": "Thunderspear explode color (Only valid when effectName is \"ThunderspearExplode\")",
+          "description": "Thunderspear explode color (Only valid when effectName is \"ThunderspearExplode\").",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1096,7 +1096,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn a player",
+      "description": "Spawn a player.",
       "parameters": [
         {
           "name": "player",
@@ -1128,7 +1128,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn a player for all players",
+      "description": "Spawn a player for all players.",
       "parameters": [
         {
           "name": "force",
@@ -1150,7 +1150,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn a player at a position",
+      "description": "Spawn a player at a position.",
       "parameters": [
         {
           "name": "player",
@@ -1202,7 +1202,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Spawn a player at a position for all players",
+      "description": "Spawn a player at a position for all players.",
       "parameters": [
         {
           "name": "force",
@@ -1244,7 +1244,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Set the music playlist",
+      "description": "Set the music playlist.",
       "parameters": [
         {
           "name": "playlist",
@@ -1266,7 +1266,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Set the music song",
+      "description": "Set the music song.",
       "parameters": [
         {
           "name": "song",
@@ -1288,7 +1288,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Draw a ray",
+      "description": "Draw a ray.",
       "parameters": [
         {
           "name": "start",
@@ -1340,7 +1340,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Show the kill score",
+      "description": "Show the kill score.",
       "parameters": [
         {
           "name": "damage",
@@ -1362,7 +1362,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Show the kill feed",
+      "description": "Show the kill feed.",
       "parameters": [
         {
           "name": "killer",
@@ -1414,7 +1414,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Show the kill feed for all players",
+      "description": "Show the kill feed for all players.",
       "parameters": [
         {
           "name": "killer",

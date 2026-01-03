@@ -123,7 +123,7 @@
         "name": "Transform",
         "typeArguments": []
       },
-      "description": "Sets the parent of the transform",
+      "description": "Sets the parent of the transform.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -237,7 +237,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation to check.",
+          "description": "The name of the animation to check. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -259,7 +259,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation to play.",
+          "description": "The name of the animation to play. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -291,7 +291,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The name of the animation.",
+          "description": "The name of the animation. Refer to HumanAnimationEnum, TitanAnimationEnum, AnnieAnimationEnum, ErenAnimationEnum, WallColossalAnimationEnum, DummyAnimationEnum, HorseAnimationEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -349,7 +349,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "Transforms a direction from world space to local space. Returns: The direction in local space.",
+      "description": "Transforms a direction from world space to local space.",
       "parameters": [
         {
           "name": "direction",
@@ -371,7 +371,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "Transforms a position from world space to local space. Returns: The position in local space.",
+      "description": "Transforms a position from world space to local space.",
       "parameters": [
         {
           "name": "point",
@@ -393,7 +393,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "Transforms a direction from local space to world space. Returns: The direction in world space.",
+      "description": "Transforms a direction from local space to world space.",
       "parameters": [
         {
           "name": "direction",
@@ -415,7 +415,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "Transforms a position from local space to world space. Returns: The position in world space.",
+      "description": "Transforms a position from local space to world space.",
       "parameters": [
         {
           "name": "point",

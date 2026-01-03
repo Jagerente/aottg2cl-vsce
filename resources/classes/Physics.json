@@ -16,7 +16,7 @@
         "name": "LineCastHitResult",
         "typeArguments": []
       },
-      "description": "Performs a line cast between two points, returns a LineCastHitResult object.",
+      "description": "Performs a line cast between two points.",
       "parameters": [
         {
           "name": "start",
@@ -105,7 +105,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Performs a sphere cast between two points, returns the object hit (Human, Titan, etc...).",
+      "description": "Performs a sphere cast between two points.",
       "parameters": [
         {
           "name": "start",
@@ -214,7 +214,7 @@
         "name": "Object",
         "typeArguments": []
       },
-      "description": "Performs a box cast between two points, returns the object hit (Human, Titan, etc...).",
+      "description": "Performs a box cast between two points.",
       "parameters": [
         {
           "name": "start",
@@ -395,7 +395,7 @@
         "name": "Vector3",
         "typeArguments": []
       },
-      "description": "Compute the minimal translation required to separate the given colliders apart at specified poses. Returns Vector3.Zero if the colliders are not intersecting.",
+      "description": "Compute the minimal translation required to separate the given colliders apart at specified poses.",
       "parameters": [
         {
           "name": "colliderA",

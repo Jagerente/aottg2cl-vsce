@@ -1,0 +1,81 @@
+{
+  "kind": "extension",
+  "name": "ShifterSoundEnum",
+  "description": "Enumeration of shifter sounds.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Thunder",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Thunder sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ErenRoar",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ErenRoar sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AnnieRoar",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieRoar sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AnnieHurt",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieHurt sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ColossalSteam1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ColossalSteam1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ColossalSteam2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ColossalSteam2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

@@ -1,7 +1,7 @@
 {
   "kind": "extension",
   "name": "Vector2",
-  "description": "",
+  "description": "Represents a 2D vector with X and Y components. Supports mathematical operations and implements copy semantics.",
   "extends": [
     "Object"
   ],

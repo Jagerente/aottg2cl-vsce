@@ -24,7 +24,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\").",
+          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\"). Refer to InputGeneralEnum, InputHumanEnum, InputTitanEnum, InputInteractionEnum, InputAnnieShifterEnum, InputErenShifterEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -46,7 +46,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\").",
+          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\"). Refer to InputGeneralEnum, InputHumanEnum, InputTitanEnum, InputInteractionEnum, InputAnnieShifterEnum, InputErenShifterEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -68,7 +68,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\").",
+          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\"). Refer to InputGeneralEnum, InputHumanEnum, InputTitanEnum, InputInteractionEnum, InputAnnieShifterEnum, InputErenShifterEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -90,7 +90,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\").",
+          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\"). Refer to InputGeneralEnum, InputHumanEnum, InputTitanEnum, InputInteractionEnum, InputAnnieShifterEnum, InputErenShifterEnum",
           "isOptional": false,
           "isVariadic": false
         }
@@ -167,7 +167,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\").",
+          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\"). Refer to InputGeneralEnum, InputHumanEnum, InputTitanEnum, InputInteractionEnum, InputAnnieShifterEnum, InputErenShifterEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -199,7 +199,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\").",
+          "description": "The key setting path (e.g., \"General/Attack\" or \"CustomKey/Space\"). Refer to InputGeneralEnum, InputHumanEnum, InputTitanEnum, InputInteractionEnum, InputAnnieShifterEnum, InputErenShifterEnum",
           "isOptional": false,
           "isVariadic": false
         },

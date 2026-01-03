@@ -16,7 +16,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "Converts a value to a float",
+      "description": "Converts a value to a float.",
       "parameters": [
         {
           "name": "value",
@@ -38,7 +38,7 @@
         "name": "int",
         "typeArguments": []
       },
-      "description": "Converts a value to an int",
+      "description": "Converts a value to an int.",
       "parameters": [
         {
           "name": "value",
@@ -60,7 +60,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Converts a value to a bool",
+      "description": "Converts a value to a bool.",
       "parameters": [
         {
           "name": "value",
@@ -82,7 +82,7 @@
         "name": "string",
         "typeArguments": []
       },
-      "description": "Converts a value to a string",
+      "description": "Converts a value to a string.",
       "parameters": [
         {
           "name": "value",
@@ -104,7 +104,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the value is a float",
+      "description": "Checks if the value is a float.",
       "parameters": [
         {
           "name": "value",
@@ -126,7 +126,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the value is an int",
+      "description": "Checks if the value is an int.",
       "parameters": [
         {
           "name": "value",
@@ -148,7 +148,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the value is a bool",
+      "description": "Checks if the value is a bool.",
       "parameters": [
         {
           "name": "value",
@@ -170,7 +170,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the value is a string",
+      "description": "Checks if the value is a string.",
       "parameters": [
         {
           "name": "value",
@@ -192,7 +192,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the value is an object",
+      "description": "Checks if the value is an object.",
       "parameters": [
         {
           "name": "value",
@@ -214,7 +214,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the value is a list",
+      "description": "Checks if the value is a list.",
       "parameters": [
         {
           "name": "value",
@@ -236,7 +236,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the value is a dictionary",
+      "description": "Checks if the value is a dictionary.",
       "parameters": [
         {
           "name": "value",
@@ -258,7 +258,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the class instance has a variable",
+      "description": "Checks if the class instance has a variable.",
       "parameters": [
         {
           "name": "cInstance",
@@ -290,7 +290,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Defines a variable for the class instance",
+      "description": "Defines a variable for the class instance.",
       "parameters": [
         {
           "name": "cInstance",
@@ -332,7 +332,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Removes a variable from the class instance",
+      "description": "Removes a variable from the class instance.",
       "parameters": [
         {
           "name": "cInstance",
@@ -364,7 +364,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Checks if the class instance has a method",
+      "description": "Checks if the class instance has a method.",
       "parameters": [
         {
           "name": "cInstance",
@@ -396,7 +396,7 @@
         "name": "string",
         "typeArguments": []
       },
-      "description": "Gets the type of the class instance",
+      "description": "Gets the type of the class instance.",
       "parameters": [
         {
           "name": "cInstance",

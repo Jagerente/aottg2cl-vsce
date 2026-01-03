@@ -76,7 +76,7 @@
         "name": "float",
         "typeArguments": []
       },
-      "description": "The Mass of the Rigidbody",
+      "description": "The Mass of the Rigidbody.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -109,7 +109,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "If the x movement axis is frozen",
+      "description": "If the x movement axis is frozen.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -120,7 +120,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "If the y movement axis is frozen",
+      "description": "If the y movement axis is frozen.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -131,7 +131,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "If the z movement axis is frozen",
+      "description": "If the z movement axis is frozen.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -142,7 +142,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "If the x rotation axis is frozen",
+      "description": "If the x rotation axis is frozen.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -153,7 +153,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "If the y rotation axis is frozen",
+      "description": "If the y rotation axis is frozen.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -164,7 +164,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "If the z rotation axis is frozen",
+      "description": "If the z rotation axis is frozen.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -175,7 +175,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Freeze all rotations",
+      "description": "Freeze all rotations.",
       "readonly": false,
       "private": false,
       "deprecated": ""
@@ -227,7 +227,7 @@
     {
       "label": "CollisionDetectionMode",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "The collision detection mode of the Rigidbody. This determines how collisions are detected and resolved. Refer to CollisionDetectionModeEnum",
@@ -254,48 +254,6 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Apply a force to the Rigidbody - legacy version, please use optimized if possible.",
-      "parameters": [
-        {
-          "name": "force",
-          "type": {
-            "name": "Vector3",
-            "typeArguments": []
-          },
-          "description": "The force vector to apply.",
-          "isOptional": false,
-          "isVariadic": false
-        },
-        {
-          "name": "forceMode",
-          "type": {
-            "name": "string",
-            "typeArguments": []
-          },
-          "description": "The force mode. Refer to ForceModeEnum",
-          "isOptional": true,
-          "isVariadic": false
-        },
-        {
-          "name": "atPoint",
-          "type": {
-            "name": "Vector3",
-            "typeArguments": []
-          },
-          "description": "Optional. If provided, applies force at this world position instead of center of mass.",
-          "isOptional": true,
-          "isVariadic": false
-        }
-      ],
-      "kind": "function",
-      "deprecated": ""
-    },
-    {
-      "label": "AddForceOptimized",
-      "returnType": {
-        "name": "void",
-        "typeArguments": []
-      },
       "description": "Apply a force to the Rigidbody.",
       "parameters": [
         {
@@ -314,8 +272,8 @@
             "name": "int",
             "typeArguments": []
           },
-          "description": "The force mode as integer (use ForceModeAcceleration, ForceModeForce, ForceModeImpulse, or ForceModeVelocityChange constants, default: 5).",
-          "isOptional": true,
+          "description": "The force mode. Refer to ForceModeEnum",
+          "isOptional": false,
           "isVariadic": false
         },
         {
@@ -338,38 +296,6 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Apply a torque to the Rigidbody - legacy version, please use optimized if possible.",
-      "parameters": [
-        {
-          "name": "torque",
-          "type": {
-            "name": "Vector3",
-            "typeArguments": []
-          },
-          "description": "The torque vector to apply.",
-          "isOptional": false,
-          "isVariadic": false
-        },
-        {
-          "name": "forceMode",
-          "type": {
-            "name": "string",
-            "typeArguments": []
-          },
-          "description": "The force mode. Refer to ForceModeEnum",
-          "isOptional": false,
-          "isVariadic": false
-        }
-      ],
-      "kind": "function",
-      "deprecated": ""
-    },
-    {
-      "label": "AddTorqueOptimized",
-      "returnType": {
-        "name": "void",
-        "typeArguments": []
-      },
       "description": "Apply a torque to the Rigidbody.",
       "parameters": [
         {
@@ -388,8 +314,8 @@
             "name": "int",
             "typeArguments": []
           },
-          "description": "The force mode as integer (use ForceModeAcceleration, ForceModeForce, ForceModeImpulse, or ForceModeVelocityChange constants, default: 5).",
-          "isOptional": true,
+          "description": "The force mode. Refer to ForceModeEnum",
+          "isOptional": false,
           "isVariadic": false
         }
       ],
@@ -589,52 +515,7 @@
       "deprecated": ""
     }
   ],
-  "staticFields": [
-    {
-      "label": "ForceModeAcceleration",
-      "type": {
-        "name": "int",
-        "typeArguments": []
-      },
-      "description": "ForceMode.Acceleration",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "ForceModeForce",
-      "type": {
-        "name": "int",
-        "typeArguments": []
-      },
-      "description": "ForceMode.Force",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "ForceModeImpulse",
-      "type": {
-        "name": "int",
-        "typeArguments": []
-      },
-      "description": "ForceMode.Impulse",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "ForceModeVelocityChange",
-      "type": {
-        "name": "int",
-        "typeArguments": []
-      },
-      "description": "ForceMode.VelocityChange",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    }
-  ],
+  "staticFields": [],
   "staticMethods": [],
   "constructors": []
 }

@@ -1,0 +1,59 @@
+{
+  "kind": "extension",
+  "name": "FontStyleEnum",
+  "description": "Enumeration of font style values for UI elements.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Normal",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Normal font style.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Bold",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Bold font style.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Italic",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Italic font style.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BoldAndItalic",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Bold and italic font style.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

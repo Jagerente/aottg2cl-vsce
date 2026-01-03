@@ -639,10 +639,19 @@ export class ClassesParserVisitor extends AbstractParseTreeVisitor<void> {
             const stringToken = ctx.STRING()!;
             const startLine = stringToken.symbol.line - 1;
             const startColumn = stringToken.symbol.charPositionInLine;
+            const text = stringToken.symbol.text ?? '';
 
-            const stopToken = ctx.stop!;
-            const endLine = stopToken.line - 1;
-            const endColumn = stopToken.charPositionInLine + (stopToken.text?.length ?? 0);
+            let endLine: number;
+            let endColumn: number;
+
+            const lines = text.split(/\r\n|\r|\n/);
+            if (lines.length === 1) {
+                endLine = startLine;
+                endColumn = startColumn + text.length;
+            } else {
+                endLine = startLine + lines.length - 1;
+                endColumn = lines[lines.length - 1].length;
+            }
 
             this.stringRanges.push(
                 new vscode.Range(

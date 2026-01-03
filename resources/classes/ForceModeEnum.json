@@ -12,7 +12,7 @@
     {
       "label": "Force",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Force mode: applies force continuously over time.",
@@ -23,7 +23,7 @@
     {
       "label": "Acceleration",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Acceleration mode: applies force as acceleration, ignoring mass.",
@@ -34,7 +34,7 @@
     {
       "label": "Impulse",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "Impulse mode: applies force instantly as an impulse.",
@@ -45,7 +45,7 @@
     {
       "label": "VelocityChange",
       "type": {
-        "name": "string",
+        "name": "int",
         "typeArguments": []
       },
       "description": "VelocityChange mode: applies force as a direct velocity change, ignoring mass.",

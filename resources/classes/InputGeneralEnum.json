@@ -1,0 +1,257 @@
+{
+  "kind": "extension",
+  "name": "InputGeneralEnum",
+  "description": "Enumeration of General input keybind settings.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Forward",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Forward keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Back",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Back keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Left",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Left keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Right",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Right keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Up",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Up keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Down",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Down keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Modifier",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Modifier keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Autorun",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Autorun keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Pause",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Pause keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ChangeCharacter",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/ChangeCharacter keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RestartGame",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/RestartGame keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ToggleScoreboard",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/ToggleScoreboard keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ToggleMap",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/ToggleMap keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Chat",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/Chat keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "PushToTalk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/PushToTalk keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ChangeCamera",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/ChangeCamera keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HideCursor",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/HideCursor keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpectatePreviousPlayer",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/SpectatePreviousPlayer keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpectateNextPlayer",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/SpectateNextPlayer keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SkipCutscene",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/SkipCutscene keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HideUI",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/HideUI keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DebugWindow",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "General/DebugWindow keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

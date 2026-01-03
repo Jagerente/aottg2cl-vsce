@@ -1,0 +1,70 @@
+{
+  "kind": "extension",
+  "name": "AlignEnum",
+  "description": "Enumeration of align values for UI elements (used for align-items and align-self properties).",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Auto",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Auto: uses the parent's align-items value.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "FlexStart",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "FlexStart: aligns items to the start of the cross axis.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Center",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Center: aligns items to the center of the cross axis.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "FlexEnd",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "FlexEnd: aligns items to the end of the cross axis.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Stretch",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Stretch: stretches items to fill the cross axis.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

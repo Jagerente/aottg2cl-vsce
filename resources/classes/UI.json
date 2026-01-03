@@ -10,105 +10,6 @@
   "instanceMethods": [],
   "staticFields": [
     {
-      "label": "TopCenter",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "\"TopCenter\" constant",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "TopLeft",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "\"TopLeft\" constant",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "TopRight",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "\"TopRight\" constant",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "MiddleCenter",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "\"MiddleCenter\" constant",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "MiddleLeft",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "\"MiddleLeft\" constant",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "MiddleRight",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "\"MiddleRight\" constant",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "BottomCenter",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "\"BottomCenter\" constant",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "BottomLeft",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "\"BottomLeft\" constant",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
-      "label": "BottomRight",
-      "type": {
-        "name": "string",
-        "typeArguments": []
-      },
-      "description": "\"BottomRight\" constant",
-      "readonly": true,
-      "private": false,
-      "deprecated": ""
-    },
-    {
       "label": "GetPopups",
       "type": {
         "name": "List",
@@ -119,7 +20,7 @@
           }
         ]
       },
-      "description": "Returns a list of all popups",
+      "description": "Returns a list of all popups.",
       "readonly": true,
       "private": false,
       "deprecated": ""
@@ -140,7 +41,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The label location.",
+          "description": "The label location. Refer to UILabelEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -172,7 +73,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The label location.",
+          "description": "The label location. Refer to UILabelEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -214,7 +115,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The label location.",
+          "description": "The label location. Refer to UILabelEnum",
           "isOptional": false,
           "isVariadic": false
         },
@@ -619,7 +520,7 @@
         "name": "void",
         "typeArguments": []
       },
-      "description": "Sets the display of the scoreboard header (default \"Kills / Deaths...\")",
+      "description": "Sets the display of the scoreboard header (default \"Kills / Deaths...\").",
       "parameters": [
         {
           "name": "header",
@@ -705,7 +606,7 @@
         "name": "bool",
         "typeArguments": []
       },
-      "description": "Returns if the given popup is active",
+      "description": "Returns if the given popup is active.",
       "parameters": [
         {
           "name": "popupName",
@@ -869,7 +770,7 @@
         "name": "VisualElement",
         "typeArguments": []
       },
-      "description": "Returns the root `VisualElement` which you can add other elements to. Returns: The root `VisualElement`",
+      "description": "Returns the root `VisualElement` which you can add other elements to.",
       "parameters": [],
       "kind": "function",
       "deprecated": ""
@@ -899,7 +800,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The text that the button displays",
+          "description": "The text that the button displays.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -909,7 +810,7 @@
             "name": "function",
             "typeArguments": []
           },
-          "description": "The function that will be called when button is clicked",
+          "description": "The function that will be called when button is clicked.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -931,7 +832,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The text to be displayed",
+          "description": "The text to be displayed.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -975,7 +876,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The label text displayed next to the toggle",
+          "description": "The label text displayed next to the toggle.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -985,7 +886,7 @@
             "name": "function",
             "typeArguments": []
           },
-          "description": "The function that will be called when toggle value changes",
+          "description": "The function that will be called when toggle value changes.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -1007,7 +908,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "The minimum value of the slider",
+          "description": "The minimum value of the slider.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1017,7 +918,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "The maximum value of the slider",
+          "description": "The maximum value of the slider.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1037,7 +938,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The label text displayed next to the slider",
+          "description": "The label text displayed next to the slider.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1047,7 +948,7 @@
             "name": "function",
             "typeArguments": []
           },
-          "description": "The function that will be called when slider value changes",
+          "description": "The function that will be called when slider value changes.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -1069,7 +970,7 @@
             "name": "int",
             "typeArguments": []
           },
-          "description": "The minimum value of the slider",
+          "description": "The minimum value of the slider.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1079,7 +980,7 @@
             "name": "int",
             "typeArguments": []
           },
-          "description": "The maximum value of the slider",
+          "description": "The maximum value of the slider.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1099,7 +1000,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The label text displayed next to the slider",
+          "description": "The label text displayed next to the slider.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1109,7 +1010,7 @@
             "name": "function",
             "typeArguments": []
           },
-          "description": "The function that will be called when slider value changes",
+          "description": "The function that will be called when slider value changes.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -1136,7 +1037,7 @@
               }
             ]
           },
-          "description": "List of string options to display in the dropdown",
+          "description": "List of string options to display in the dropdown.",
           "isOptional": false,
           "isVariadic": false
         },
@@ -1146,7 +1047,7 @@
             "name": "int",
             "typeArguments": []
           },
-          "description": "The index of the initially selected option (default: 0)",
+          "description": "The index of the initially selected option (default: 0).",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1156,7 +1057,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The label text displayed next to the dropdown",
+          "description": "The label text displayed next to the dropdown.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1166,7 +1067,7 @@
             "name": "function",
             "typeArguments": []
           },
-          "description": "The function that will be called when dropdown value changes",
+          "description": "The function that will be called when dropdown value changes.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -1188,7 +1089,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "The minimum value of the progress bar (default: 0)",
+          "description": "The minimum value of the progress bar (default: 0).",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1198,7 +1099,7 @@
             "name": "float",
             "typeArguments": []
           },
-          "description": "The maximum value of the progress bar (default: 100)",
+          "description": "The maximum value of the progress bar (default: 100).",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1208,7 +1109,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "The title text displayed on the progress bar",
+          "description": "The title text displayed on the progress bar.",
           "isOptional": true,
           "isVariadic": false
         },
@@ -1218,7 +1119,7 @@
             "name": "function",
             "typeArguments": []
           },
-          "description": "The function that will be called when progress bar value changes",
+          "description": "The function that will be called when progress bar value changes.",
           "isOptional": true,
           "isVariadic": false
         }
@@ -1251,7 +1152,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Path to the icon resource (e.g., \"Icons/Game/BladeIcon\")",
+          "description": "Path to the icon resource (e.g., \"Icons/Game/BladeIcon\").",
           "isOptional": true,
           "isVariadic": false
         }
@@ -1273,7 +1174,7 @@
             "name": "string",
             "typeArguments": []
           },
-          "description": "Path to the icon resource (e.g., \"Icons/Game/BladeIcon\")",
+          "description": "Path to the icon resource (e.g., \"Icons/Game/BladeIcon\").",
           "isOptional": true,
           "isVariadic": false
         }

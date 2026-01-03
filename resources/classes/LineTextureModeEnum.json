@@ -1,0 +1,59 @@
+{
+  "kind": "extension",
+  "name": "LineTextureModeEnum",
+  "description": "Enumeration of line texture mode values for LineRenderer.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Stretch",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Stretch: texture is stretched along the entire line.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Tile",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Tile: texture is tiled along the line.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "DistributePerSegment",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "DistributePerSegment: texture is distributed per segment.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RepeatPerSegment",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "RepeatPerSegment: texture is repeated per segment.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}
