@@ -1,0 +1,862 @@
+{
+  "kind": "extension",
+  "name": "HumanSoundEnum",
+  "description": "Enumeration of human sounds.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "BladeBreak",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeBreak sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeHit",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeHit sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "OldBladeHit",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "OldBladeHit sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "NapeHit",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "NapeHit sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "LimbHit",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "LimbHit sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "OldNapeHit",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "OldNapeHit sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeReloadAir",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeReloadAir sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeReloadGround",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeReloadGround sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "GunReload",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "GunReload sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeSwing1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeSwing1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeSwing2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeSwing2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeSwing3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeSwing3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeSwing4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeSwing4 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "OldBladeSwing",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "OldBladeSwing sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Dodge",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Dodge sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "FlareLaunch",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "FlareLaunch sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ThunderspearLaunch",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ThunderspearLaunch sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "GasBurst",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "GasBurst sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HookLaunch",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "HookLaunch sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "OldHookLaunch",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "OldHookLaunch sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HookRetractLeft",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "HookRetractLeft sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HookRetractRight",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "HookRetractRight sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HookImpact",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "HookImpact sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "HookImpactLoud",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "HookImpactLoud sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "GasStart",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "GasStart sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "GasLoop",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "GasLoop sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "GasEnd",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "GasEnd sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ReelIn",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ReelIn sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ReelOut",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ReelOut sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "CrashLand",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "CrashLand sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Jump sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Land",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Land sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "NoGas",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "NoGas sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Refill",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Refill sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Slide",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Slide sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Footstep1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Footstep1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Footstep2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Footstep2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Death1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Death1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Death2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Death2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Death3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Death3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Death4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Death4 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Death5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Death5 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Checkpoint",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Checkpoint sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "GunExplode",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "GunExplode sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "GunExplodeLoud",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "GunExplodeLoud sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "WaterSplash",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "WaterSplash sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Switchback",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Switchback sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "APGShot1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "APGShot1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "APGShot2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "APGShot2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "APGShot3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "APGShot3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "APGShot4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "APGShot4 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape1Var1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape1Var1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape1Var2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape1Var2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape1Var3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape1Var3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape2Var1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape2Var1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape2Var2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape2Var2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape2Var3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape2Var3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape3Var1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape3Var1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape3Var2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape3Var2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape3Var3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape3Var3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape4Var1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape4Var1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape4Var2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape4Var2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BladeNape4Var3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BladeNape4Var3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSGunShot1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSGunShot1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSGunShot2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSGunShot2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSGunShot3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSGunShot3 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSGunShot4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSGunShot4 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSGunShotDouble1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSGunShotDouble1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSGunShotDouble2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSGunShotDouble2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSNape1Var1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSNape1Var1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSNape1Var2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSNape1Var2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSNape2Var1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSNape2Var1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSNape2Var2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSNape2Var2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSNape3Var1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSNape3Var1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AHSSNape3Var2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AHSSNape3Var2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TSLaunch1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "TSLaunch1 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TSLaunch2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "TSLaunch2 sound.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

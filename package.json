@@ -2,8 +2,9 @@
   "name": "aottg2cl",
   "displayName": "AoTTG 2 Custom Logic Language Support",
   "description": "Syntax highlighting and autocomplete for AoTTG 2 Custom Logic",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "publisher": "Jagerente",
+  "icon": "resources/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Jagerente/aottg2cl-vsce"
@@ -36,6 +37,11 @@
         "language": "acl",
         "scopeName": "source.acl",
         "path": "./syntaxes/acl.tmLanguage.json"
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "acl"
       }
     ],
     "snippets": [
@@ -99,18 +105,103 @@
           "type": "boolean",
           "default": false,
           "description": "Disable automatic parameter completion in function calls. When enabled, only empty parentheses will be inserted."
+        },
+        "aottg2cl.debug.port": {
+          "type": "number",
+          "default": 4711,
+          "minimum": 1,
+          "maximum": 65535,
+          "description": "Default port for the CL debug server."
+        },
+        "aottg2cl.parsing.debounceDelay": {
+          "type": "number",
+          "default": 300,
+          "minimum": 50,
+          "maximum": 1000,
+          "description": "Delay in milliseconds before parsing a document. This helps reduce the number of parsing operations and improves performance."
         }
       }
-    }
+    },
+    "debuggers": [
+      {
+        "type": "cl",
+        "label": "CL Debug",
+        "languages": [
+          "acl"
+        ],
+        "breakpoints": {
+          "languageIds": [
+            "acl"
+          ]
+        },
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to a .cl file.",
+                "default": "${file}"
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Automatically stop after launch.",
+                "default": false
+              },
+              "port": {
+                "type": "number",
+                "description": "Port to connect to the debugger server.",
+                "default": 4711
+              },
+              "trace": {
+                "type": "boolean",
+                "description": "Enable logging of the Debug Adapter Protocol.",
+                "default": false
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "cl",
+            "request": "launch",
+            "name": "Debug CL Script",
+            "program": "${file}",
+            "stopOnEntry": false,
+            "port": 4711
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "CL Debug: Launch",
+            "description": "A new configuration for debugging a CL file.",
+            "body": {
+              "type": "cl",
+              "request": "launch",
+              "name": "Debug CL Script",
+              "program": "^\"\\${file}\"",
+              "stopOnEntry": false,
+              "port": 4711
+            }
+          }
+        ]
+      }
+    ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "update-syntax": "ts-node scripts/updateSyntaxClasses.ts",
+    "vscode:prepublish": "npm run update-syntax && npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "pretest": "npm run compile && npm run lint && npm run test:integration",
     "lint": "eslint src",
     "test": "vscode-test",
-    "antlr4ts": "antlr4ts -o ./src/antlr4ts/ -visitor -listener ./src/antlr4ts/ACL.g4"
+    "test:unit": "mocha out/**/*.test.js",
+    "test:integration": "mocha out/test/JsonClassLoader.integration.test.js",
+    "antlr4ts": "antlr4ts -o ./src/antlr4ts/ -visitor -listener ./src/antlr4ts/ACL.g4",
+    "build": "npm run antlr4ts && npm run pretest && vsce package"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.8",
@@ -123,9 +214,12 @@
     "antlr4ts-cli": "^0.5.0-alpha.4",
     "esbuild": "^0.25.4",
     "eslint": "^9.11.1",
+    "mocha": "^10.2.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   },
   "dependencies": {
-    "antlr4ts": "^0.5.0-alpha.4"
+    "antlr4ts": "^0.5.0-alpha.4",
+    "vscode-debugadapter": "^1.51.0"
   }
 }

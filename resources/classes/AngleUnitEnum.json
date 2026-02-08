@@ -1,0 +1,59 @@
+{
+  "kind": "extension",
+  "name": "AngleUnitEnum",
+  "description": "Enumeration of angle unit values for UI element transformations.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Degree",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Degree: angle unit in degrees (360 degrees = full circle).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Gradian",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Gradian: angle unit in gradians (400 gradians = full circle).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Radian",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Radian: angle unit in radians (2π radians = full circle).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Turn",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Turn: angle unit in turns (1 turn = full circle).",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

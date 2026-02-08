@@ -16,6 +16,7 @@ export interface IChainNode {
     text: string;
     startLine: number;
     startColumn: number;
+    range: vscode.Range;
     isMethodCall: boolean;
     methodArguments?: string[];
 }
@@ -37,6 +38,13 @@ export interface IReassignment {
     value: string;
 }
 
+export interface IReference {
+    uri: vscode.Uri;
+    range: vscode.Range;
+    isRead?: boolean;
+    isWrite?: boolean;
+}
+
 export interface TypeReference {
     name: string;
     typeArguments: TypeReference[];
@@ -47,9 +55,12 @@ export interface IVariable {
     value: string;
     type: TypeReference;
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
+    valueRange?: vscode.Range;
     scopeRange?: vscode.Range;
     reassignments?: IReassignment[];
     inLoop?: boolean;
+    references?: IReference[];
 }
 
 export interface IParameter {
@@ -57,32 +68,40 @@ export interface IParameter {
     type: TypeReference;
     description: string;
     declarationRange?: vscode.Range;
-    isOptional?: boolean;
-    isVariadic?: boolean;
+    nameRange?: vscode.Range;
+    isOptional: boolean;
+    isVariadic: boolean;
     reassignments?: IReassignment[];
+    references?: IReference[];
 }
 
 export interface IConstructor {
     parent: IClass;
     parameters: IParameter[];
     description: string;
+    deprecated?: string;
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
     localVariables?: IVariable[];
+    references?: IReference[];
 }
 
 export interface IMethod {
     parent: IClass;
     label: string;
-    kind?: MethodKinds;
+    kind: MethodKinds;
     returnType: TypeReference;
     description: string;
     parameters: IParameter[];
+    deprecated?: string;
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
     localVariables?: IVariable[];
+    references?: IReference[];
 }
 
 export interface IField {
@@ -90,10 +109,13 @@ export interface IField {
     label: string;
     type: TypeReference;
     description: string;
-    readonly?: boolean;
-    private?: boolean
+    readonly: boolean;
+    private: boolean
+    deprecated?: string;
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
     sourceUri?: vscode.Uri;
+    references?: IReference[];
 }
 
 export interface IClass {
@@ -106,10 +128,13 @@ export interface IClass {
     staticMethods: IMethod[];
     instanceFields: IField[];
     instanceMethods: IMethod[];
+    deprecated?: string;
     declarationRange?: vscode.Range;
+    nameRange?: vscode.Range;
     bodyRange?: vscode.Range;
     sourceUri?: vscode.Uri;
     hidden?: boolean;
+    references?: IReference[];
 }
 
 export interface IGenericClass extends IClass {
@@ -247,9 +272,28 @@ export function FindFieldInClassParentsHierarchy(
 }
 
 export function FindConstructorInClassHierarchy(classDef: IClass, argCount: number): IConstructor | null {
-    const ctor = classDef.constructors?.find(m => m.parameters.length === argCount);
-    if (ctor) {
-        return ctor;
+    if (classDef.constructors) {
+        const ctor = classDef.constructors.find(c => {
+            if (argCount === -1) {
+                return true;
+            }
+
+            const requiredParams = c.parameters.filter(
+                param => !param.isOptional && !param.isVariadic
+            ).length;
+
+            const maxParams = c.parameters.filter(
+                param => !param.isVariadic
+            ).length;
+
+            const hasVariadic = c.parameters.some(param => param.isVariadic);
+
+            return argCount >= requiredParams && (argCount <= maxParams || hasVariadic);
+        });
+
+        if (ctor) {
+            return ctor;
+        }
     }
 
     if (classDef.extends) {

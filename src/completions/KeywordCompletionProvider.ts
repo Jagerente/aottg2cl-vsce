@@ -1,13 +1,8 @@
 import * as vscode from 'vscode';
 import * as markdown from '../utils/MarkdownHelper';
-import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
+import {CompletionContext} from './CompletionContext';
 
-export class KeywordCompletionProvider implements vscode.CompletionItemProvider, vscode.HoverProvider {
-    private documentTreeProvider: DocumentTreeProvider;
-
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.documentTreeProvider = documentTreeProvider;
-    }
+export class KeywordCompletionProvider {
 
     private keywords = [
         {
@@ -56,25 +51,23 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
         {parent: this, label: 'return', snippet: 'return$0;', description: 'Return statement.'},
     ];
 
-    public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
+    public provideCompletions(context: CompletionContext): vscode.CompletionItem[] {
         const items: vscode.CompletionItem[] = [];
-        const currentClass = this.documentTreeProvider.getCurrentClass(document, position);
-        const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
 
-        const isInsideLoop = this.documentTreeProvider.isInsideLoopBody(document, position);
-        const isInsideLoopCondition = this.documentTreeProvider.isInsideLoopCondition(document, position);
-        const canSuggestElif = this.documentTreeProvider.canSuggestElif(document, position);
+        const {
+            isInsideClassDeclaration,
+            isInsideMethodDeclaration,
+            textBeforeCursor,
+            textAfterCursor,
+            wordRange,
+            documentTreeProvider,
+            position
+        } = context;
 
-        const line = document.lineAt(position).text;
-        const textBefore = line.slice(0, position.character);
-        const textAfter = line.slice(position.character);
-        const hasRightText = /\S/.test(textAfter);
+        const hasRightText = /\S/.test(textAfterCursor);
         const preferSnippet = !hasRightText;
-
-        const declMatch = textBefore.match(/\b(class|component|extension|cutscene|function|coroutine)\s*$/);
+        const declMatch = textBeforeCursor.match(/\b(class|component|extension|cutscene|function|coroutine)\s*$/);
         const skipLabel = declMatch ? declMatch[1] : undefined;
-
-        const wordRange = document.getWordRangeAtPosition(position, /[A-Za-z_]\w*/);
 
         const makePlain = (label: string) => {
             const item = new vscode.CompletionItem(label, vscode.CompletionItemKind.Keyword);
@@ -97,62 +90,67 @@ export class KeywordCompletionProvider implements vscode.CompletionItemProvider,
             return item;
         };
 
-        if (!currentClass && skipLabel !== 'class' && skipLabel !== 'component' && skipLabel !== 'extension' && skipLabel !== 'cutscene') {
-            ['class', 'component', 'extension', 'cutscene'].forEach(label => {
-                items.push(makePlain(label));
-                const kw = this.keywords.find(k => k.label === label);
-                if (kw) {
-                    items.push(makeSnippet(kw));
-                }
-            });
-        } else if (currentClass && !currentMethod && skipLabel !== 'function' && skipLabel !== 'coroutine') {
-            ['function', 'coroutine'].forEach(label => {
-                items.push(makePlain(label));
-                const kw = this.keywords.find(k => k.label === label);
-                if (kw) {
-                    items.push(makeSnippet(kw));
-                }
-            });
-        } else if (currentMethod && !isInsideLoopCondition) {
-            items.push(makePlain('self'));
-            ['if', 'for', 'while', 'return'].forEach(label => {
-                items.push(makePlain(label));
-                const kw = this.keywords.find(k => k.label === label);
-                if (kw) {
-                    items.push(makeSnippet(kw));
-                }
-            });
-            if (canSuggestElif) {
-                ['else', 'elif'].forEach(label => {
+        if (!isInsideClassDeclaration && skipLabel !== 'class' && skipLabel !== 'component' && skipLabel !== 'extension' && skipLabel !== 'cutscene') {
+            const currentClass = context.currentClass;
+            if (!currentClass) {
+                ['class', 'component', 'extension', 'cutscene'].forEach(label => {
                     items.push(makePlain(label));
                     const kw = this.keywords.find(k => k.label === label);
                     if (kw) {
                         items.push(makeSnippet(kw));
                     }
                 });
+                return items;
+            }
+
+            if (!isInsideMethodDeclaration && skipLabel !== 'function' && skipLabel !== 'coroutine') {
+                const currentMethod = context.currentMethod;
+                if (!currentMethod) {
+                    ['function', 'coroutine'].forEach(label => {
+                        items.push(makePlain(label));
+                        const kw = this.keywords.find(k => k.label === label);
+                        if (kw) {
+                            items.push(makeSnippet(kw));
+                        }
+                    });
+                    return items;
+                }
+
+                const isInsideLoopCondition = documentTreeProvider.isInsideLoopCondition(context.document, position);
+                if (!isInsideLoopCondition) {
+                    items.push(makePlain('self'));
+                    ['if', 'for', 'while', 'return'].forEach(label => {
+                        items.push(makePlain(label));
+                        const kw = this.keywords.find(k => k.label === label);
+                        if (kw) {
+                            items.push(makeSnippet(kw));
+                        }
+                    });
+                    const canSuggestElif = documentTreeProvider.canSuggestElif(context.document, position);
+                    if (canSuggestElif) {
+                        ['else', 'elif'].forEach(label => {
+                            items.push(makePlain(label));
+                            const kw = this.keywords.find(k => k.label === label);
+                            if (kw) {
+                                items.push(makeSnippet(kw));
+                            }
+                        });
+                    }
+                }
+
+                const isInsideLoop = documentTreeProvider.isInsideLoopBody(context.document, position);
+                if (isInsideLoop && !isInsideLoopCondition) {
+                    [/*'break',*/ 'continue'].forEach(label => {
+                        items.push(makePlain(label));
+                        const kw = this.keywords.find(k => k.label === label);
+                        if (kw) {
+                            items.push(makeSnippet(kw));
+                        }
+                    });
+                }
             }
         }
 
-        if (isInsideLoop && !isInsideLoopCondition) {
-            [/*'break',*/ 'continue'].forEach(label => {
-                items.push(makePlain(label));
-                const kw = this.keywords.find(k => k.label === label);
-                if (kw) {
-                    items.push(makeSnippet(kw));
-                }
-            });
-        }
-
         return items;
-    }
-
-    public provideHover(document: vscode.TextDocument, position: vscode.Position): vscode.Hover | undefined {
-        const range = document.getWordRangeAtPosition(position);
-        const word = range && document.getText(range);
-        const keyword = this.keywords.find(k => k.label === word);
-        if (keyword) {
-            return new vscode.Hover(markdown.createKeywordMarkdown(keyword));
-        }
-        return undefined;
     }
 }

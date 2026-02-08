@@ -1,0 +1,59 @@
+{
+  "kind": "extension",
+  "name": "InputErenShifterEnum",
+  "description": "Enumeration of ErenShifter input keybind settings.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Kick",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ErenShifter/Kick keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ErenShifter/Jump keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Walk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ErenShifter/Walk keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackCombo",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "ErenShifter/AttackCombo keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

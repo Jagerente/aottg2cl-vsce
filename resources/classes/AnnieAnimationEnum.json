@@ -1,0 +1,389 @@
+{
+  "kind": "extension",
+  "name": "AnnieAnimationEnum",
+  "description": "Enumeration of available animations for Annie characters.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Idle",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Idle animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Run",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Run animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Walk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Walk animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Jump animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Fall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Fall animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Land",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Land animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Die",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Die animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Stun",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Stun animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitFall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit fall animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitIdle",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit idle animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SitUp",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sit up animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackCombo",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack combo animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackComboBlind",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack combo blind animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSwing",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack swing animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushBack",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack brush back animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushFrontL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack brush front left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushFrontR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack brush front right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushHeadL",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack brush head left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushHeadR",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack brush head right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabBottomLeft",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab bottom left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabBottomRight",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab bottom right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabMidLeft",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab mid left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabMidRight",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab mid right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabUp",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab up animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabUpLeft",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab up left animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabUpRight",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack grab up right animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackKick",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack kick animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackStomp",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack stomp animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackHead",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack head animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBite",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Attack bite animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteSalute",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote salute animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteTaunt",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote taunt animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteWave",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote wave animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteRoar",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Emote roar animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

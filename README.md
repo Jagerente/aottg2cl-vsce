@@ -16,31 +16,31 @@ class AnnotationsDemo
     # @type Human
     _myHuman = null;
 
-    # @type Character
+    # @type Character Player character instance
     _myCharacter = null;
 
     /*
-        @type Timer
+        @type Timer Timer instance for tracking time
     */
     _myTimer = null;
 
-    /*@type Object*/
+    /*@type Object Base game object*/
     _myObject = null;
 
-    # @param foo float
-    # @param bar Human
-    # @param baz Titan
-    # @return Timer
+    # @param foo float Speed multiplier value
+    # @param bar Human Target human character
+    # @param baz Titan Titan instance to process
+    # @return Timer Created timer instance
     function MethodExample(foo, bar, baz)
     {
         return Timer();
     }
 
     /*
-      @param foo string
-      @param bar bool
-      @param baz Vector3
-      @return int
+      @param foo string Input string to process
+      @param bar bool Enable or disable feature
+      @param baz Vector3 Position in 3D space
+      @return int Result code (0 for success)
     */
     function MethodExample2(foo, bar, baz)
     {
@@ -49,20 +49,44 @@ class AnnotationsDemo
     
     function GenericsExample()
     {
-        # @type List<Vector3>
+        # @type List<Vector3> List of 3D positions
         positions = List();
         
-        # @type Dict<string, Timer>
+        # @type Dict<string, Timer> Dictionary mapping names to timers
         timers = Dict();
         
-        # @type Dict<int, List<Human>>
+        # @type Dict<int, List<Human>> Dictionary mapping team IDs to player lists
         teamPlayers = Dict();
         
-        # @type List<Dict<string, float>>
+        # @type List<Dict<string, float>> List of player stats dictionaries
         playerStats = List();
     }
 }
 ```
+
+#### Annotation syntax
+
+`@type` - Specifies the type of a variable
+- Format: `# @type TypeName [description]`
+- Format (multiline): `/* @type TypeName [description] */`
+- `TypeName` can be a simple type (e.g., `Human`, `Timer`) or a generic type (e.g., `List<Vector3>`, `Dict<string, Timer>`)
+- Optional `description` provides additional information about the variable
+- Example: `# @type Character Player character instance`
+
+`@param` - Specifies the type and description of a method parameter
+- Format: `# @param parameterName TypeName [description]`
+- Format (multiline): `/* @param parameterName TypeName [description] */`
+- `parameterName` must match the actual parameter name in the method signature
+- `TypeName` can be a simple type or a generic type
+- Optional `description` provides additional information about the parameter
+- Example: `# @param foo float Speed multiplier value`
+
+`@return` - Specifies the return type and description of a method
+- Format: `# @return TypeName [description]`
+- Format (multiline): `/* @return TypeName [description] */`
+- `TypeName` can be a simple type or a generic type
+- Optional `description` provides additional information about the return value
+- Example: `# @return Timer Created timer instance`
 
 ### Modular imports support
 
@@ -173,5 +197,18 @@ Builds all imported files and injects the result into an existing Custom Map fil
 ```sh
 npm install -g vsce
 npm i
-vsce package
+npm run build
+```
+
+## Antlr Generation
+
+### Prerequirements
+
+- JDK installed
+- JDK bin directory added to your PATH (so that the java command is available)
+
+### Run
+
+```
+npm run antlr4ts
 ```

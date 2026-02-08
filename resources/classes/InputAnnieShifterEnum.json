@@ -1,0 +1,169 @@
+{
+  "kind": "extension",
+  "name": "InputAnnieShifterEnum",
+  "description": "Enumeration of AnnieShifter input keybind settings.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Kick",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/Kick keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jump",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/Jump keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Walk",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/Walk keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackCombo",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackCombo keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackSwing",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackSwing keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackStomp",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackStomp keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBite",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackBite keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackHead",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackHead keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushBack",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackBrushBack keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushFront",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackBrushFront keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackBrushHead",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackBrushHead keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabBottom",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackGrabBottom keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabMid",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackGrabMid keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AttackGrabUp",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "AnnieShifter/AttackGrabUp keybind.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

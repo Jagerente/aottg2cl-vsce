@@ -1,39 +1,29 @@
 import * as vscode from 'vscode';
-import { ClassKinds, IClass } from '../classes/IClass';
-import { IValidator } from './DiagnosticManager';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
+import {ClassKinds, IClass} from '../classes/IClass';
+import {IUserDefinedClassValidator} from './UserDefinedClassesValidator';
+import {DiagnosticCodes} from './DiagnosticCodes';
 
-export class CtorValidator implements IValidator {
-    private documentTreeProvider: DocumentTreeProvider;
+export class CtorValidator implements IUserDefinedClassValidator {
+    public validateClass(classDef: IClass, document: vscode.TextDocument): vscode.Diagnostic[] {
+        if (classDef.kind === ClassKinds.EXTENSION) {
+            return [];
+        }
 
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.documentTreeProvider = documentTreeProvider;
-    }
+        const constructors = classDef.constructors;
+        if (!constructors || constructors.length <= 1) {
+            return [];
+        }
 
-    public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
-        const diagnostics: vscode.Diagnostic[] = [];
-
-        this.documentTreeProvider.getUserDefinedClasses(document).forEach((classDef: IClass) => {
-            if (classDef.kind !== ClassKinds.EXTENSION) {
-                const constructors = classDef.constructors;
-
-                if (!constructors || constructors.length <= 1) {
-                    return;
-                }
-
-                constructors.forEach(ctor => {
-                    if (ctor.declarationRange) {
-                        const diagnostic = new vscode.Diagnostic(
-                            ctor.declarationRange,
-                            `Class '${classDef.name}' has multiple constructors, which is not allowed.`,
-                            vscode.DiagnosticSeverity.Warning
-                        );
-                        diagnostics.push(diagnostic);
-                    }
-                });
-            }
-        });
-
-        return diagnostics;
+        return constructors
+            .filter(ctor => ctor.declarationRange !== undefined)
+            .map(ctor => {
+                const diagnostic = new vscode.Diagnostic(
+                    ctor.declarationRange!,
+                    `Class '${classDef.name}' has multiple constructors, which is not allowed.`,
+                    vscode.DiagnosticSeverity.Warning
+                );
+                diagnostic.code = DiagnosticCodes.MULTIPLE_CONSTRUCTORS;
+                return diagnostic;
+            });
     }
 }

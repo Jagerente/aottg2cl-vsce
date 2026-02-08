@@ -1,0 +1,59 @@
+{
+  "kind": "extension",
+  "name": "FlexDirectionEnum",
+  "description": "Enumeration of flex direction values for UI elements.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Row",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Row: items are laid out horizontally.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Column",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Column: items are laid out vertically.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "RowReverse",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "RowReverse: items are laid out horizontally in reverse order.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ColumnReverse",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "ColumnReverse: items are laid out vertically in reverse order.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

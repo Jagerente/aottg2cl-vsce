@@ -1,0 +1,48 @@
+{
+  "kind": "extension",
+  "name": "ScrollElasticityEnum",
+  "description": "Enumeration of scroll elasticity (touch scroll behavior) values for ScrollView.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Clamped",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Clamped: scrolling is clamped at the content boundaries.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Elastic",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Elastic: scrolling has elastic behavior when reaching boundaries.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Unrestricted",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Unrestricted: scrolling is unrestricted and can go beyond boundaries.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

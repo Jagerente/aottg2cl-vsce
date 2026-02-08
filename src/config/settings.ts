@@ -38,4 +38,13 @@ export class Settings {
     public static get disableAutoParameters(): boolean {
         return Settings.config.get<boolean>('completion.disableAutoParameters', false);
     }
+
+    public static get debugPort(): number {
+        return Settings.config.get<number>('debug.port', 4711);
+    }
+
+    public static get parsingDebounceDelay(): number {
+        const delay = Settings.config.get<number>('parsing.debounceDelay', 300);
+        return Math.max(50, Math.min(1000, delay));
+    }
 }

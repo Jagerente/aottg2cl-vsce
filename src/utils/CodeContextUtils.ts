@@ -1,4 +1,4 @@
-import { DocumentTreeProvider } from './DocumentTreeProvider';
+import {DocumentTreeProvider} from './DocumentTreeProvider';
 import * as vscode from 'vscode';
 import {
     IClass,
@@ -9,272 +9,97 @@ import {
     IParameter,
     FindFieldInClassHierarchy,
     FindMethodInClassHierarchy,
-    TypeReference
+    TypeReference,
+    IChainNode,
+    ClassKinds
 } from '../classes/IClass';
 
 export class CodeContextUtils {
+    /**
+     * Checks if the specified position is in a function declaration.
+     *
+     * @param document - Text document to check
+     * @param position - Position in the document to check
+     * @returns true if the line at the specified position starts with the 'function' keyword, otherwise false
+     */
     public static isDeclaringFunction(document: vscode.TextDocument, position: vscode.Position): boolean {
         const line = document.lineAt(position).text;
         return line.trim().startsWith('function');
     }
 
+    /**
+     * Checks if the specified position is in a coroutine declaration.
+     *
+     * @param document - Text document to check
+     * @param position - Position in the document to check
+     * @returns true if the line at the specified position starts with the 'coroutine' keyword, otherwise false
+     */
     public static isDeclaringCoroutine(document: vscode.TextDocument, position: vscode.Position): boolean {
         const line = document.lineAt(position).text;
         return line.trim().startsWith('coroutine');
     }
 
-    public static parseCallChain(input: string): string {
-        let methodChain = '';
-        let bracesDepth = 0;
-        let inString = false;
-        let stringChar: string | null = null;
-        let escape = false;
+    /**
+     * Checks if the specified position is in a variable declaration.
+     * Identifies variable declarations by pattern: variable name followed by an equals sign.
+     *
+     * @param document - Text document to check
+     * @param position - Position in the document to check
+     * @returns true if the text before the position matches the variable declaration pattern (name = value), otherwise false
+     */
+    public static isDeclaringVariable(document: vscode.TextDocument, position: vscode.Position): boolean {
+        const line = document.lineAt(position).text;
+        const textBeforePosition = line.substring(0, position.character);
 
-        for (let i = input.length - 1; i >= 0; i--) {
-            const char = input[i];
-
-            if (inString) {
-                if (escape) {
-                    escape = false;
-                } else if (char === '\\') {
-                    escape = true;
-                } else if (char === stringChar) {
-                    inString = false;
-                    stringChar = null;
-                }
-                methodChain = char + methodChain;
-                continue;
-            } else {
-                if (char === '"' || char === "'" || char === '`') {
-                    inString = true;
-                    stringChar = char;
-                    methodChain = char + methodChain;
-                    continue;
-                }
-            }
-
-            if (char === ')') {
-                bracesDepth++;
-            } else if (char === '(') {
-                bracesDepth--;
-                if (bracesDepth < 0) {
-                    break;
-                }
-            }
-
-            if (
-                bracesDepth === 0 &&
-                (char === '=' || char === '&' || char === '|' || char === '>' || char === '<' || /\s/.test(char) || char === ';' || char === ',' || char === '!')
-            ) {
-                break;
-            }
-
-            methodChain = char + methodChain;
-        }
-
-        if (!/^[A-Za-z_]\w*/.test(methodChain)) {
-            return '';
-        }
-
-        if (!this.areParenthesesBalanced(methodChain)) {
-            return '';
-        }
-
-        return methodChain.trim();
+        const pattern = /^[\s]*([A-Za-z_]\w*)[\s]*=.*$/;
+        return pattern.test(textBeforePosition);
     }
 
-    public static splitCallChain(chain: string): string[] {
-        const components: string[] = [];
-        let currentComponent = '';
-        let bracesDepth = 0;
-        let inString = false;
-        let stringChar: string | null = null;
-        let escape = false;
-
-        for (let i = 0; i < chain.length; i++) {
-            const char = chain[i];
-
-            if (inString) {
-                currentComponent += char;
-                if (escape) {
-                    escape = false;
-                } else if (char === '\\') {
-                    escape = true;
-                } else if (char === stringChar) {
-                    inString = false;
-                    stringChar = null;
-                }
-                continue;
-            } else {
-                if (char === '"' || char === "'" || char === '`') {
-                    inString = true;
-                    stringChar = char;
-                    currentComponent += char;
-                    continue;
-                }
-            }
-
-            if (char === '(') {
-                bracesDepth++;
-            } else if (char === ')') {
-                bracesDepth--;
-            }
-
-            if (char === '.' && bracesDepth === 0) {
-                if (currentComponent.trim() !== '') {
-                    components.push(currentComponent.trim());
-                    currentComponent = '';
-                }
-            } else {
-                currentComponent += char;
-            }
-        }
-
-        if (currentComponent.trim() !== '') {
-            components.push(currentComponent.trim());
-        }
-
-        return components;
-    }
-
-    public static areParenthesesBalanced(str: string): boolean {
-        let balance = 0;
-        let inString = false;
-        let stringChar: string | null = null;
-        let escape = false;
-
-        for (let i = 0; i < str.length; i++) {
-            const char = str[i];
-
-            if (inString) {
-                if (escape) {
-                    escape = false;
-                } else if (char === '\\') {
-                    escape = true;
-                } else if (char === stringChar) {
-                    inString = false;
-                    stringChar = null;
-                }
-                continue;
-            } else {
-                if (char === '"' || char === "'" || char === '`') {
-                    inString = true;
-                    stringChar = char;
-                    continue;
-                }
-            }
-
-            if (char === '(') {
-                balance++;
-            } else if (char === ')') {
-                balance--;
-                if (balance < 0) {
-                    return false;
-                }
-            }
-        }
-
-        return balance === 0 && !inString;
-    }
-
-    public static resolveChainType(
+    /**
+     * Internal method that resolves a chain of identifiers and returns both the type reference and the resolved part.
+     * This is the common algorithm used by both resolveChainType and resolveChainFinalPart.
+     *
+     * @param document - Text document or string with document name
+     * @param position - Position in the document for contextual analysis
+     * @param documentTreeProvider - Document tree provider for finding classes and variables
+     * @param identifierChain - Array of chain nodes (IChainNode) containing information about each identifier
+     * @param currentClassDef - Optional current class definition for resolving 'self'
+     * @param currentMethod - Optional current method or constructor for finding parameters and local variables
+     * @param maxIndex - Optional maximum index in the chain to process (defaults to processing the entire chain)
+     * @returns Object containing both the type reference and the resolved part, or undefined if resolution fails
+     */
+    private static resolveChainInternal(
         document: vscode.TextDocument | string,
         position: vscode.Position,
         documentTreeProvider: DocumentTreeProvider,
-        identifierChain: string[],
+        identifierChain: IChainNode[],
         currentClassDef?: IClass,
-        currentMethod?: IMethod | IConstructor
-    ): TypeReference | undefined {
-        if (identifierChain.length === 0) {
+        currentMethod?: IMethod | IConstructor,
+        maxIndex?: number
+    ): { typeRef: TypeReference; part: IClass | IMethod | IField | IVariable | IParameter } | undefined {
+        const chainLength = maxIndex !== undefined ? Math.min(maxIndex + 1, identifierChain.length) : identifierChain.length;
+        if (chainLength === 0) {
             return undefined;
         }
-        let currentTypeRef: TypeReference | undefined;
-        for (let i = 0; i < identifierChain.length; i++) {
-            const id = identifierChain[i];
-            if (i === 0) {
-                if (id === 'self') {
-                    if (!currentClassDef) {
-                        return undefined;
-                    }
-                    currentTypeRef = { name: currentClassDef.name, typeArguments: [] };
-                } else {
-                    const param = currentMethod?.parameters.find(p => p.name === id);
-                    let local: IVariable | undefined = undefined;
-                    if (!param && currentMethod) {
-                        local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, id, true, position);
-                    }
 
-                    if (param) {
-                        currentTypeRef = param.type;
-                    } else if (local) {
-                        currentTypeRef = local.type;
-                    } else {
-                        const tr = CodeContextUtils.parseTypeReference(id);
-                        const cls = documentTreeProvider.findClassByName(document, id);
-                        if (!cls) {
-                            return undefined;
-                        }
-                        currentTypeRef = tr;
-                    }
-                }
-            } else {
-                if (!currentTypeRef) {
-                    return undefined;
-                }
-                const raw = this.typeRefToString(currentTypeRef);
-                const cls = documentTreeProvider.findClassByName(document, raw);
-                if (!cls) {
-                    return undefined;
-                }
-                const field = FindFieldInClassHierarchy(cls, id, true, true, true, true);
-                if (field) {
-                    currentTypeRef = field.type;
-                    continue;
-                }
-                const callMatch = id.match(/^(\w+)\s*\(/);
-                if (callMatch) {
-                    const method = FindMethodInClassHierarchy(cls, callMatch[1], -1, true, true);
-                    if (method) {
-                        currentTypeRef = method.returnType;
-                        continue;
-                    }
-                }
-                return undefined;
-            }
-        }
-        return currentTypeRef;
-    }
-
-    public static resolveChainFinalPart(
-        document: vscode.TextDocument,
-        position: vscode.Position,
-        documentTreeProvider: DocumentTreeProvider,
-        identifierChain: string[],
-        currentClassDef?: IClass,
-        currentMethod?: IMethod | IConstructor
-    ): IClass | IMethod | IField | IVariable | IParameter | undefined {
-        if (identifierChain.length === 0) {
-            return undefined;
-        }
         let currentTypeRef: TypeReference | undefined;
         let currentPart: IClass | IMethod | IField | IVariable | IParameter | undefined;
-        for (let i = 0; i < identifierChain.length; i++) {
+
+        for (let i = 0; i < chainLength; i++) {
             const id = identifierChain[i];
             if (i === 0) {
-                if (id === 'self') {
+                if (id.text === 'self') {
                     if (!currentClassDef) {
                         return undefined;
                     }
-                    currentTypeRef = { name: currentClassDef.name, typeArguments: [] };
+                    currentTypeRef = {name: currentClassDef.name, typeArguments: []};
                     currentPart = currentClassDef;
                 } else {
-                    let local: IVariable | undefined;
-                    let param: IParameter | undefined;
-                    if (currentMethod) {
-                        local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, id, true, position);
-                        if (!local) {
-                            param = currentMethod?.parameters.find(p => p.name === id);
-                        }
+                    // First check parameter, then local variable (consistent order)
+                    const param = currentMethod?.parameters.find(p => p.name === id.text);
+                    let local: IVariable | undefined = undefined;
+                    if (!param && currentMethod) {
+                        local = documentTreeProvider.findAvailableLocalVariableByName(currentMethod, id.text, true, position);
                     }
 
                     if (param) {
@@ -284,8 +109,8 @@ export class CodeContextUtils {
                         currentTypeRef = local.type;
                         currentPart = local;
                     } else {
-                        const tr = CodeContextUtils.parseTypeReference(id);
-                        const cls = documentTreeProvider.findClassByName(document, id);
+                        const tr = CodeContextUtils.parseTypeReference(id.text);
+                        const cls = documentTreeProvider.findClassByName(document, id.text);
                         if (!cls) {
                             return undefined;
                         }
@@ -298,10 +123,13 @@ export class CodeContextUtils {
                     return undefined;
                 }
 
+                // Optimize: if currentPart is already a class, use it directly
+                // Otherwise, resolve class from type reference
                 let cls: IClass | undefined;
-                if (currentPart && 'kind' in currentPart && 'name' in currentPart) {
-                    cls = currentPart;
+                if (currentPart && 'kind' in currentPart && 'name' in currentPart && !('label' in currentPart)) {
+                    cls = currentPart as IClass;
                 } else {
+                    // Use findClassByReference for more universal resolution
                     cls = documentTreeProvider.findClassByReference(document, currentTypeRef);
                 }
 
@@ -309,34 +137,140 @@ export class CodeContextUtils {
                     return undefined;
                 }
 
-                const field = FindFieldInClassHierarchy(cls, id, true, true, true, true);
+                if (id.isMethodCall) {
+                    const methodName = id.text.split('(')[0];
+                    const method = FindMethodInClassHierarchy(cls, methodName, id.methodArguments?.length ?? -1, true, true);
+                    if (method) {
+                        // Special handling for MapObject.AddComponent and MapObject.GetComponent
+                        // These methods take a string argument that represents the component type name
+                        if (cls.name === 'MapObject' && (methodName === 'AddComponent' || methodName === 'GetComponent')) {
+                            const firstArg = id.methodArguments?.[0];
+                            if (firstArg && firstArg.trim().length > 0) {
+                                // Extract string value from argument (remove quotes if present)
+                                let componentTypeName = firstArg.trim();
+                                if ((componentTypeName.startsWith('"') && componentTypeName.endsWith('"'))) {
+                                    componentTypeName = componentTypeName.slice(1, -1);
+                                }
+
+                                if (componentTypeName.length > 0) {
+                                    // Check if such component exists among definitions
+                                    const componentClass = documentTreeProvider.findClassByName(document, componentTypeName);
+                                    if (componentClass && componentClass.kind === ClassKinds.COMPONENT) {
+                                        // Use the component type name from the argument as the type
+                                        currentTypeRef = CodeContextUtils.parseTypeReference(componentTypeName);
+                                        // Create a copy of the method with the new return type
+                                        currentPart = {
+                                            ...method,
+                                            returnType: currentTypeRef
+                                        };
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+
+                        currentTypeRef = method.returnType;
+                        currentPart = method;
+                        continue;
+                    }
+                }
+
+                const field = FindFieldInClassHierarchy(cls, id.text, true, true, true, true);
                 if (field) {
                     currentTypeRef = field.type;
                     currentPart = field;
                     continue;
                 }
-                
-                let methodName = id;
-                const callMatch = methodName.match(/^(\w+)\s*\(/);
-                if (callMatch) {
-                    methodName = callMatch[1];
-                }
 
-                const method = FindMethodInClassHierarchy(cls, methodName, -1, true, true);
-                if (method) {
-                    currentTypeRef = method.returnType;
-                    currentPart = method;
-                    continue;
-                }
-                
                 return undefined;
             }
         }
-        return currentPart;
+
+        if (!currentTypeRef || !currentPart) {
+            return undefined;
+        }
+
+        return {typeRef: currentTypeRef, part: currentPart};
     }
 
-    public static parseTypeReference(typeStr: string): TypeReference {
+    /**
+     * Resolves the type for a chain of identifiers using structured chain nodes.
+     *
+     * @param document - Text document or string with document name
+     * @param position - Position in the document for contextual analysis
+     * @param documentTreeProvider - Document tree provider for finding classes and variables
+     * @param identifierChain - Array of chain nodes (IChainNode) containing information about each identifier
+     * @param currentClassDef - Optional current class definition for resolving 'self'
+     * @param currentMethod - Optional current method or constructor for finding parameters and local variables
+     * @returns TypeReference for the last element in the chain, or undefined if the type cannot be resolved
+     */
+    public static resolveChainType(
+        document: vscode.TextDocument | string,
+        position: vscode.Position,
+        documentTreeProvider: DocumentTreeProvider,
+        identifierChain: IChainNode[],
+        currentClassDef?: IClass,
+        currentMethod?: IMethod | IConstructor
+    ): TypeReference | undefined {
+        const result = this.resolveChainInternal(
+            document,
+            position,
+            documentTreeProvider,
+            identifierChain,
+            currentClassDef,
+            currentMethod
+        );
+        return result?.typeRef;
+    }
+
+    /**
+     * Resolves the final part of an identifier chain and returns the corresponding definition object.
+     * Unlike resolveChainType, returns the actual object (class, method, field, variable, or parameter),
+     * not just its type.
+     *
+     * @param document - Text document for analysis
+     * @param position - Position in the document for contextual analysis
+     * @param documentTreeProvider - Document tree provider for finding classes and variables
+     * @param identifierChain - Array of chain nodes (IChainNode) containing information about each identifier
+     * @param currentClassDef - Optional current class definition for resolving 'self'
+     * @param currentMethod - Optional current method or constructor for finding parameters and local variables
+     * @param maxIndex - Optional maximum index in the chain to process (defaults to processing the entire chain)
+     * @returns Definition object (IClass, IMethod, IField, IVariable, or IParameter) for the final part of the chain,
+     *          or undefined if the object cannot be found
+     */
+    public static resolveChainFinalPart(
+        document: vscode.TextDocument,
+        position: vscode.Position,
+        documentTreeProvider: DocumentTreeProvider,
+        identifierChain: IChainNode[],
+        currentClassDef?: IClass,
+        currentMethod?: IMethod | IConstructor,
+        maxIndex?: number
+    ): IClass | IMethod | IField | IVariable | IParameter | undefined {
+        const result = this.resolveChainInternal(
+            document,
+            position,
+            documentTreeProvider,
+            identifierChain,
+            currentClassDef,
+            currentMethod,
+            maxIndex
+        );
+        return result?.part;
+    }
+
+    /**
+     * Parses a string representation of a type into a TypeReference object.
+     * Supports various formats: simple types, generics (Foo<Bar,Baz>), literals (strings, numbers, booleans),
+     * as well as special types List, Dict, and Set.
+     *
+     * @param typeStr - String representing the type (e.g., "Foo<Bar,Baz>", "string", "List", "int")
+     * @param fallback - Optional fallback type name used if the type cannot be recognized. If not provided, the original string is used.
+     * @returns TypeReference object representing the parsed type
+     */
+    public static parseTypeReference(typeStr: string, fallback?: string): TypeReference {
         const s = typeStr.trim();
+
         // Generic Foo<Bar,Baz>
         const lt = s.indexOf('<');
         if (lt >= 0 && s.endsWith('>')) {
@@ -351,36 +285,43 @@ export class CodeContextUtils {
                 } else if (c === '>') {
                     depth--;
                 } else if (c === ',' && depth === 0) {
-                    args.push(this.parseTypeReference(inner.substring(start, i).trim()));
+                    args.push(this.parseTypeReference(inner.substring(start, i).trim(), fallback));
                     start = i + 1;
                 }
             }
-            args.push(this.parseTypeReference(inner.substring(start).trim()));
-            return { name, typeArguments: args };
+            args.push(this.parseTypeReference(inner.substring(start).trim(), fallback));
+            return {name, typeArguments: args};
         }
         // String literal
         if (/^".*"$/.test(s)) {
-            return { name: 'string', typeArguments: [] };
+            return {name: 'string', typeArguments: []};
         }
         // Float
         if (/^\d+\.\d+$/.test(s)) {
-            return { name: 'float', typeArguments: [] };
+            return {name: 'float', typeArguments: []};
         }
         // Int
         if (/^\d+$/.test(s)) {
-            return { name: 'int', typeArguments: [] };
+            return {name: 'int', typeArguments: []};
         }
         // Bool
         if (s === 'true' || s === 'false') {
-            return { name: 'bool', typeArguments: [] };
+            return {name: 'bool', typeArguments: []};
         }
 
         if (s === 'List' || s === 'List()') {
-            return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+            return {name: 'List', typeArguments: [{name: 'Object', typeArguments: []}]};
         }
 
         if (s === 'Dict' || s === 'Dict()') {
-            return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+            return {
+                name: 'Dict',
+                typeArguments: [{name: 'Object', typeArguments: []}, {name: 'Object', typeArguments: []}]
+            };
+        }
+
+        if (s === 'Set' || s === 'Set()') {
+            return {name: 'Set', typeArguments: [{name: 'Object', typeArguments: []}]};
         }
 
         // Simple call: Foo(...) but not a field access Foo.Bar(...)
@@ -388,84 +329,33 @@ export class CodeContextUtils {
         if (callMatch && !/^[A-Za-z_]\w*\.[A-Za-z_]\w*/.test(s)) {
             let name = callMatch[1];
             if (name === 'List') {
-                return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
+                return {name: 'List', typeArguments: [{name: 'Object', typeArguments: []}]};
             }
 
             if (name === 'Dict') {
-                return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
+                return {
+                    name: 'Dict',
+                    typeArguments: [{name: 'Object', typeArguments: []}, {name: 'Object', typeArguments: []}]
+                };
             }
 
-            return { name: name, typeArguments: [] };
+            if (name === 'Set') {
+                return {name: 'Set', typeArguments: [{name: 'Object', typeArguments: []}]};
+            }
+
+            return {name: name, typeArguments: []};
         }
 
-        return { name: s, typeArguments: [] };
+        return {name: fallback ?? s, typeArguments: []};
     }
 
-    public static parseTypeReferenceFallback(typeStr: string, fallback: string): TypeReference {
-        const s = typeStr.trim();
-        // Generic Foo<Bar,Baz>
-        const lt = s.indexOf('<');
-        if (lt >= 0 && s.endsWith('>')) {
-            const name = s.substring(0, lt).trim();
-            const inner = s.substring(lt + 1, s.length - 1);
-            const args: TypeReference[] = [];
-            let depth = 0, start = 0;
-            for (let i = 0; i < inner.length; i++) {
-                const c = inner[i];
-                if (c === '<') {
-                    depth++;
-                } else if (c === '>') {
-                    depth--;
-                } else if (c === ',' && depth === 0) {
-                    args.push(this.parseTypeReference(inner.substring(start, i).trim()));
-                    start = i + 1;
-                }
-            }
-            args.push(this.parseTypeReference(inner.substring(start).trim()));
-            return { name, typeArguments: args };
-        }
-        // String literal
-        if (/^".*"$/.test(s)) {
-            return { name: 'string', typeArguments: [] };
-        }
-        // Float
-        if (/^\d+\.\d+$/.test(s)) {
-            return { name: 'float', typeArguments: [] };
-        }
-        // Int
-        if (/^\d+$/.test(s)) {
-            return { name: 'int', typeArguments: [] };
-        }
-        // Bool
-        if (s === 'true' || s === 'false') {
-            return { name: 'bool', typeArguments: [] };
-        }
-
-        if (s === 'List' || s === 'List()') {
-            return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
-        }
-
-        if (s === 'Dict' || s === 'Dict()') {
-            return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
-        }
-
-        // Simple call: Foo(...) but not a field access Foo.Bar(...)
-        const callMatch = s.match(/^([A-Za-z_]\w*)\s*\(/);
-        if (callMatch && !/^[A-Za-z_]\w*\.[A-Za-z_]\w*/.test(s)) {
-            let name = callMatch[1];
-            if (name === 'List') {
-                return { name: 'List', typeArguments: [{ name: 'Object', typeArguments: [] }] };
-            }
-
-            if (name === 'Dict') {
-                return { name: 'Dict', typeArguments: [{ name: 'Object', typeArguments: [] }, { name: 'Object', typeArguments: [] }] };
-            }
-
-            return { name: name, typeArguments: [] };
-        }
-        return { name: fallback, typeArguments: [] };
-    }
-
+    /**
+     * Converts a TypeReference object to its string representation.
+     * Recursively processes generics, creating a string like "Foo<Bar,Baz>".
+     *
+     * @param tr - TypeReference object to convert
+     * @returns String representation of the type (e.g., "Foo" or "List<Object>")
+     */
     public static typeRefToString(tr: TypeReference): string {
         if (tr.typeArguments.length === 0) {
             return tr.name;

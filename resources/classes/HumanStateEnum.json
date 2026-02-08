@@ -1,0 +1,202 @@
+{
+  "kind": "extension",
+  "name": "HumanStateEnum",
+  "description": "Enumeration of human state types.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Idle",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is idle.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Attack",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is attacking.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "GroundDodge",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is performing a ground dodge.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "AirDodge",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is performing an air dodge.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Reload",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is reloading.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Refill",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is refilling gas.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Die",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is dying.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Grab",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is grabbed.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmoteAction",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is performing an emote action.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialAttack",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is performing a special attack.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpecialAction",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is performing a special action.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Slide",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is sliding.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Run",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is running.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Land",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is landing.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "MountingHorse",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is mounting a horse.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Stun",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is stunned.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "WallSlide",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Human is wall sliding.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

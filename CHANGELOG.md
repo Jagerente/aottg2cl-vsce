@@ -5,6 +5,63 @@ All notable changes to the "aottg2cl" extension will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-01-04
+
+### Added
+
+- Rename Symbol support (F2)
+  - Support renaming variables, parameters, methods, fields, and classes
+  - Automatic reference updates across the document
+  - Note: References in annotations (@type, @param, @return) are not currently supported
+- Go to Definition (F12) and Go to References (Alt+Shift+F12)
+  - Support for variables, parameters, methods, fields, and classes
+  - Navigate to symbol definitions and find all usages
+  - Note: References in annotations (@type, @param, @return) are not currently supported
+- Debugger support.
+- Auto-generated docs integration (generated from game source).
+- Arithmetic operators: added modulo (`%`).
+- Hover improvements
+  - Fixed cases where hovers used `csharp` syntax instead of `acl`.
+  - Improved readability and increased the amount of useful info.
+  - Added method parameters and fields description into hovers.
+  - Extract and display descriptions from `@param`, `@return`, and `@type` annotations.
+  - Handle hover for `self.field`/`self.method()` when cursor is on 'self'.
+  - Detect constructors hover and show constructor based on provided arguments count.
+  - Annotations hover
+- Autocomplete and hover improvements
+  - Detect comments and strings to prevent autocomplete and hover suggestions in invalid contexts.
+  - Improved suggestion context detection for better accuracy.
+  - Suggest builtin callback snippets as `CompletionItemKind.Snippet` instead of `CompletionItemKind.Function`.
+- Callbacks support
+- UX & performance improvements
+  - Added cache keyed by document version/hash to reduce CPU/RAM usage by avoiding excessive parsing.
+  - Improved behavior on focus changes and when switching files.
+  - Added indexing for user-defined entities, classes, methods, strings, and comments for faster reference building and reduced memory allocations.
+  - Optimized chain resolution.
+  - Providers decomposition with wait-until-parsed.
+- Syntax highlighting improvements
+  - Extended syntax detection.
+  - Better overall highlighting quality.
+- User-defined classes override built-ins (aligned with in-game behavior)
+  - Duplicate class names are errors (only when multiple user classes share the same name).
+  - Name collision with a built-in class is a warning.
+  - Completions and hovers follow the same resolution rules.
+- Fixed multiline comments
+- Added multiline annotations support
+- Code action providers system
+  - Diagnostic quick fixes
+    - Missing 'self.': Quick fix adds 'self.' prefix when accessing instance fields or methods without it
+    - Missing Cutscene.Start() method: Quick fix adds missing coroutine Start() method for cutscene classes
+  - Formatting quick fixes
+    - Format class braces: Quick fix to format class/cutscene/component/extension declarations to Allman style (braces on new lines)
+    - Format method braces: Quick fix to format instance methods, static methods, and constructors to Allman style (braces on new lines)
+- Component type inference for MapObject methods
+  - Improved type resolution for `GetComponent()` and `AddComponent()` methods
+  - Component type name is now extracted from string arguments and used for accurate type inference
+- Deprecated support
+  - Added support for deprecated classes, fields, methods, and constructors in class definitions
+  - Warning diagnostics are shown when using deprecated elements
+
 ## [0.1.4] - 2025-07-18
 
 ### Added

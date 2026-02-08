@@ -1,14 +1,7 @@
 import * as vscode from 'vscode';
-import { CodeContextUtils } from '../utils/CodeContextUtils';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
-import { ClassKinds } from '../classes/IClass';
+import { IClass, MethodKinds } from '../classes/IClass';
 
-export class MainFunctionsCompletionProvider implements vscode.CompletionItemProvider {
-    private documentTreeProvider: DocumentTreeProvider;
-
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.documentTreeProvider = documentTreeProvider;
-    }
+export class MainFunctionsCompletionProvider {
 
     private reservedFunctions = [
         { parent: this, label: 'Init', snippet: 'Init()\n{\n\t$0\n}', description: 'Called upon class creation' },
@@ -41,64 +34,79 @@ export class MainFunctionsCompletionProvider implements vscode.CompletionItemPro
         { parent: this, label: 'OnNetworkMessage', snippet: 'OnNetworkMessage(sender, message)\n{\n\t$0\n}', description: 'Called upon receiving a self.NetworkView.SendMessage call.' }
     ];
 
-    public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
-        const currentClass = this.documentTreeProvider.getCurrentClass(document, position);
-        const isInsideClass = currentClass?.kind === ClassKinds.CLASS;
-        const isInsideComponent = currentClass?.kind === ClassKinds.COMPONENT;
-        const isInsideCutscene = currentClass?.kind === ClassKinds.CUTSCENE;
-
-        const line = document.lineAt(position).text;
-        const textAfter = line.slice(position.character);
-        const hasRightText = /\S/.test(textAfter);
-        const preferSnippet = !hasRightText;
-        const wordRange = document.getWordRangeAtPosition(position, /[A-Za-z_]\w*/);
-
-        const makePlain = (label: string, detail: string) => {
-            const item = new vscode.CompletionItem(label, vscode.CompletionItemKind.Function);
-            item.detail = detail;
-            item.insertText = label;
-            item.sortText = (preferSnippet ? '1_' : '0_') + label;
-            if (wordRange) { item.range = wordRange; }
-            return item;
-        };
-        const makeSnippet = (fn: { label: string; snippet: string; description: string }, detail: string) => {
-            const item = new vscode.CompletionItem(fn.label, vscode.CompletionItemKind.Function);
-            item.detail = detail;
-            item.insertText = new vscode.SnippetString(fn.snippet);
-            item.documentation = new vscode.MarkdownString(fn.description);
-            item.sortText = (preferSnippet ? '0_' : '1_') + fn.label;
-            if (wordRange) { item.range = wordRange; }
-            return item;
-        };
-
+    public provideMainClassCompletions(cls: IClass, extendSnippet: boolean, preferSnippet: boolean, wordRange?: vscode.Range): vscode.CompletionItem[] {
         const items: vscode.CompletionItem[] = [];
 
-        if (isInsideComponent || currentClass?.name === 'Main') {
-            if (CodeContextUtils.isDeclaringFunction(document, position)) {
-                this.reservedFunctions.forEach(fn => {
-                    items.push(makePlain(fn.label, 'Reserved function'));
-                    items.push(makeSnippet(fn, 'Reserved function'));
-                });
-                if (isInsideComponent) {
-                    this.componentFunctions.forEach(fn => {
-                        items.push(makePlain(fn.label, 'Reserved function'));
-                        items.push(makeSnippet(fn, 'Reserved function'));
-                    });
-                }
+        this.reservedFunctions.forEach(fn => {
+            if (cls.staticMethods.some(method => method.label === fn.label)) {
+                return;
             }
-        } else if (isInsideClass) {
-            if (CodeContextUtils.isDeclaringFunction(document, position)) {
-                const initFn = this.reservedFunctions.find(fn => fn.label === 'Init')!;
-                items.push(makePlain(initFn.label, 'Constructor'));
-                items.push(makeSnippet(initFn, 'Constructor'));
+
+            items.push(this.makePlain(fn.label, 'Reserved function', preferSnippet, wordRange));
+            items.push(this.makeSnippet(fn, 'Reserved function', extendSnippet ? 'function ' : '', preferSnippet, wordRange));
+        });
+        
+        return items;
+    }
+
+    public provideComponentClassCompletions(cls: IClass, extendSnippet: boolean, preferSnippet: boolean, wordRange?: vscode.Range): vscode.CompletionItem[] {
+        const items: vscode.CompletionItem[] = [];
+        
+        this.componentFunctions.forEach(fn => {
+            if (cls.instanceMethods.some(method => method.label === fn.label)) {
+                return;
             }
-        } else if (isInsideCutscene) {
-            if (CodeContextUtils.isDeclaringCoroutine(document, position)) {
-                items.push(makePlain('Start', 'Cutscene entry point'));
-                items.push(makeSnippet({ label: 'Start', snippet: 'Start()\n{\n\t$0\n}', description: 'Cutscene entry point' }, 'Cutscene entry point'));
-            }
+
+            items.push(this.makePlain(fn.label, 'Reserved function', preferSnippet, wordRange));
+            items.push(this.makeSnippet(fn, 'Reserved function', extendSnippet ? 'function ' : '', preferSnippet, wordRange));
+        });
+        
+        return items;
+    }
+
+    public provideClassCompletions(cls: IClass, extendSnippet: boolean, preferSnippet: boolean, wordRange?: vscode.Range): vscode.CompletionItem[] {
+        if (!cls.constructors || cls.constructors.length === 0) {
+            return [];
         }
+        
+        const items: vscode.CompletionItem[] = [];
+        
+        const initFn = this.reservedFunctions.find(fn => fn.label === 'Init')!;
+        items.push(this.makePlain(initFn.label, 'Constructor', preferSnippet, wordRange));
+        items.push(this.makeSnippet(initFn, 'Constructor', extendSnippet ? 'function ' : '', preferSnippet, wordRange));
 
         return items;
+    }
+
+    public provideCutsceneCompletions(cls: IClass, extendSnippet: boolean, preferSnippet: boolean, wordRange?: vscode.Range): vscode.CompletionItem[] {
+        if (cls.instanceMethods.some(method => method.label === 'Start' && method.kind === MethodKinds.COROUTINE)) {
+            return [];
+        }
+        
+        const items: vscode.CompletionItem[] = [];
+        items.push(this.makePlain('Start', 'Cutscene entry point', preferSnippet, wordRange));
+        items.push(this.makeSnippet({ label: 'Start', snippet: 'Start()\n{\n\t$0\n}', description: 'Cutscene entry point' }, 'Cutscene entry point', extendSnippet ? 'coroutine ' : '', preferSnippet, wordRange));
+
+        return items;
+    }
+
+    private makePlain(label: string, detail: string, preferSnippet: boolean, wordRange?: vscode.Range): vscode.CompletionItem {
+        const item = new vscode.CompletionItem(label, vscode.CompletionItemKind.Function);
+        item.detail = detail;
+        item.insertText = label;
+        item.sortText = (preferSnippet ? '1_' : '0_') + label;
+        if (wordRange) { item.range = wordRange; }
+        return item;
+    }
+
+    private makeSnippet(fn: { label: string; snippet: string; description: string }, detail: string, snippetPrefix: string, preferSnippet: boolean, wordRange?: vscode.Range): vscode.CompletionItem {
+        const item = new vscode.CompletionItem(snippetPrefix ? snippetPrefix + fn.label : fn.label, vscode.CompletionItemKind.Snippet);
+        item.detail = detail;
+        let snippet = snippetPrefix ? snippetPrefix + fn.snippet : fn.snippet;
+        item.insertText = new vscode.SnippetString(snippet);
+        item.documentation = new vscode.MarkdownString(fn.description);
+        item.sortText = (preferSnippet ? '0_' : '1_') + (snippetPrefix ? snippetPrefix + fn.label : fn.label);
+        if (wordRange) { item.range = wordRange; }
+        return item;
     }
 }

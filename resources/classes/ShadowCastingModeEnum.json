@@ -1,0 +1,59 @@
+{
+  "kind": "extension",
+  "name": "ShadowCastingModeEnum",
+  "description": "Enumeration of shadow casting mode values for LineRenderer.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Off",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Off: shadows are disabled.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "On",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "On: shadows are enabled.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TwoSided",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "TwoSided: two-sided shadows are enabled.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "ShadowsOnly",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "ShadowsOnly: only shadows are rendered, not the object itself.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

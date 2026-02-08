@@ -1,0 +1,48 @@
+{
+  "kind": "extension",
+  "name": "LineAlignmentEnum",
+  "description": "Enumeration of line alignment values for LineRenderer.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "View",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "View: line is aligned to the camera view.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Local",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Local: line is aligned to the local transform.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TransformZ",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "TransformZ: line is aligned to the transform's Z axis.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

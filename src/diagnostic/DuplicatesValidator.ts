@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { IClass, IMethod, IField } from '../classes/IClass';
 import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
+import { DiagnosticCodes } from './DiagnosticCodes';
 
 export class DuplicatesValidator {
     private documentTreeProvider: DocumentTreeProvider;
@@ -11,10 +12,12 @@ export class DuplicatesValidator {
 
     public validate(document: vscode.TextDocument): vscode.Diagnostic[] {
         const diagnostics: vscode.Diagnostic[] = [];
-        const classes = this.documentTreeProvider.getAllAvailableClasses(document);
+        const allClasses = this.documentTreeProvider.getAllAvailableClasses(document);
+        const globalClassesMap = this.documentTreeProvider.getGlobalClassesMap();
+        const userDefinedClasses = this.documentTreeProvider.getUserDefinedClasses(document);
 
         const classNames = new Map<string, IClass[]>();
-        classes.forEach((classDef) => {
+        allClasses.forEach((classDef) => {
             if (!classNames.has(classDef.name)) {
                 classNames.set(classDef.name, []);
             }
@@ -22,22 +25,46 @@ export class DuplicatesValidator {
         });
 
         classNames.forEach((classDefs, className) => {
-            if (classDefs.length > 1) {
-                const currentClasses = classDefs.filter(cls => cls.sourceUri?.fsPath === document.uri.fsPath);
-                if (currentClasses.length > 0) {
-                    currentClasses.forEach((classDef) => {
+            const globalClasses = classDefs.filter(cls => globalClassesMap.has(cls.name) && !cls.sourceUri);
+            const userDefinedClassesWithName = classDefs.filter(cls => !!cls.sourceUri);
+            
+            const currentClasses = classDefs.filter(cls => cls.sourceUri?.fsPath === document.uri.fsPath);
+            
+            if (currentClasses.length === 0) {
+                return;
+            }
+
+            if (globalClasses.length === 1 && userDefinedClassesWithName.length === 1) {
+                currentClasses.forEach((classDef) => {
+                    if (classDef.sourceUri && classDef.declarationRange) {
                         const diagnostic = new vscode.Diagnostic(
-                            classDef.declarationRange!,
-                            `Duplicate class declaration '${className}' detected (exists in ${classDefs.length} definitions).`,
+                            classDef.declarationRange,
+                            `User defined class '${className}' overrides global class.`,
+                            vscode.DiagnosticSeverity.Warning
+                        );
+                        diagnostic.code = DiagnosticCodes.CLASS_OVERRIDES_GLOBAL;
+                        diagnostics.push(diagnostic);
+                    }
+                });
+            }
+
+            if (userDefinedClassesWithName.length > 1) {
+                currentClasses.forEach((classDef) => {
+                    if (classDef.sourceUri && classDef.declarationRange) {
+                        const diagnostic = new vscode.Diagnostic(
+                            classDef.declarationRange,
+                            `Duplicate class declaration '${className}' detected (exists in ${userDefinedClassesWithName.length} user defined definitions).`,
                             vscode.DiagnosticSeverity.Error
                         );
+                        diagnostic.code = DiagnosticCodes.DUPLICATE_CLASS_DECLARATION;
                         diagnostics.push(diagnostic);
-                    });
-                }
+                    }
+                });
             }
         });
 
-        classes.forEach((classDef) => {
+        const currentDocumentClasses = userDefinedClasses.filter(cls => cls.sourceUri?.fsPath === document.uri.fsPath);
+        currentDocumentClasses.forEach((classDef) => {
             const methodSignatures = new Map<string, IMethod[]>();
             const fieldNames = new Map<string, IField[]>();
 
@@ -60,6 +87,7 @@ export class DuplicatesValidator {
                                 `Duplicate method '${method.label}' with the same parameter count in class '${classDef.name}'.`,
                                 vscode.DiagnosticSeverity.Error
                             );
+                            diagnostic.code = DiagnosticCodes.DUPLICATE_METHOD;
                             diagnostics.push(diagnostic);
                         }
                     });
@@ -84,6 +112,7 @@ export class DuplicatesValidator {
                             `Duplicate field '${fieldName}' in class '${classDef.name}'.`,
                             vscode.DiagnosticSeverity.Error
                         );
+                        diagnostic.code = DiagnosticCodes.DUPLICATE_FIELD;
                         diagnostics.push(diagnostic);
                     });
                 }
@@ -122,6 +151,7 @@ export class DuplicatesValidator {
                         `Method '${method.label}' has the same name as a field in class '${classDef.name}'.`,
                         vscode.DiagnosticSeverity.Error
                     );
+                    diagnostic.code = DiagnosticCodes.METHOD_FIELD_NAME_CONFLICT;
                     diagnostics.push(diagnostic);
                 });
 
@@ -131,6 +161,7 @@ export class DuplicatesValidator {
                         `Field '${field.label}' has the same name as a method in class '${classDef.name}'.`,
                         vscode.DiagnosticSeverity.Error
                     );
+                    diagnostic.code = DiagnosticCodes.FIELD_METHOD_NAME_CONFLICT;
                     diagnostics.push(diagnostic);
                 });
             });

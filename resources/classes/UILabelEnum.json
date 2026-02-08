@@ -1,0 +1,114 @@
+{
+  "kind": "extension",
+  "name": "UILabelEnum",
+  "description": "Enumeration of UI label alignment values.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "TopCenter",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "TopCenter: label is aligned to the top center.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TopLeft",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "TopLeft: label is aligned to the top left.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "TopRight",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "TopRight: label is aligned to the top right.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "MiddleCenter",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "MiddleCenter: label is aligned to the middle center.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "MiddleLeft",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "MiddleLeft: label is aligned to the middle left.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "MiddleRight",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "MiddleRight: label is aligned to the middle right.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BottomCenter",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BottomCenter: label is aligned to the bottom center.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BottomLeft",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BottomLeft: label is aligned to the bottom left.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "BottomRight",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "BottomRight: label is aligned to the bottom right.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

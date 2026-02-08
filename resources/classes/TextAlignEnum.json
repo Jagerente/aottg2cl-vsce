@@ -1,0 +1,114 @@
+{
+  "kind": "extension",
+  "name": "TextAlignEnum",
+  "description": "Enumeration of text alignment values for UI elements.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "UpperLeft",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "UpperLeft: text is aligned to the upper left.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "UpperCenter",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "UpperCenter: text is aligned to the upper center.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "UpperRight",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "UpperRight: text is aligned to the upper right.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "MiddleLeft",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "MiddleLeft: text is aligned to the middle left.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "MiddleCenter",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "MiddleCenter: text is aligned to the middle center.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "MiddleRight",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "MiddleRight: text is aligned to the middle right.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "LowerLeft",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "LowerLeft: text is aligned to the lower left.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "LowerCenter",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "LowerCenter: text is aligned to the lower center.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "LowerRight",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "LowerRight: text is aligned to the lower right.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

@@ -1,0 +1,1522 @@
+{
+  "kind": "extension",
+  "name": "ProfileIconEnum",
+  "description": "Enumeration of available profile icon types for cutscene dialogues.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Acros1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Acros1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Annie1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Annie1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Annie2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Annie2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Annie3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Annie3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Annie4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Annie4 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Annie5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Annie5 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Armin1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Armin1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Bertholdt1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Bertholdt1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Carula1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Carula1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Conny1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Conny1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Conny2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Conny2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Dakros1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Dakros1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Eren1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Eren1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Eren2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Eren2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Eren3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Eren3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Eren4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Eren4 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Eren5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Eren5 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Eren6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Eren6 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Eren7",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Eren7 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Eren8",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Eren8 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin4 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin5 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin6 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin7",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin7 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin8",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin8 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin9",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin9 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin10",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin10 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin11",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin11 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Erwin12",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Erwin12 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Etika1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Etika1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Falco1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Falco1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Fenglee1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Fenglee1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Founding1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Founding1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Frieda1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Frieda1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Frieda2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Frieda2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Gabi1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Gabi1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Gisketch1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Gisketch1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Gunther1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Gunther1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hange1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hange1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hannes1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hannes1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hannes2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hannes2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Historia1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Historia1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Historia2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Historia2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Historia3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Historia3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Historia4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Historia4 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Historia5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Historia5 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Historia6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Historia6 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Historia7",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Historia7 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Historia8",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Historia8 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Hitch1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Hitch1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Ian1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Ian1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Ilse1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Ilse1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Isabel1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Isabel1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Jean1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Jean1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Keith1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Keith1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Keith2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Keith2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Keith3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Keith3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Kenny1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Kenny1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Kenny2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Kenny2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi4 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi5 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi6 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi7",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi7 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi8",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi8 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi9",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi9 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi10",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi10 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi11",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi11 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi12",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi12 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi13",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi13 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi14",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi14 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi15",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi15 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi16",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi16 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Levi17",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Levi17 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Mikasa1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Mikasa1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Mikasa2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Mikasa2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Mikasa3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Mikasa3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Mikasa4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Mikasa4 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Mikasa5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Mikasa5 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Mikasa6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Mikasa6 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Mikasa7",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Mikasa7 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Mike1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Mike1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Nanaba1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Nanaba1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Nick1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Nick1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Petra1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Petra1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Petra2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Petra2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Pieck1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Pieck1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Pieck2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Pieck2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Pixis1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Pixis1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Reiner1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Reiner1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Revolution1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Revolution1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Rico1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Rico1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Rico2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Rico2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Ricecake1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Ricecake1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Sasha1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sasha1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Sasha2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sasha2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Sasha3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sasha3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Sasha4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Sasha4 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Uri1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Uri1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Yelena1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Yelena1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Yelena2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Yelena2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Yelena3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Yelena3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Ymir1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Ymir1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Ymir2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Ymir2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Ymir104",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "104Ymir1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Zeke1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Zeke1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Zeke2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Zeke2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan1",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan1 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan2",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan2 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan3",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan3 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan4",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan4 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan5",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan5 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan6",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan6 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan7",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan7 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan8",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan8 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan9",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan9 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan10",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan10 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan11",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan11 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan12",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan12 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan13",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan13 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan14",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan14 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan15",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan15 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan16",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan16 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Titan17",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Titan17 profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmojiAngry",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "EmojiAngry profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmojiAnnoyed",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "EmojiAnnoyed profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmojiCool",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "EmojiCool profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmojiCrying",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "EmojiCrying profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmojiLove",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "EmojiLove profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmojiShocked",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "EmojiShocked profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmojiSmile",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "EmojiSmile profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "EmojiThumbsUp",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "EmojiThumbsUp profile icon.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

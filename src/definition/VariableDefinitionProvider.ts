@@ -1,85 +1,138 @@
 import * as vscode from 'vscode';
-import { DocumentTreeProvider } from '../utils/DocumentTreeProvider';
-import { CodeContextUtils } from '../utils/CodeContextUtils';
-import { IParameter, IVariable } from '../classes/IClass';
+import {DocumentTreeProvider} from '../utils/DocumentTreeProvider';
+import {CodeContextUtils} from '../utils/CodeContextUtils';
+import {IParameter, IVariable, IClass, IMethod, IField, IConstructor} from '../classes/IClass';
 
 export class VariableDefinitionProvider implements vscode.DefinitionProvider {
-    private documentTreeProvider: DocumentTreeProvider;
-
-    constructor(documentTreeProvider: DocumentTreeProvider) {
-        this.documentTreeProvider = documentTreeProvider;
+    constructor(private readonly documentTreeProvider: DocumentTreeProvider) {
     }
 
-    public provideDefinition(
+    public async provideDefinition(
         document: vscode.TextDocument,
         position: vscode.Position,
         token: vscode.CancellationToken
-    ): vscode.Definition | null {
+    ): Promise<vscode.Definition | null> {
+        await this.documentTreeProvider.ensureDocumentParsed(document);
+
+        if (this.documentTreeProvider.isInsideString(document, position) || this.documentTreeProvider.isInsideComment(document, position)) {
+            return null;
+        }
+
         const wordPattern = /[A-Za-z_]\w*/;
 
-        const wordRange = document.getWordRangeAtPosition(position,  wordPattern);
+        const wordRange = document.getWordRangeAtPosition(position, wordPattern);
         if (!wordRange) {
             return null;
         }
         const word = document.getText(wordRange);
 
-        const lineText = document.lineAt(position).text;
-        const textBeforeCursor = lineText.substring(0, position.character);
-        const callChainString = CodeContextUtils.parseCallChain(textBeforeCursor);
-        const callChainArray = CodeContextUtils.splitCallChain(callChainString);
         const currentMethod = this.documentTreeProvider.getCurrentMethod(document, position);
-
-        if (callChainArray.length > 1) {
-            callChainArray[callChainArray.length - 1] = word;
-            const currentClass = this.documentTreeProvider.getCurrentClass(document, position);
-            const resolved = CodeContextUtils.resolveChainFinalPart(document, position, this.documentTreeProvider, callChainArray, currentClass, currentMethod);
-            if (resolved && (resolved as any).declarationRange) {
-                const targetUri = (resolved as any).sourceUri || document.uri;
-                return new vscode.Location(targetUri, (resolved as any).declarationRange);
-            }
-        }
-
-        let variable: IVariable | IParameter | undefined;
-        if (currentMethod) {
-            variable = this.documentTreeProvider.findAvailableLocalVariableByName(currentMethod, word, true, position, position) ?? currentMethod.parameters.find(v => v.name === word);
-        }
-
-        if (variable?.declarationRange) {
-            const targetUri = currentMethod!.sourceUri || document.uri;
-            return new vscode.Location(targetUri, variable.declarationRange);
-        }
-
-        const allClasses = this.documentTreeProvider.getAllAvailableClasses(document);
-        const matchedClass = allClasses.find(cls => cls.name === word);
-        if (matchedClass && matchedClass.declarationRange) {
-            const targetUri = matchedClass.sourceUri || document.uri;
-            return new vscode.Location(targetUri, matchedClass.declarationRange);
-        }
-
+        const currentDeclaringMethod = this.documentTreeProvider.getCurrentDeclaringMethod(document, position);
         const currentClass = this.documentTreeProvider.getCurrentClass(document, position);
-        if (currentClass) {
-            const method = currentClass.instanceMethods.find(m => m.label === word);
-            if (method && method.declarationRange) {
-                const targetUri = currentClass.sourceUri || document.uri;
-                return new vscode.Location(targetUri, method.declarationRange);
+
+        // Try to resolve what symbol we're looking at
+        let resolved: IClass | IMethod | IField | IVariable | IParameter | IConstructor | undefined;
+
+        // Handle chain calls (e.g., self.methodName, obj.field)
+        const chainInfo = this.documentTreeProvider.findChainAtPosition(document, position);
+        if (chainInfo && chainInfo.chain.length > 1) {
+            // Update the last node in the chain with the current word
+            const lastNode = chainInfo.chain[chainInfo.chain.length - 1];
+            if (lastNode) {
+                lastNode.text = word;
             }
-            const field = currentClass.instanceFields.find(f => f.label === word);
-            if (field && field.declarationRange) {
-                const targetUri = currentClass.sourceUri || document.uri;
-                return new vscode.Location(targetUri, field.declarationRange);
+            resolved = CodeContextUtils.resolveChainFinalPart(
+                document,
+                position,
+                this.documentTreeProvider,
+                chainInfo.chain,
+                currentClass,
+                currentMethod
+            );
+        }
+
+        // Handle parameters in function declaration (when cursor is on parameter name in declaration)
+        if (!resolved && currentDeclaringMethod) {
+            const param = currentDeclaringMethod.parameters.find(p => p.name === word);
+            if (param) {
+                resolved = param;
             }
-            const staticMethod = currentClass.staticMethods.find(m => m.label === word);
-            if (staticMethod && staticMethod.declarationRange) {
-                const targetUri = currentClass.sourceUri || document.uri;
-                return new vscode.Location(targetUri, staticMethod.declarationRange);
+        }
+
+        // Handle local variables and parameters in method body
+        if (!resolved && currentMethod) {
+            // First check parameters (they have higher priority than local variables due to shadowing)
+            const param = currentMethod.parameters.find(p => p.name === word);
+            if (param) {
+                resolved = param;
+            } else {
+                const variable = this.documentTreeProvider.findAvailableLocalVariableByName(
+                    currentMethod,
+                    word,
+                    true,
+                    position,
+                    position
+                );
+                if (variable) {
+                    resolved = variable;
+                }
             }
-            const staticField = currentClass.staticFields.find(f => f.label === word);
-            if (staticField && staticField.declarationRange) {
-                const targetUri = currentClass.sourceUri || document.uri;
-                return new vscode.Location(targetUri, staticField.declarationRange);
+        }
+
+        // Handle class names
+        if (!resolved) {
+            const allClasses = this.documentTreeProvider.getAllAvailableClasses(document);
+            const matchedClass = allClasses.find(cls => cls.name === word);
+            if (matchedClass) {
+                resolved = matchedClass;
             }
+        }
+
+        // Handle methods and fields in current class
+        if (!resolved && currentClass) {
+            const method = currentClass.instanceMethods.find(m => m.label === word) ||
+                currentClass.staticMethods.find(m => m.label === word);
+            if (method) {
+                resolved = method;
+            } else {
+                const field = currentClass.instanceFields.find(f => f.label === word) ||
+                    currentClass.staticFields.find(f => f.label === word);
+                if (field) {
+                    resolved = field;
+                }
+            }
+        }
+
+        // Handle constructors
+        if (!resolved && currentClass && currentClass.constructors) {
+            // For constructors, we check if the word matches the class name
+            // and we're in a context that could be a constructor call
+            if (word === currentClass.name) {
+                // This is a class name, which could be used as a constructor
+                resolved = currentClass;
+            }
+        }
+
+        if (!resolved) {
+            return null;
+        }
+
+        // Return definition location
+        const nameRange = resolved.nameRange;
+        const sourceUri = this.getSourceUri(resolved) || document.uri;
+        if (nameRange) {
+            return new vscode.Location(sourceUri, nameRange);
         }
 
         return null;
+    }
+
+    private getSourceUri(
+        entity: IClass | IMethod | IField | IVariable | IParameter | IConstructor
+    ): vscode.Uri | undefined {
+        if ('sourceUri' in entity) {
+            return entity.sourceUri;
+        }
+        return undefined;
     }
 }

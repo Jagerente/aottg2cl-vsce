@@ -1,0 +1,81 @@
+{
+  "kind": "extension",
+  "name": "JustifyEnum",
+  "description": "Enumeration of justify content values for UI elements.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "FlexStart",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "FlexStart: aligns items to the start of the main axis.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Center",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "Center: aligns items to the center of the main axis.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "FlexEnd",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "FlexEnd: aligns items to the end of the main axis.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpaceBetween",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "SpaceBetween: distributes items evenly with space between them.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpaceAround",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "SpaceAround: distributes items evenly with space around them.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "SpaceEvenly",
+      "type": {
+        "name": "int",
+        "typeArguments": []
+      },
+      "description": "SpaceEvenly: distributes items evenly with equal space around them.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}

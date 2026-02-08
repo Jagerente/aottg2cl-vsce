@@ -41,6 +41,7 @@ PLUS: '+';
 MINUS: '-';
 MULTIPLY: '*';
 DIVIDE: '/';
+MODULO: '%';
 
 PLUS_ASSIGN: '+=';
 MINUS_ASSIGN: '-=';
@@ -66,10 +67,17 @@ RPAREN: ')';
 WS: [ \t\r\n]+ -> skip;
 
 ANNOTATION_COMMENT: '#' WS* '@' ~[\r\n]*;
-ANNOTATION_BLOCK_COMMENT: '/*' .*? '@' .*? '*/';
+fragment NOT_END_COMMENT
+    : ~'*'
+    | '*' ~'/'
+    ;
+
+ANNOTATION_BLOCK_COMMENT
+    : '/*' NOT_END_COMMENT* '@' NOT_END_COMMENT* '*/'
+    ;
 
 LINE_COMMENT: '#' ~[\r\n]* -> channel(HIDDEN);
-BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
+BLOCK_COMMENT: '/*' ( BLOCK_COMMENT | . )*? '*/'  -> channel(HIDDEN);
 
 program: (annotation* classDecl)*;
 
@@ -143,11 +151,11 @@ additiveExpression
     ;
 
 multiplicativeExpression
-    : unaryExpression ((MULTIPLY | DIVIDE) unaryExpression)*
+    : unaryExpression ((MULTIPLY | DIVIDE | MODULO) unaryExpression)*
     ;
 
 unaryExpression
-    : (NOT | MINUS)? postfixExpression
+    : (NOT | MINUS | PLUS)? postfixExpression
     ;
 
 postfixExpression

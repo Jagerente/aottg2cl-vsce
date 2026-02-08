@@ -1,0 +1,48 @@
+{
+  "kind": "extension",
+  "name": "DummyAnimationEnum",
+  "description": "Enumeration of available animations for dummy characters.",
+  "extends": [
+    "Object"
+  ],
+  "deprecated": "",
+  "instanceFields": [],
+  "instanceMethods": [],
+  "staticFields": [
+    {
+      "label": "Idle",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Dummy animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Fall",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Fall animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    },
+    {
+      "label": "Rise",
+      "type": {
+        "name": "string",
+        "typeArguments": []
+      },
+      "description": "Rise animation.",
+      "readonly": true,
+      "private": false,
+      "deprecated": ""
+    }
+  ],
+  "staticMethods": [],
+  "constructors": []
+}
